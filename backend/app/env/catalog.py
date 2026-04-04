@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 ZONE_ORDER = ["public", "app", "data", "admin"]
+ENTERPRISE_ZONE_ORDER = ["public", "app", "data", "admin", "identity", "saas"]
 
 SERVICE_CATALOG = [
     "web",
@@ -12,6 +13,15 @@ SERVICE_CATALOG = [
     "ssh",
     "queue",
 ]
+
+ASSET_SERVICE_CATALOG = {
+    "endpoint": ["web", "dns", "ssh"],
+    "server": ["web", "api", "auth", "db", "cache", "dns", "ssh", "queue"],
+    "idp": ["auth", "api", "dns"],
+    "crm_saas": ["web", "api", "queue"],
+    "integration_service": ["api", "queue", "auth"],
+    "data_store": ["db", "cache", "api"],
+}
 
 VULN_CATALOG = {
     "web": ["SYNTH-CVE-2026-1001", "SYNTH-CVE-2026-1002"],
