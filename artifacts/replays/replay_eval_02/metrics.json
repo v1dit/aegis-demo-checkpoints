@@ -4319,7 +4319,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 8.09
+          "value": 7.69
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -4341,7 +4341,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 7.81
+          "value": 7.41
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -4363,7 +4363,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 7.76
+          "value": 7.36
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -4385,7 +4385,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 7.18
+          "value": 6.78
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -4402,11 +4402,11 @@
     }
   ],
   "summary": {
-    "attack_success_rate": 0.35,
-    "damage": 38.2,
+    "attack_success_rate": 0.32,
+    "damage": 28.6,
     "exfiltration_count": 19,
-    "mean_detection_latency_ms": 222.22,
-    "rewards_sum": 520.6,
+    "mean_detection_latency_ms": 215.0,
+    "rewards_sum": 544.6,
     "sync_drift_ms": 13.0
   },
   "timeseries": [
@@ -5156,857 +5156,857 @@
     },
     {
       "compromised_hosts": 12,
-      "damage_score": 15.7,
+      "damage_score": 14.1,
       "detection_count": 61,
-      "rewards_sum": 242.5,
+      "rewards_sum": 246.5,
       "step": 94,
       "ts_ms": 1712412367314
     },
     {
       "compromised_hosts": 12,
-      "damage_score": 16.85,
+      "damage_score": 15.25,
       "detection_count": 61,
-      "rewards_sum": 241.35,
+      "rewards_sum": 245.35,
       "step": 95,
       "ts_ms": 1712412367434
     },
     {
       "compromised_hosts": 12,
-      "damage_score": 18.6,
+      "damage_score": 17.0,
       "detection_count": 61,
-      "rewards_sum": 238.2,
+      "rewards_sum": 242.2,
       "step": 96,
       "ts_ms": 1712412367554
     },
     {
       "compromised_hosts": 12,
-      "damage_score": 18.15,
+      "damage_score": 16.55,
       "detection_count": 62,
-      "rewards_sum": 243.05,
+      "rewards_sum": 247.05,
       "step": 97,
       "ts_ms": 1712412367674
     },
     {
       "compromised_hosts": 12,
-      "damage_score": 17.7,
+      "damage_score": 16.1,
       "detection_count": 63,
-      "rewards_sum": 247.9,
+      "rewards_sum": 251.9,
       "step": 98,
       "ts_ms": 1712412367794
     },
     {
       "compromised_hosts": 12,
-      "damage_score": 17.25,
+      "damage_score": 15.65,
       "detection_count": 64,
-      "rewards_sum": 252.75,
+      "rewards_sum": 256.75,
       "step": 99,
       "ts_ms": 1712412367914
     },
     {
       "compromised_hosts": 12,
-      "damage_score": 16.8,
+      "damage_score": 15.2,
       "detection_count": 65,
-      "rewards_sum": 257.6,
+      "rewards_sum": 261.6,
       "step": 100,
       "ts_ms": 1712412368034
     },
     {
       "compromised_hosts": 12,
-      "damage_score": 16.35,
+      "damage_score": 14.75,
       "detection_count": 66,
-      "rewards_sum": 262.45,
+      "rewards_sum": 266.45,
       "step": 101,
       "ts_ms": 1712412368154
     },
     {
       "compromised_hosts": 12,
-      "damage_score": 18.1,
+      "damage_score": 16.5,
       "detection_count": 67,
-      "rewards_sum": 261.3,
+      "rewards_sum": 265.3,
       "step": 102,
       "ts_ms": 1712412368274
     },
     {
       "compromised_hosts": 12,
-      "damage_score": 17.65,
+      "damage_score": 16.05,
       "detection_count": 68,
-      "rewards_sum": 266.15,
+      "rewards_sum": 270.15,
       "step": 103,
       "ts_ms": 1712412368394
     },
     {
       "compromised_hosts": 12,
-      "damage_score": 17.2,
+      "damage_score": 15.6,
       "detection_count": 68,
-      "rewards_sum": 269.0,
+      "rewards_sum": 273.0,
       "step": 104,
       "ts_ms": 1712412368514
     },
     {
       "compromised_hosts": 12,
-      "damage_score": 18.35,
+      "damage_score": 16.75,
       "detection_count": 68,
-      "rewards_sum": 267.85,
+      "rewards_sum": 271.85,
       "step": 105,
       "ts_ms": 1712412368634
     },
     {
       "compromised_hosts": 12,
-      "damage_score": 17.9,
+      "damage_score": 16.3,
       "detection_count": 69,
-      "rewards_sum": 272.7,
+      "rewards_sum": 276.7,
       "step": 106,
       "ts_ms": 1712412368754
     },
     {
       "compromised_hosts": 12,
-      "damage_score": 17.45,
+      "damage_score": 15.85,
       "detection_count": 70,
-      "rewards_sum": 277.55,
+      "rewards_sum": 281.55,
       "step": 107,
       "ts_ms": 1712412368874
     },
     {
       "compromised_hosts": 12,
-      "damage_score": 19.2,
+      "damage_score": 17.6,
       "detection_count": 71,
-      "rewards_sum": 276.4,
+      "rewards_sum": 280.4,
       "step": 108,
       "ts_ms": 1712412368994
     },
     {
       "compromised_hosts": 12,
-      "damage_score": 18.75,
+      "damage_score": 17.15,
       "detection_count": 71,
-      "rewards_sum": 279.25,
+      "rewards_sum": 283.25,
       "step": 109,
       "ts_ms": 1712412369114
     },
     {
       "compromised_hosts": 12,
-      "damage_score": 18.3,
+      "damage_score": 16.7,
       "detection_count": 72,
-      "rewards_sum": 284.1,
+      "rewards_sum": 288.1,
       "step": 110,
       "ts_ms": 1712412369234
     },
     {
       "compromised_hosts": 12,
-      "damage_score": 17.85,
+      "damage_score": 16.25,
       "detection_count": 73,
-      "rewards_sum": 288.95,
+      "rewards_sum": 292.95,
       "step": 111,
       "ts_ms": 1712412369354
     },
     {
       "compromised_hosts": 12,
-      "damage_score": 19.0,
+      "damage_score": 17.4,
       "detection_count": 73,
-      "rewards_sum": 287.8,
+      "rewards_sum": 291.8,
       "step": 112,
       "ts_ms": 1712412369474
     },
     {
       "compromised_hosts": 12,
-      "damage_score": 20.15,
+      "damage_score": 18.55,
       "detection_count": 74,
-      "rewards_sum": 288.65,
+      "rewards_sum": 292.65,
       "step": 113,
       "ts_ms": 1712412369594
     },
     {
       "compromised_hosts": 12,
-      "damage_score": 21.9,
+      "damage_score": 20.3,
       "detection_count": 75,
-      "rewards_sum": 287.5,
+      "rewards_sum": 291.5,
       "step": 114,
       "ts_ms": 1712412369714
     },
     {
       "compromised_hosts": 12,
-      "damage_score": 21.45,
+      "damage_score": 19.85,
       "detection_count": 76,
-      "rewards_sum": 292.35,
+      "rewards_sum": 296.35,
       "step": 115,
       "ts_ms": 1712412369834
     },
     {
       "compromised_hosts": 12,
-      "damage_score": 21.0,
+      "damage_score": 19.4,
       "detection_count": 76,
-      "rewards_sum": 295.2,
+      "rewards_sum": 299.2,
       "step": 116,
       "ts_ms": 1712412369954
     },
     {
       "compromised_hosts": 12,
-      "damage_score": 20.55,
+      "damage_score": 18.95,
       "detection_count": 76,
-      "rewards_sum": 298.05,
+      "rewards_sum": 302.05,
       "step": 117,
       "ts_ms": 1712412370074
     },
     {
       "compromised_hosts": 12,
-      "damage_score": 20.1,
+      "damage_score": 18.5,
       "detection_count": 77,
-      "rewards_sum": 302.9,
+      "rewards_sum": 306.9,
       "step": 118,
       "ts_ms": 1712412370194
     },
     {
       "compromised_hosts": 12,
-      "damage_score": 19.65,
+      "damage_score": 18.05,
       "detection_count": 78,
-      "rewards_sum": 307.75,
+      "rewards_sum": 311.75,
       "step": 119,
       "ts_ms": 1712412370314
     },
     {
       "compromised_hosts": 12,
-      "damage_score": 19.2,
+      "damage_score": 17.6,
       "detection_count": 79,
-      "rewards_sum": 312.6,
+      "rewards_sum": 316.6,
       "step": 120,
       "ts_ms": 1712412370434
     },
     {
       "compromised_hosts": 12,
-      "damage_score": 18.75,
+      "damage_score": 17.15,
       "detection_count": 80,
-      "rewards_sum": 317.45,
+      "rewards_sum": 321.45,
       "step": 121,
       "ts_ms": 1712412370554
     },
     {
       "compromised_hosts": 12,
-      "damage_score": 18.3,
+      "damage_score": 16.7,
       "detection_count": 81,
-      "rewards_sum": 322.3,
+      "rewards_sum": 326.3,
       "step": 122,
       "ts_ms": 1712412370674
     },
     {
       "compromised_hosts": 12,
-      "damage_score": 19.45,
+      "damage_score": 17.85,
       "detection_count": 81,
-      "rewards_sum": 321.15,
+      "rewards_sum": 325.15,
       "step": 123,
       "ts_ms": 1712412370794
     },
     {
       "compromised_hosts": 12,
-      "damage_score": 19.0,
+      "damage_score": 17.4,
       "detection_count": 82,
-      "rewards_sum": 326.0,
+      "rewards_sum": 330.0,
       "step": 124,
       "ts_ms": 1712412370914
     },
     {
       "compromised_hosts": 12,
-      "damage_score": 20.15,
+      "damage_score": 18.55,
       "detection_count": 83,
-      "rewards_sum": 326.85,
+      "rewards_sum": 330.85,
       "step": 125,
       "ts_ms": 1712412371034
     },
     {
       "compromised_hosts": 12,
-      "damage_score": 19.7,
+      "damage_score": 18.1,
       "detection_count": 84,
-      "rewards_sum": 331.7,
+      "rewards_sum": 335.7,
       "step": 126,
       "ts_ms": 1712412371154
     },
     {
       "compromised_hosts": 12,
-      "damage_score": 19.25,
+      "damage_score": 17.65,
       "detection_count": 85,
-      "rewards_sum": 336.55,
+      "rewards_sum": 340.55,
       "step": 127,
       "ts_ms": 1712412371274
     },
     {
       "compromised_hosts": 12,
-      "damage_score": 18.8,
+      "damage_score": 17.2,
       "detection_count": 86,
-      "rewards_sum": 341.4,
+      "rewards_sum": 345.4,
       "step": 128,
       "ts_ms": 1712412371394
     },
     {
       "compromised_hosts": 12,
-      "damage_score": 19.95,
+      "damage_score": 16.75,
       "detection_count": 86,
-      "rewards_sum": 340.25,
+      "rewards_sum": 348.25,
       "step": 129,
       "ts_ms": 1712412371514
     },
     {
       "compromised_hosts": 12,
-      "damage_score": 19.5,
+      "damage_score": 16.3,
       "detection_count": 87,
-      "rewards_sum": 345.1,
+      "rewards_sum": 353.1,
       "step": 130,
       "ts_ms": 1712412371634
     },
     {
       "compromised_hosts": 13,
-      "damage_score": 20.65,
+      "damage_score": 17.45,
       "detection_count": 88,
-      "rewards_sum": 345.95,
+      "rewards_sum": 353.95,
       "step": 131,
       "ts_ms": 1712412371754
     },
     {
       "compromised_hosts": 13,
-      "damage_score": 22.4,
+      "damage_score": 19.2,
       "detection_count": 88,
-      "rewards_sum": 342.8,
+      "rewards_sum": 350.8,
       "step": 132,
       "ts_ms": 1712412371874
     },
     {
       "compromised_hosts": 13,
-      "damage_score": 21.95,
+      "damage_score": 18.75,
       "detection_count": 88,
-      "rewards_sum": 345.65,
+      "rewards_sum": 353.65,
       "step": 133,
       "ts_ms": 1712412371994
     },
     {
       "compromised_hosts": 13,
-      "damage_score": 21.5,
+      "damage_score": 18.3,
       "detection_count": 88,
-      "rewards_sum": 348.5,
+      "rewards_sum": 356.5,
       "step": 134,
       "ts_ms": 1712412372114
     },
     {
       "compromised_hosts": 13,
-      "damage_score": 22.65,
+      "damage_score": 19.45,
       "detection_count": 89,
-      "rewards_sum": 349.35,
+      "rewards_sum": 357.35,
       "step": 135,
       "ts_ms": 1712412372234
     },
     {
       "compromised_hosts": 13,
-      "damage_score": 23.8,
+      "damage_score": 20.6,
       "detection_count": 90,
-      "rewards_sum": 350.2,
+      "rewards_sum": 358.2,
       "step": 136,
       "ts_ms": 1712412372354
     },
     {
       "compromised_hosts": 13,
-      "damage_score": 24.95,
+      "damage_score": 21.75,
       "detection_count": 91,
-      "rewards_sum": 351.05,
+      "rewards_sum": 359.05,
       "step": 137,
       "ts_ms": 1712412372474
     },
     {
       "compromised_hosts": 13,
-      "damage_score": 24.5,
+      "damage_score": 21.3,
       "detection_count": 92,
-      "rewards_sum": 355.9,
+      "rewards_sum": 363.9,
       "step": 138,
       "ts_ms": 1712412372594
     },
     {
       "compromised_hosts": 13,
-      "damage_score": 24.05,
+      "damage_score": 20.85,
       "detection_count": 93,
-      "rewards_sum": 360.75,
+      "rewards_sum": 368.75,
       "step": 139,
       "ts_ms": 1712412372714
     },
     {
       "compromised_hosts": 13,
-      "damage_score": 23.6,
+      "damage_score": 20.4,
       "detection_count": 94,
-      "rewards_sum": 365.6,
+      "rewards_sum": 373.6,
       "step": 140,
       "ts_ms": 1712412372834
     },
     {
       "compromised_hosts": 14,
-      "damage_score": 24.75,
+      "damage_score": 21.55,
       "detection_count": 95,
-      "rewards_sum": 366.45,
+      "rewards_sum": 374.45,
       "step": 141,
       "ts_ms": 1712412372954
     },
     {
       "compromised_hosts": 14,
-      "damage_score": 24.3,
+      "damage_score": 21.1,
       "detection_count": 95,
-      "rewards_sum": 369.3,
+      "rewards_sum": 377.3,
       "step": 142,
       "ts_ms": 1712412373074
     },
     {
       "compromised_hosts": 14,
-      "damage_score": 23.85,
+      "damage_score": 20.65,
       "detection_count": 96,
-      "rewards_sum": 374.15,
+      "rewards_sum": 382.15,
       "step": 143,
       "ts_ms": 1712412373194
     },
     {
       "compromised_hosts": 14,
-      "damage_score": 25.6,
+      "damage_score": 22.4,
       "detection_count": 96,
-      "rewards_sum": 371.0,
+      "rewards_sum": 379.0,
       "step": 144,
       "ts_ms": 1712412373314
     },
     {
       "compromised_hosts": 14,
-      "damage_score": 25.15,
+      "damage_score": 21.95,
       "detection_count": 97,
-      "rewards_sum": 375.85,
+      "rewards_sum": 383.85,
       "step": 145,
       "ts_ms": 1712412373434
     },
     {
       "compromised_hosts": 14,
-      "damage_score": 24.7,
+      "damage_score": 21.5,
       "detection_count": 98,
-      "rewards_sum": 380.7,
+      "rewards_sum": 388.7,
       "step": 146,
       "ts_ms": 1712412373554
     },
     {
       "compromised_hosts": 14,
-      "damage_score": 24.25,
+      "damage_score": 21.05,
       "detection_count": 98,
-      "rewards_sum": 383.55,
+      "rewards_sum": 391.55,
       "step": 147,
       "ts_ms": 1712412373674
     },
     {
       "compromised_hosts": 14,
-      "damage_score": 23.8,
+      "damage_score": 20.6,
       "detection_count": 99,
-      "rewards_sum": 388.4,
+      "rewards_sum": 396.4,
       "step": 148,
       "ts_ms": 1712412373794
     },
     {
       "compromised_hosts": 14,
-      "damage_score": 24.95,
+      "damage_score": 21.75,
       "detection_count": 100,
-      "rewards_sum": 389.25,
+      "rewards_sum": 397.25,
       "step": 149,
       "ts_ms": 1712412373914
     },
     {
       "compromised_hosts": 14,
-      "damage_score": 26.7,
+      "damage_score": 23.5,
       "detection_count": 101,
-      "rewards_sum": 388.1,
+      "rewards_sum": 396.1,
       "step": 150,
       "ts_ms": 1712412374034
     },
     {
       "compromised_hosts": 14,
-      "damage_score": 26.25,
+      "damage_score": 23.05,
       "detection_count": 102,
-      "rewards_sum": 392.95,
+      "rewards_sum": 400.95,
       "step": 151,
       "ts_ms": 1712412374154
     },
     {
       "compromised_hosts": 14,
-      "damage_score": 25.8,
+      "damage_score": 22.6,
       "detection_count": 103,
-      "rewards_sum": 397.8,
+      "rewards_sum": 405.8,
       "step": 152,
       "ts_ms": 1712412374274
     },
     {
       "compromised_hosts": 14,
-      "damage_score": 26.95,
+      "damage_score": 23.75,
       "detection_count": 103,
-      "rewards_sum": 396.65,
+      "rewards_sum": 404.65,
       "step": 153,
       "ts_ms": 1712412374394
     },
     {
       "compromised_hosts": 14,
-      "damage_score": 28.1,
+      "damage_score": 24.9,
       "detection_count": 104,
-      "rewards_sum": 397.5,
+      "rewards_sum": 405.5,
       "step": 154,
       "ts_ms": 1712412374514
     },
     {
       "compromised_hosts": 14,
-      "damage_score": 27.65,
+      "damage_score": 24.45,
       "detection_count": 105,
-      "rewards_sum": 402.35,
+      "rewards_sum": 410.35,
       "step": 155,
       "ts_ms": 1712412374634
     },
     {
       "compromised_hosts": 14,
-      "damage_score": 29.4,
+      "damage_score": 26.2,
       "detection_count": 106,
-      "rewards_sum": 401.2,
+      "rewards_sum": 409.2,
       "step": 156,
       "ts_ms": 1712412374754
     },
     {
       "compromised_hosts": 14,
-      "damage_score": 28.95,
+      "damage_score": 25.75,
       "detection_count": 107,
-      "rewards_sum": 406.05,
+      "rewards_sum": 414.05,
       "step": 157,
       "ts_ms": 1712412374874
     },
     {
       "compromised_hosts": 14,
-      "damage_score": 28.5,
+      "damage_score": 25.3,
       "detection_count": 107,
-      "rewards_sum": 408.9,
+      "rewards_sum": 416.9,
       "step": 158,
       "ts_ms": 1712412374994
     },
     {
       "compromised_hosts": 14,
-      "damage_score": 29.65,
+      "damage_score": 24.85,
       "detection_count": 108,
-      "rewards_sum": 409.75,
+      "rewards_sum": 421.75,
       "step": 159,
       "ts_ms": 1712412375114
     },
     {
       "compromised_hosts": 14,
-      "damage_score": 30.8,
+      "damage_score": 26.0,
       "detection_count": 109,
-      "rewards_sum": 410.6,
+      "rewards_sum": 422.6,
       "step": 160,
       "ts_ms": 1712412375234
     },
     {
       "compromised_hosts": 14,
-      "damage_score": 31.95,
+      "damage_score": 27.15,
       "detection_count": 110,
-      "rewards_sum": 411.45,
+      "rewards_sum": 423.45,
       "step": 161,
       "ts_ms": 1712412375354
     },
     {
       "compromised_hosts": 14,
-      "damage_score": 33.7,
+      "damage_score": 28.9,
       "detection_count": 111,
-      "rewards_sum": 410.3,
+      "rewards_sum": 422.3,
       "step": 162,
       "ts_ms": 1712412375474
     },
     {
       "compromised_hosts": 14,
-      "damage_score": 33.25,
+      "damage_score": 28.45,
       "detection_count": 112,
-      "rewards_sum": 415.15,
+      "rewards_sum": 427.15,
       "step": 163,
       "ts_ms": 1712412375594
     },
     {
       "compromised_hosts": 14,
-      "damage_score": 32.8,
+      "damage_score": 28.0,
       "detection_count": 113,
-      "rewards_sum": 420.0,
+      "rewards_sum": 432.0,
       "step": 164,
       "ts_ms": 1712412375714
     },
     {
       "compromised_hosts": 14,
-      "damage_score": 32.35,
+      "damage_score": 27.55,
       "detection_count": 114,
-      "rewards_sum": 424.85,
+      "rewards_sum": 436.85,
       "step": 165,
       "ts_ms": 1712412375834
     },
     {
       "compromised_hosts": 14,
-      "damage_score": 31.9,
+      "damage_score": 27.1,
       "detection_count": 115,
-      "rewards_sum": 429.7,
+      "rewards_sum": 441.7,
       "step": 166,
       "ts_ms": 1712412375954
     },
     {
       "compromised_hosts": 14,
-      "damage_score": 31.45,
+      "damage_score": 26.65,
       "detection_count": 115,
-      "rewards_sum": 432.55,
+      "rewards_sum": 444.55,
       "step": 167,
       "ts_ms": 1712412376074
     },
     {
       "compromised_hosts": 14,
-      "damage_score": 31.0,
+      "damage_score": 26.2,
       "detection_count": 116,
-      "rewards_sum": 437.4,
+      "rewards_sum": 449.4,
       "step": 168,
       "ts_ms": 1712412376194
     },
     {
       "compromised_hosts": 14,
-      "damage_score": 30.55,
+      "damage_score": 25.75,
       "detection_count": 117,
-      "rewards_sum": 442.25,
+      "rewards_sum": 454.25,
       "step": 169,
       "ts_ms": 1712412376314
     },
     {
       "compromised_hosts": 14,
-      "damage_score": 30.1,
+      "damage_score": 25.3,
       "detection_count": 118,
-      "rewards_sum": 447.1,
+      "rewards_sum": 459.1,
       "step": 170,
       "ts_ms": 1712412376434
     },
     {
       "compromised_hosts": 14,
-      "damage_score": 29.65,
+      "damage_score": 24.85,
       "detection_count": 118,
-      "rewards_sum": 449.95,
+      "rewards_sum": 461.95,
       "step": 171,
       "ts_ms": 1712412376554
     },
     {
       "compromised_hosts": 14,
-      "damage_score": 30.8,
+      "damage_score": 26.0,
       "detection_count": 119,
-      "rewards_sum": 450.8,
+      "rewards_sum": 462.8,
       "step": 172,
       "ts_ms": 1712412376674
     },
     {
       "compromised_hosts": 14,
-      "damage_score": 30.35,
+      "damage_score": 25.55,
       "detection_count": 120,
-      "rewards_sum": 455.65,
+      "rewards_sum": 467.65,
       "step": 173,
       "ts_ms": 1712412376794
     },
     {
       "compromised_hosts": 14,
-      "damage_score": 32.1,
+      "damage_score": 27.3,
       "detection_count": 121,
-      "rewards_sum": 454.5,
+      "rewards_sum": 466.5,
       "step": 174,
       "ts_ms": 1712412376914
     },
     {
       "compromised_hosts": 14,
-      "damage_score": 31.65,
+      "damage_score": 26.85,
       "detection_count": 122,
-      "rewards_sum": 459.35,
+      "rewards_sum": 471.35,
       "step": 175,
       "ts_ms": 1712412377034
     },
     {
       "compromised_hosts": 14,
-      "damage_score": 31.2,
+      "damage_score": 26.4,
       "detection_count": 122,
-      "rewards_sum": 462.2,
+      "rewards_sum": 474.2,
       "step": 176,
       "ts_ms": 1712412377154
     },
     {
       "compromised_hosts": 14,
-      "damage_score": 32.35,
+      "damage_score": 27.55,
       "detection_count": 123,
-      "rewards_sum": 463.05,
+      "rewards_sum": 475.05,
       "step": 177,
       "ts_ms": 1712412377274
     },
     {
       "compromised_hosts": 14,
-      "damage_score": 33.5,
+      "damage_score": 28.7,
       "detection_count": 124,
-      "rewards_sum": 463.9,
+      "rewards_sum": 475.9,
       "step": 178,
       "ts_ms": 1712412377394
     },
     {
       "compromised_hosts": 14,
-      "damage_score": 34.65,
+      "damage_score": 28.25,
       "detection_count": 125,
-      "rewards_sum": 464.75,
+      "rewards_sum": 480.75,
       "step": 179,
       "ts_ms": 1712412377514
     },
     {
       "compromised_hosts": 14,
-      "damage_score": 36.4,
+      "damage_score": 30.0,
       "detection_count": 126,
-      "rewards_sum": 463.6,
+      "rewards_sum": 479.6,
       "step": 180,
       "ts_ms": 1712412377634
     },
     {
       "compromised_hosts": 14,
-      "damage_score": 35.95,
+      "damage_score": 29.55,
       "detection_count": 126,
-      "rewards_sum": 466.45,
+      "rewards_sum": 482.45,
       "step": 181,
       "ts_ms": 1712412377754
     },
     {
       "compromised_hosts": 14,
-      "damage_score": 35.5,
+      "damage_score": 29.1,
       "detection_count": 126,
-      "rewards_sum": 469.3,
+      "rewards_sum": 485.3,
       "step": 182,
       "ts_ms": 1712412377874
     },
     {
       "compromised_hosts": 14,
-      "damage_score": 35.05,
+      "damage_score": 28.65,
       "detection_count": 126,
-      "rewards_sum": 472.15,
+      "rewards_sum": 488.15,
       "step": 183,
       "ts_ms": 1712412377994
     },
     {
       "compromised_hosts": 14,
-      "damage_score": 36.2,
+      "damage_score": 29.8,
       "detection_count": 126,
-      "rewards_sum": 471.0,
+      "rewards_sum": 487.0,
       "step": 184,
       "ts_ms": 1712412378114
     },
     {
       "compromised_hosts": 14,
-      "damage_score": 35.75,
+      "damage_score": 29.35,
       "detection_count": 127,
-      "rewards_sum": 475.85,
+      "rewards_sum": 491.85,
       "step": 185,
       "ts_ms": 1712412378234
     },
     {
       "compromised_hosts": 14,
-      "damage_score": 35.3,
+      "damage_score": 28.9,
       "detection_count": 128,
-      "rewards_sum": 480.7,
+      "rewards_sum": 496.7,
       "step": 186,
       "ts_ms": 1712412378354
     },
     {
       "compromised_hosts": 14,
-      "damage_score": 34.85,
+      "damage_score": 28.45,
       "detection_count": 129,
-      "rewards_sum": 485.55,
+      "rewards_sum": 501.55,
       "step": 187,
       "ts_ms": 1712412378474
     },
     {
       "compromised_hosts": 14,
-      "damage_score": 34.4,
+      "damage_score": 28.0,
       "detection_count": 130,
-      "rewards_sum": 490.4,
+      "rewards_sum": 506.4,
       "step": 188,
       "ts_ms": 1712412378594
     },
     {
       "compromised_hosts": 14,
-      "damage_score": 33.95,
+      "damage_score": 27.55,
       "detection_count": 131,
-      "rewards_sum": 495.25,
+      "rewards_sum": 511.25,
       "step": 189,
       "ts_ms": 1712412378714
     },
     {
       "compromised_hosts": 14,
-      "damage_score": 33.5,
+      "damage_score": 27.1,
       "detection_count": 132,
-      "rewards_sum": 500.1,
+      "rewards_sum": 516.1,
       "step": 190,
       "ts_ms": 1712412378834
     },
     {
       "compromised_hosts": 14,
-      "damage_score": 34.65,
+      "damage_score": 26.65,
       "detection_count": 133,
-      "rewards_sum": 500.95,
+      "rewards_sum": 520.95,
       "step": 191,
       "ts_ms": 1712412378954
     },
     {
       "compromised_hosts": 14,
-      "damage_score": 36.4,
+      "damage_score": 28.4,
       "detection_count": 134,
-      "rewards_sum": 499.8,
+      "rewards_sum": 519.8,
       "step": 192,
       "ts_ms": 1712412379074
     },
     {
       "compromised_hosts": 14,
-      "damage_score": 35.95,
+      "damage_score": 27.95,
       "detection_count": 135,
-      "rewards_sum": 504.65,
+      "rewards_sum": 524.65,
       "step": 193,
       "ts_ms": 1712412379194
     },
     {
       "compromised_hosts": 14,
-      "damage_score": 35.5,
+      "damage_score": 27.5,
       "detection_count": 136,
-      "rewards_sum": 509.5,
+      "rewards_sum": 529.5,
       "step": 194,
       "ts_ms": 1712412379314
     },
     {
       "compromised_hosts": 14,
-      "damage_score": 36.65,
+      "damage_score": 28.65,
       "detection_count": 137,
-      "rewards_sum": 510.35,
+      "rewards_sum": 530.35,
       "step": 195,
       "ts_ms": 1712412379434
     },
     {
       "compromised_hosts": 14,
-      "damage_score": 36.2,
+      "damage_score": 28.2,
       "detection_count": 138,
-      "rewards_sum": 515.2,
+      "rewards_sum": 535.2,
       "step": 196,
       "ts_ms": 1712412379554
     },
     {
-      "compromised_hosts": 15,
-      "damage_score": 37.35,
+      "compromised_hosts": 14,
+      "damage_score": 27.75,
       "detection_count": 138,
-      "rewards_sum": 514.05,
+      "rewards_sum": 538.05,
       "step": 197,
       "ts_ms": 1712412379674
     },
     {
-      "compromised_hosts": 15,
-      "damage_score": 39.1,
+      "compromised_hosts": 14,
+      "damage_score": 29.5,
       "detection_count": 139,
-      "rewards_sum": 512.9,
+      "rewards_sum": 536.9,
       "step": 198,
       "ts_ms": 1712412379794
     },
     {
-      "compromised_hosts": 15,
-      "damage_score": 38.65,
+      "compromised_hosts": 14,
+      "damage_score": 29.05,
       "detection_count": 140,
-      "rewards_sum": 517.75,
+      "rewards_sum": 541.75,
       "step": 199,
       "ts_ms": 1712412379914
     },
     {
-      "compromised_hosts": 15,
-      "damage_score": 38.2,
+      "compromised_hosts": 14,
+      "damage_score": 28.6,
       "detection_count": 140,
-      "rewards_sum": 520.6,
+      "rewards_sum": 544.6,
       "step": 200,
       "ts_ms": 1712412380034
     }
