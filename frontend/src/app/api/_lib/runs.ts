@@ -5,6 +5,7 @@ export type LocalReplayListItem = {
   id: string;
   run_id: string;
   replay_id: string;
+  scenario_id?: string;
   created_at?: string;
   source: "local_runs";
 };
@@ -13,6 +14,7 @@ type LocalReplayRef = {
   id: string;
   runId: string;
   replayId: string;
+  scenarioId?: string;
   replayDir: string;
   eventsPath?: string;
   metricsPath?: string;
@@ -143,13 +145,16 @@ async function discoverRunReplayRefs(): Promise<LocalReplayRef[]> {
           const replayDir = path.join(replayRoot, replayId);
           const replayManifestPath = path.join(replayDir, "manifest.json");
           const replayManifest = await safeReadJson(replayManifestPath);
+          const replayManifestRecord = toRecord(replayManifest);
           const replayCreatedAt =
-            toString(toRecord(replayManifest)?.created_at) ?? runCreatedAt;
+            toString(replayManifestRecord?.created_at) ?? runCreatedAt;
+          const scenarioId = toString(replayManifestRecord?.scenario_id);
 
           refs.push({
             id: buildReplayId(runId, replayId),
             runId,
             replayId,
+            scenarioId,
             replayDir,
             createdAt: replayCreatedAt,
             eventsPath:
@@ -178,17 +183,21 @@ async function discoverLegacyReplayRefs(): Promise<LocalReplayRef[]> {
 
     for (const replayId of replayIds) {
       const replayDir = path.join(legacyRoot, replayId);
+      const replayManifestPath = path.join(replayDir, "manifest.json");
+      const replayManifest = await safeReadJson(replayManifestPath);
+      const scenarioId = toString(toRecord(replayManifest)?.scenario_id);
       refs.push({
         id: buildReplayId("legacy", replayId),
         runId: "legacy",
         replayId,
+        scenarioId,
         replayDir,
         eventsPath:
           (await pathIfExists(path.join(replayDir, "events.jsonl"))) ??
           (await pathIfExists(path.join(replayDir, "events.json"))),
         metricsPath: await pathIfExists(path.join(replayDir, "metrics.json")),
         topologyPath: await pathIfExists(path.join(replayDir, "topology_snapshots.json")),
-        manifestPath: await pathIfExists(path.join(replayDir, "manifest.json")),
+        manifestPath: await pathIfExists(replayManifestPath),
       });
     }
   }
@@ -257,6 +266,15 @@ async function parseEventsFile(filePath: string): Promise<unknown[]> {
   return extractRawEvents(payload);
 }
 
+async function parseJsonFile(filePath: string): Promise<unknown | null> {
+  try {
+    const raw = await fs.readFile(filePath, "utf8");
+    return JSON.parse(raw) as unknown;
+  } catch {
+    return null;
+  }
+}
+
 function toProjectRelative(filePath?: string): string | undefined {
   if (!filePath) return undefined;
   return path.relative(process.cwd(), filePath);
@@ -268,6 +286,7 @@ export async function listLocalReplays(): Promise<LocalReplayListItem[]> {
     id: ref.id,
     run_id: ref.runId,
     replay_id: ref.replayId,
+    scenario_id: ref.scenarioId,
     created_at: ref.createdAt,
     source: "local_runs",
   }));
@@ -286,6 +305,7 @@ export async function loadLocalReplayBundle(
 
   const events = match.eventsPath ? await parseEventsFile(match.eventsPath) : [];
   const manifest = match.manifestPath ? await safeReadJson(match.manifestPath) : null;
+  const topology = match.topologyPath ? await parseJsonFile(match.topologyPath) : null;
 
   return {
     id: match.id,
@@ -294,6 +314,7 @@ export async function loadLocalReplayBundle(
     created_at: match.createdAt,
     source: "local_runs",
     events,
+    topology: topology ?? undefined,
     manifest: manifest ?? undefined,
     artifacts: {
       events_jsonl: toProjectRelative(match.eventsPath),
