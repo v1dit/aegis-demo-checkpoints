@@ -1,8 +1,10 @@
 {
   "checkpoint_id": "ckpt_blue_main_001",
-  "run_id": "train_20260404_073715_001",
+  "run_id": "run_20260404_080336_001",
   "seed": 42,
-  "policy_bias": 0.8769,
+  "parent_run_id": "run_20260404_075919_001",
+  "parent_checkpoint": "ckpt_blue_main_001",
+  "policy_bias": 0.9212,
   "config_profile": "weekend_v1",
   "gpu_ids": [
     5,
