@@ -35,6 +35,8 @@ class SimulationMetrics:
     attack_success_rate: float
     rewards_sum: float
     exfiltration_count: int
+    exfiltration_attempts: int
+    critical_asset_compromise_rate: float
 
 
 @dataclass
@@ -110,6 +112,7 @@ def simulate_episode(
     cumulative_damage = 0.0
     rewards_sum = 0.0
     exfiltration_count = 0
+    exfiltration_attempts = 0
     detection_latencies: list[float] = []
     prevention_events = 0
     repeat_penalty_events = 0
@@ -118,6 +121,12 @@ def simulate_episode(
     detect_counter = 1
     recent_red_target = hosts[0]
     repeat_tracker = ActionRepeatTracker()
+    critical_hosts = {
+        node.node_id
+        for node in topology.nodes
+        if node.zone in {"data", "identity", "saas"}
+        or node.asset_type in {"idp", "crm_saas", "data_store"}
+    }
 
     for step in range(1, horizon + 1):
         red_decision = red_policy.decide(step, hosts, services_by_host)
@@ -169,6 +178,7 @@ def simulate_episode(
                 )
 
         if red_decision.action_type == "exfiltrate_data":
+            exfiltration_attempts += 1
             source = runtime[red_decision.source_host]
             exfil_success = source.compromised and not source.isolated
             if exfil_success:
@@ -411,6 +421,10 @@ def simulate_episode(
         else float(clock.step_ms * horizon)
     )
     attack_success_rate = attack_successes / float(horizon)
+    compromised_critical_hosts = sum(
+        1 for host in critical_hosts if runtime.get(host) and runtime[host].compromised
+    )
+    critical_asset_compromise_rate = compromised_critical_hosts / float(max(1, len(critical_hosts)))
 
     ordered_events = [
         item.model_dump(mode="json")
@@ -427,6 +441,8 @@ def simulate_episode(
         attack_success_rate=round(attack_success_rate, 4),
         rewards_sum=round(rewards_sum, 4),
         exfiltration_count=exfiltration_count,
+        exfiltration_attempts=exfiltration_attempts,
+        critical_asset_compromise_rate=round(critical_asset_compromise_rate, 4),
     )
 
     return SimulationResult(
