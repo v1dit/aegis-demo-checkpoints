@@ -11,7 +11,14 @@ class Settings(BaseSettings):
     replay_dir: Path = Path("artifacts/replays")
     checkpoint_dir: Path = Path("artifacts/checkpoints")
     eval_report_dir: Path = Path("artifacts/eval_reports")
-    use_rllib: bool = False
+    use_rllib: bool = True
+    ppo_lr: float = 0.0003
+    ppo_gamma: float = 0.99
+    ppo_train_batch_size: int = 4000
+    ppo_num_rollout_workers: int = 0
+    ppo_horizon: int = 200
+    ppo_scenario_id: str = "scenario_unseen_web_rce"
+    red_stochastic_probability: float = 0.3
 
     model_config = SettingsConfigDict(
         env_file=".env",
