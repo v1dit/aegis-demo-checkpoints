@@ -2,8 +2,9 @@ from __future__ import annotations
 
 import random
 from dataclasses import dataclass
-from typing import Literal
+from typing import Any, Literal
 
+from backend.app.core.runs import read_checkpoint_payload
 from backend.app.env.catalog import MITRE_TACTIC_BY_ACTION
 from backend.app.env.clock import StepClock
 from backend.app.env.topology import generate_topology
@@ -66,6 +67,8 @@ def simulate_episode(
     checkpoint_id: str,
     defender_mode: Literal["none", "rule", "ppo"],
     checkpoint_bias: float | None = None,
+    checkpoint_payload: dict[str, Any] | None = None,
+    run_id: str | None = None,
     horizon: int = 200,
 ) -> SimulationResult:
     topology = generate_topology(seed=seed, scenario_id=scenario_id)
@@ -75,11 +78,20 @@ def simulate_episode(
     runtime = {host: _HostRuntime() for host in hosts}
     edge_status = {edge.edge_id: edge.status for edge in topology.edges}
 
+    resolved_payload = checkpoint_payload
+    if defender_mode == "ppo" and resolved_payload is None:
+        resolved_payload = read_checkpoint_payload(checkpoint_id=checkpoint_id, run_id=run_id)
+    legacy_checkpoint_bias = checkpoint_bias
+    if legacy_checkpoint_bias is None and resolved_payload and "policy_bias" in resolved_payload:
+        legacy_checkpoint_bias = float(resolved_payload["policy_bias"])
+
     red_policy = ScriptedRedPolicy(seed=seed)
     blue_policy = policy_for(
         mode=defender_mode,
         seed=seed + 17,
-        checkpoint_bias=checkpoint_bias,
+        checkpoint_bias=legacy_checkpoint_bias,
+        checkpoint_payload=resolved_payload,
+        horizon=horizon,
     )
     clock = StepClock(start_ts_ms=1712412345000 + (seed * 11))
 
@@ -117,7 +129,9 @@ def simulate_episode(
 
         exploit_probability = 0.55 - exploit_penalty
         if defender_mode == "ppo":
-            exploit_probability -= 0.08 + (checkpoint_bias or 0.82) * 0.06
+            exploit_probability -= 0.08
+            if legacy_checkpoint_bias is not None:
+                exploit_probability -= legacy_checkpoint_bias * 0.06
         if defender_mode == "none":
             exploit_probability += 0.15
 
