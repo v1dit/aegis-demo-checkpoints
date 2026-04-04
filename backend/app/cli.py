@@ -2,14 +2,17 @@ from __future__ import annotations
 
 import argparse
 import time
-from pathlib import Path
 
-from backend.app.core.paths import (
-    CHECKPOINT_DIR,
-    EVAL_REPORT_DIR,
-    FIXTURES_DIR,
-    REPLAY_DIR,
-    ensure_artifact_dirs,
+from backend.app.core.paths import CHECKPOINT_DIR, FIXTURES_DIR, ensure_artifact_dirs
+from backend.app.core.runs import (
+    compute_improvement_delta,
+    get_active_run_id,
+    get_parent_kpis,
+    load_manifest,
+    mirror_eval_to_legacy,
+    run_stage_dirs,
+    set_active_run_id,
+    update_eval_manifest,
 )
 from backend.app.replay.packager import package_demo_replays, write_ws_mock_frames
 from backend.app.rl.eval import acceptance_gate_status, evaluate_checkpoint, write_eval_report
@@ -18,23 +21,31 @@ from backend.app.schemas.contracts import EvalRunRequest, TrainRunRequest
 from backend.app.schemas.fixtures import write_contract_fixtures
 
 
-def _latest_checkpoint_from_disk(checkpoint_dir: Path) -> str | None:
-    checkpoints = sorted(checkpoint_dir.glob("ckpt_blue_main_*.json"))
+def _latest_checkpoint_from_run(run_id: str | None) -> str | None:
+    if not run_id:
+        return None
+    run_dirs = run_stage_dirs(run_id)
+    checkpoints = sorted(run_dirs["train"].glob("ckpt_blue_main_*.json"))
     if not checkpoints:
         return None
     return checkpoints[-1].stem
 
 
-def _run_train() -> None:
+def _run_train(run_id: str | None, fresh_start: bool) -> str:
     request = TrainRunRequest(
         run_name="blue_train_main",
         seed=42,
         gpu_ids=[5, 6, 7],
         max_timesteps=3000000,
         config_profile="weekend_v1",
+        run_id=run_id,
+        fresh_start=fresh_start,
     )
-    run_id = start_training_job(request=request, checkpoint_dir=CHECKPOINT_DIR)
-    print(f"run_id={run_id}")
+    run_id, parent_info = start_training_job(request=request, checkpoint_dir=CHECKPOINT_DIR)
+    print(
+        f"run_id={run_id} parent_run_id={parent_info.parent_run_id} "
+        f"parent_checkpoint={parent_info.parent_checkpoint}"
+    )
 
     while True:
         status = get_train_status(run_id)
@@ -48,49 +59,91 @@ def _run_train() -> None:
         if status.status in {"completed", "failed"}:
             break
         time.sleep(0.25)
+    return run_id
 
 
-def _run_eval() -> None:
+def _run_eval(run_id: str | None) -> str:
+    resolved_run = run_id or get_active_run_id()
     checkpoint_id = (
         latest_completed_checkpoint()
-        or _latest_checkpoint_from_disk(CHECKPOINT_DIR)
+        or _latest_checkpoint_from_run(resolved_run)
         or "checkpoint_blue_demo_best"
     )
     request = EvalRunRequest(
         checkpoint_id=checkpoint_id,
         suite_id="heldout_suite_v1",
         seeds=[1001, 1002, 1003, 1004],
+        run_id=resolved_run,
     )
     eval_id = f"eval_cli_{int(time.time())}"
+    run_dirs = run_stage_dirs(resolved_run or get_active_run_id() or "run_adhoc")
     report = evaluate_checkpoint(
         eval_id=eval_id,
         checkpoint_id=request.checkpoint_id,
         suite_id=request.suite_id,
         seeds=request.seeds,
-        replay_root=REPLAY_DIR,
+        replay_root=run_dirs["replays"],
+        run_id=request.run_id,
     )
-    report_path = write_eval_report(report, EVAL_REPORT_DIR)
+    report_path = write_eval_report(report, run_dirs["eval"])
     gates = acceptance_gate_status(report)
+    if report_path.exists():
+        mirror_eval_to_legacy(report_path)
+    parent_run_id = None
+    try:
+        parent_run_id = load_manifest(resolved_run)["parent_run_id"] if resolved_run else None
+    except FileNotFoundError:
+        parent_run_id = None
+    delta = compute_improvement_delta(
+        report.kpis.model_dump(mode="json"),
+        get_parent_kpis(parent_run_id),
+    )
+    report.improvement_delta_vs_parent = delta
+    if resolved_run:
+        try:
+            update_eval_manifest(
+                resolved_run,
+                eval_id=eval_id,
+                status="completed",
+                report_path=str(report_path),
+                kpis=report.kpis.model_dump(mode="json"),
+                gates=gates,
+                improvement_delta=delta,
+            )
+        except FileNotFoundError:
+            pass
 
+    print(f"run_id={resolved_run}")
     print(f"eval_report={report_path}")
     print(f"kpis={report.kpis.model_dump(mode='json')}")
     print(f"acceptance_gates={gates}")
+    return resolved_run or "run_adhoc"
 
 
-def _package_replays() -> None:
-    checkpoint_id = latest_completed_checkpoint() or "checkpoint_blue_demo_best"
-    manifests = package_demo_replays(checkpoint_id=checkpoint_id, replay_root=REPLAY_DIR)
-    ws_fixture = write_ws_mock_frames(REPLAY_DIR, FIXTURES_DIR / "ws_mock_frames")
+def _package_replays(run_id: str | None = None) -> None:
+    resolved_run = run_id or get_active_run_id()
+    checkpoint_id = latest_completed_checkpoint() or _latest_checkpoint_from_run(resolved_run)
+    checkpoint_id = checkpoint_id or "checkpoint_blue_demo_best"
+    if resolved_run:
+        set_active_run_id(resolved_run)
+    run_dirs = run_stage_dirs(resolved_run or get_active_run_id() or "run_adhoc")
+    manifests = package_demo_replays(
+        checkpoint_id=checkpoint_id,
+        replay_root=run_dirs["replays"],
+        run_id=resolved_run,
+    )
+    ws_fixture = write_ws_mock_frames(run_dirs["replays"], FIXTURES_DIR / "ws_mock_frames")
     write_contract_fixtures(FIXTURES_DIR / "schema_examples")
 
+    print(f"run_id={resolved_run}")
     print(f"packaged={len(manifests)}")
     print(f"ws_fixture={ws_fixture}")
 
 
-def _demo() -> None:
-    _package_replays()
-    if not (EVAL_REPORT_DIR / "eval_report_latest.json").exists():
-        _run_eval()
+def _demo(run_id: str | None) -> None:
+    resolved_run = run_id or get_active_run_id()
+    _package_replays(resolved_run)
+    _run_eval(resolved_run)
     print(
         "Demo artifacts ready. Start API with: "
         "uv run uvicorn backend.app.main:app --host 0.0.0.0 --port 8000"
@@ -102,16 +155,18 @@ def main() -> None:
 
     parser = argparse.ArgumentParser(description="PantherHacks Track A CLI")
     parser.add_argument("command", choices=["train", "eval", "package-replays", "demo"])
+    parser.add_argument("--run-id", dest="run_id", default=None)
+    parser.add_argument("--fresh-start", action="store_true")
     args = parser.parse_args()
 
     if args.command == "train":
-        _run_train()
+        _run_train(run_id=args.run_id, fresh_start=args.fresh_start)
     elif args.command == "eval":
-        _run_eval()
+        _run_eval(run_id=args.run_id)
     elif args.command == "package-replays":
-        _package_replays()
+        _package_replays(run_id=args.run_id)
     elif args.command == "demo":
-        _demo()
+        _demo(run_id=args.run_id)
 
 
 if __name__ == "__main__":
