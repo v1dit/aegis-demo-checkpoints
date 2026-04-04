@@ -7,6 +7,7 @@ import orjson
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 
 from backend.app.core.paths import REPLAY_DIR
+from backend.app.core.runs import get_active_run_id, run_stage_dirs
 from backend.app.env.simulator import simulate_episode
 
 router = APIRouter(prefix="/stream", tags=["stream"])
@@ -55,7 +56,13 @@ async def live_stream(websocket: WebSocket, session_id: str) -> None:
 @router.websocket("/replay/{replay_id}")
 async def replay_stream(websocket: WebSocket, replay_id: str) -> None:
     await websocket.accept()
-    events_path = REPLAY_DIR / replay_id / "events.jsonl"
+    run_id = get_active_run_id()
+    if run_id:
+        events_path = run_stage_dirs(run_id)["replays"] / replay_id / "events.jsonl"
+        if not events_path.exists():
+            events_path = REPLAY_DIR / replay_id / "events.jsonl"
+    else:
+        events_path = REPLAY_DIR / replay_id / "events.jsonl"
 
     if not events_path.exists():
         await websocket.send_json(
