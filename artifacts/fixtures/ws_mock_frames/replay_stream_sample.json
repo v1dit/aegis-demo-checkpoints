@@ -7,7 +7,7 @@
     "action_type": "scan_host",
     "source_host": "host_01",
     "target_host": "host_09",
-    "target_service": "auth",
+    "target_service": "dns",
     "outcome": "blocked",
     "mitre_tactic": "Reconnaissance",
     "confidence": 0.97
@@ -56,7 +56,7 @@
     "action_type": "enumerate_service",
     "source_host": "host_02",
     "target_host": "host_11",
-    "target_service": "web",
+    "target_service": "api",
     "outcome": "blocked",
     "mitre_tactic": "Reconnaissance",
     "confidence": 0.76
@@ -95,7 +95,7 @@
     "action_type": "exploit_vulnerability",
     "source_host": "host_03",
     "target_host": "host_09",
-    "target_service": "web",
+    "target_service": "dns",
     "outcome": "blocked",
     "mitre_tactic": "Initial Access",
     "confidence": 0.93
@@ -144,7 +144,7 @@
     "action_type": "lateral_move",
     "source_host": "host_04",
     "target_host": "host_08",
-    "target_service": "queue",
+    "target_service": "dns",
     "outcome": "success",
     "mitre_tactic": "Lateral Movement",
     "confidence": 0.95
@@ -193,7 +193,7 @@
     "action_type": "privilege_escalate",
     "source_host": "host_05",
     "target_host": "host_09",
-    "target_service": "cache",
+    "target_service": "dns",
     "outcome": "blocked",
     "mitre_tactic": "Credential Access",
     "confidence": 0.96
@@ -242,7 +242,7 @@
     "action_type": "exfiltrate_data",
     "source_host": "host_06",
     "target_host": "host_03",
-    "target_service": "web",
+    "target_service": "db",
     "outcome": "blocked",
     "mitre_tactic": "Exfiltration",
     "confidence": 0.78
@@ -281,7 +281,7 @@
     "action_type": "scan_host",
     "source_host": "host_07",
     "target_host": "host_15",
-    "target_service": "ssh",
+    "target_service": "api",
     "outcome": "blocked",
     "mitre_tactic": "Reconnaissance",
     "confidence": 0.82
@@ -320,7 +320,7 @@
     "action_type": "enumerate_service",
     "source_host": "host_08",
     "target_host": "host_01",
-    "target_service": "dns",
+    "target_service": "queue",
     "outcome": "blocked",
     "mitre_tactic": "Reconnaissance",
     "confidence": 0.86
@@ -359,7 +359,7 @@
     "action_type": "exploit_vulnerability",
     "source_host": "host_09",
     "target_host": "host_03",
-    "target_service": "web",
+    "target_service": "db",
     "outcome": "success",
     "mitre_tactic": "Initial Access",
     "confidence": 0.83
