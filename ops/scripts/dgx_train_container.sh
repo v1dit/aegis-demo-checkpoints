@@ -32,8 +32,8 @@ else
   git checkout --detach "\$TARGET_REF"
 fi
 
-FREE_GB=$(df --output=avail -BG / | tail -n1 | tr -dc '0-9')
-if [ "$FREE_GB" -lt 250 ]; then
+FREE_GB=\$(df --output=avail -BG / | tail -n1 | tr -dc '0-9')
+if [ "\$FREE_GB" -lt 250 ]; then
   echo "Root disk free space is below 250GB. Aborting heavy run."
   exit 1
 fi
@@ -41,14 +41,14 @@ fi
 docker build --label project=pantherhacks -f infra/docker/trainer.Dockerfile -t pantherhacks-trainer:latest .
 
 for GPU_SET in "5,6,7" "0,1,2" "all"; do
-  echo "Trying GPU set: $GPU_SET"
-  if [ "$GPU_SET" = "all" ]; then
+  echo "Trying GPU set: \$GPU_SET"
+  if [ "\$GPU_SET" = "all" ]; then
     docker run --rm --label project=pantherhacks --gpus all \
       -v "\$REMOTE_DIR/artifacts:/workspace/artifacts" \
       pantherhacks-trainer:latest && exit 0
   else
-    docker run --rm --label project=pantherhacks --gpus "device=$GPU_SET" \
-      -e CUDA_VISIBLE_DEVICES="$GPU_SET" \
+    docker run --rm --label project=pantherhacks --gpus "device=\$GPU_SET" \
+      -e CUDA_VISIBLE_DEVICES="\$GPU_SET" \
       -v "\$REMOTE_DIR/artifacts:/workspace/artifacts" \
       pantherhacks-trainer:latest && exit 0
   fi

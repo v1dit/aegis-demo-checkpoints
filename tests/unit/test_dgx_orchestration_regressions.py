@@ -53,10 +53,19 @@ def test_cli_eval_prefers_latest_checkpoint_file_when_no_in_memory_checkpoint(
 
     captured: dict[str, str] = {}
 
-    def fake_evaluate_checkpoint(*, eval_id, checkpoint_id, suite_id, seeds, replay_root):
+    def fake_evaluate_checkpoint(
+        *,
+        eval_id,
+        checkpoint_id,
+        suite_id,
+        seeds,
+        replay_root,
+        run_id=None,
+    ):
         captured["checkpoint_id"] = checkpoint_id
         return EvalReport(
             eval_id=eval_id,
+            run_id=run_id,
             suite_id=suite_id,
             kpis=EvalKpis(
                 damage_reduction_vs_no_defense=0.3,
@@ -67,8 +76,11 @@ def test_cli_eval_prefers_latest_checkpoint_file_when_no_in_memory_checkpoint(
         )
 
     monkeypatch.setattr("backend.app.cli.CHECKPOINT_DIR", checkpoint_dir)
-    monkeypatch.setattr("backend.app.cli.REPLAY_DIR", replay_dir)
-    monkeypatch.setattr("backend.app.cli.EVAL_REPORT_DIR", report_dir)
+    monkeypatch.setattr("backend.app.cli.get_active_run_id", lambda: "run_test")
+    monkeypatch.setattr(
+        "backend.app.cli.run_stage_dirs",
+        lambda _run_id: {"train": checkpoint_dir, "replays": replay_dir, "eval": report_dir},
+    )
     monkeypatch.setattr("backend.app.cli.latest_completed_checkpoint", lambda: None)
     monkeypatch.setattr("backend.app.cli.evaluate_checkpoint", fake_evaluate_checkpoint)
     monkeypatch.setattr(
@@ -84,6 +96,6 @@ def test_cli_eval_prefers_latest_checkpoint_file_when_no_in_memory_checkpoint(
         },
     )
 
-    _run_eval()
+    _run_eval(run_id=None)
 
     assert captured["checkpoint_id"] == "ckpt_blue_main_010"
