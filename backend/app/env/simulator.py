@@ -65,6 +65,7 @@ def simulate_episode(
     scenario_id: str,
     checkpoint_id: str,
     defender_mode: Literal["none", "rule", "ppo"],
+    checkpoint_bias: float | None = None,
     horizon: int = 200,
 ) -> SimulationResult:
     topology = generate_topology(seed=seed, scenario_id=scenario_id)
@@ -75,7 +76,11 @@ def simulate_episode(
     edge_status = {edge.edge_id: edge.status for edge in topology.edges}
 
     red_policy = ScriptedRedPolicy(seed=seed)
-    blue_policy = policy_for(mode=defender_mode, seed=seed + 17)
+    blue_policy = policy_for(
+        mode=defender_mode,
+        seed=seed + 17,
+        checkpoint_bias=checkpoint_bias,
+    )
     clock = StepClock(start_ts_ms=1712412345000 + (seed * 11))
 
     action_events: list[ActionEvent] = []
@@ -112,7 +117,7 @@ def simulate_episode(
 
         exploit_probability = 0.55 - exploit_penalty
         if defender_mode == "ppo":
-            exploit_probability -= 0.08
+            exploit_probability -= 0.08 + (checkpoint_bias or 0.82) * 0.06
         if defender_mode == "none":
             exploit_probability += 0.15
 

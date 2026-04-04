@@ -130,9 +130,13 @@ class PPOBluePolicy(BluePolicy):
         return BlueDecision(action_type=action, target_host=target)
 
 
-def policy_for(mode: Literal["none", "rule", "ppo"], seed: int) -> BluePolicy:
+def policy_for(
+    mode: Literal["none", "rule", "ppo"],
+    seed: int,
+    checkpoint_bias: float | None = None,
+) -> BluePolicy:
     if mode == "none":
         return NoDefensePolicy()
     if mode == "rule":
         return RuleBasedBluePolicy()
-    return PPOBluePolicy(seed=seed)
+    return PPOBluePolicy(seed=seed, checkpoint_bias=checkpoint_bias or 0.82)
