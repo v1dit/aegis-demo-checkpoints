@@ -263,27 +263,6 @@
       "ts_ms": 1712412365995
     },
     {
-      "edge_changes": [
-        {
-          "edge_id": "host_01->host_02",
-          "status": "blocked"
-        },
-        {
-          "edge_id": "host_02->host_06",
-          "status": "blocked"
-        }
-      ],
-      "node_changes": [
-        {
-          "compromise_state": "compromised",
-          "defense_state": "none",
-          "node_id": "host_02"
-        }
-      ],
-      "step": 89,
-      "ts_ms": 1712412366715
-    },
-    {
       "edge_changes": [],
       "node_changes": [
         {
@@ -342,6 +321,27 @@
       ],
       "step": 111,
       "ts_ms": 1712412369355
+    },
+    {
+      "edge_changes": [
+        {
+          "edge_id": "host_01->host_02",
+          "status": "blocked"
+        },
+        {
+          "edge_id": "host_02->host_06",
+          "status": "blocked"
+        }
+      ],
+      "node_changes": [
+        {
+          "compromise_state": "compromised",
+          "defense_state": "none",
+          "node_id": "host_02"
+        }
+      ],
+      "step": 118,
+      "ts_ms": 1712412370195
     },
     {
       "edge_changes": [],
@@ -414,18 +414,6 @@
       ],
       "step": 159,
       "ts_ms": 1712412375115
-    },
-    {
-      "edge_changes": [],
-      "node_changes": [
-        {
-          "compromise_state": "compromised",
-          "defense_state": "none",
-          "node_id": "host_14"
-        }
-      ],
-      "step": 160,
-      "ts_ms": 1712412375235
     },
     {
       "edge_changes": [],

@@ -195,18 +195,6 @@
         {
           "compromise_state": "compromised",
           "defense_state": "none",
-          "node_id": "host_09"
-        }
-      ],
-      "step": 57,
-      "ts_ms": 1712412362886
-    },
-    {
-      "edge_changes": [],
-      "node_changes": [
-        {
-          "compromise_state": "compromised",
-          "defense_state": "none",
           "node_id": "host_02"
         }
       ],
@@ -296,18 +284,6 @@
       ],
       "step": 99,
       "ts_ms": 1712412367926
-    },
-    {
-      "edge_changes": [],
-      "node_changes": [
-        {
-          "compromise_state": "compromised",
-          "defense_state": "none",
-          "node_id": "host_02"
-        }
-      ],
-      "step": 105,
-      "ts_ms": 1712412368646
     },
     {
       "edge_changes": [],
@@ -422,18 +398,6 @@
       "node_changes": [
         {
           "compromise_state": "compromised",
-          "defense_state": "isolated",
-          "node_id": "host_01"
-        }
-      ],
-      "step": 153,
-      "ts_ms": 1712412374406
-    },
-    {
-      "edge_changes": [],
-      "node_changes": [
-        {
-          "compromise_state": "compromised",
           "defense_state": "monitored",
           "node_id": "host_04"
         }
@@ -476,54 +440,6 @@
       ],
       "step": 178,
       "ts_ms": 1712412377406
-    },
-    {
-      "edge_changes": [],
-      "node_changes": [
-        {
-          "compromise_state": "compromised",
-          "defense_state": "none",
-          "node_id": "host_03"
-        }
-      ],
-      "step": 179,
-      "ts_ms": 1712412377526
-    },
-    {
-      "edge_changes": [],
-      "node_changes": [
-        {
-          "compromise_state": "compromised",
-          "defense_state": "none",
-          "node_id": "host_06"
-        }
-      ],
-      "step": 184,
-      "ts_ms": 1712412378126
-    },
-    {
-      "edge_changes": [],
-      "node_changes": [
-        {
-          "compromise_state": "compromised",
-          "defense_state": "none",
-          "node_id": "host_05"
-        }
-      ],
-      "step": 189,
-      "ts_ms": 1712412378726
-    },
-    {
-      "edge_changes": [],
-      "node_changes": [
-        {
-          "compromise_state": "compromised",
-          "defense_state": "isolated",
-          "node_id": "host_01"
-        }
-      ],
-      "step": 191,
-      "ts_ms": 1712412378966
     },
     {
       "edge_changes": [],

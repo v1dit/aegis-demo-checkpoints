@@ -1239,7 +1239,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 5.7
+          "value": 5.3
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -1261,7 +1261,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.06
+          "value": 5.66
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -1283,7 +1283,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 5.5
+          "value": 5.1
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -1305,7 +1305,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 5.72
+          "value": 5.32
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -1327,7 +1327,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 5.75
+          "value": 5.35
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -1349,7 +1349,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 5.5
+          "value": 5.1
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -1371,7 +1371,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.09
+          "value": 5.69
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -1393,7 +1393,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 5.32
+          "value": 4.92
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -1415,7 +1415,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.1
+          "value": 5.7
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -1437,7 +1437,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.18
+          "value": 5.78
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -1459,7 +1459,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 5.61
+          "value": 5.21
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -1481,7 +1481,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.09
+          "value": 5.69
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -1503,7 +1503,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 5.51
+          "value": 5.11
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -1525,7 +1525,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.2
+          "value": 5.8
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -1547,7 +1547,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.33
+          "value": 5.93
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -1569,7 +1569,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.14
+          "value": 5.74
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -1591,7 +1591,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 5.82
+          "value": 5.42
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -1613,7 +1613,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 5.74
+          "value": 5.34
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -1635,7 +1635,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 5.99
+          "value": 5.59
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -1657,7 +1657,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.35
+          "value": 5.95
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -1679,7 +1679,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.23
+          "value": 5.83
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -1701,7 +1701,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.29
+          "value": 5.89
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -1723,7 +1723,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.24
+          "value": 5.84
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -1745,7 +1745,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 5.72
+          "value": 5.32
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -1767,7 +1767,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 5.62
+          "value": 5.22
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -1789,7 +1789,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.26
+          "value": 5.86
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -1811,7 +1811,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.32
+          "value": 5.92
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -1833,7 +1833,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.24
+          "value": 5.84
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -1855,7 +1855,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 5.68
+          "value": 5.28
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -1877,7 +1877,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.36
+          "value": 5.96
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -1899,7 +1899,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.32
+          "value": 5.92
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -1921,7 +1921,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.31
+          "value": 5.91
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -1943,7 +1943,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.28
+          "value": 5.88
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -1965,7 +1965,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 5.92
+          "value": 5.52
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -1987,7 +1987,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.32
+          "value": 5.92
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -2009,7 +2009,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.19
+          "value": 5.79
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -2031,7 +2031,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 5.91
+          "value": 5.51
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -2053,7 +2053,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.03
+          "value": 5.63
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -2075,7 +2075,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 5.61
+          "value": 5.21
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -2097,7 +2097,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 5.51
+          "value": 5.11
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -2119,7 +2119,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 5.97
+          "value": 5.57
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -2141,7 +2141,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.49
+          "value": 6.09
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -2163,7 +2163,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.4
+          "value": 6.0
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -2185,7 +2185,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.11
+          "value": 5.71
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -2207,7 +2207,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 5.87
+          "value": 5.47
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -2229,7 +2229,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 5.93
+          "value": 5.53
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -2251,7 +2251,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 5.55
+          "value": 5.15
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -2273,7 +2273,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.45
+          "value": 6.05
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -2295,7 +2295,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.39
+          "value": 5.99
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -2317,7 +2317,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 5.93
+          "value": 5.53
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -2339,7 +2339,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.46
+          "value": 6.06
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -2361,7 +2361,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 5.52
+          "value": 5.12
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -2383,7 +2383,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.28
+          "value": 5.88
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -2405,7 +2405,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 5.97
+          "value": 5.57
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -2427,7 +2427,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.42
+          "value": 6.02
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -2449,7 +2449,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.26
+          "value": 5.86
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -2471,7 +2471,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 5.8
+          "value": 5.4
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -2493,7 +2493,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.16
+          "value": 5.76
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -2515,7 +2515,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.49
+          "value": 6.09
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -2537,7 +2537,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 5.74
+          "value": 5.34
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -2559,7 +2559,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 5.83
+          "value": 5.43
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -2581,7 +2581,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 5.67
+          "value": 5.27
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -2603,7 +2603,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.43
+          "value": 6.03
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -2625,7 +2625,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.2
+          "value": 5.8
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -2647,7 +2647,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 5.53
+          "value": 5.13
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -2669,7 +2669,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.26
+          "value": 5.86
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -2691,7 +2691,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 5.53
+          "value": 5.13
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -2713,7 +2713,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 5.74
+          "value": 5.34
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -2735,7 +2735,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 5.82
+          "value": 5.42
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -2757,7 +2757,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.14
+          "value": 5.74
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -2779,7 +2779,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 5.58
+          "value": 5.18
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -2801,7 +2801,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.13
+          "value": 5.73
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -2823,7 +2823,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 5.99
+          "value": 5.59
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -2845,7 +2845,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.04
+          "value": 5.64
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -2867,7 +2867,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.06
+          "value": 5.66
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -2889,7 +2889,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.81
+          "value": 6.41
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -2911,7 +2911,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.58
+          "value": 6.18
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -2933,7 +2933,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.37
+          "value": 5.97
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -2955,7 +2955,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.6
+          "value": 6.2
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -2977,7 +2977,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.76
+          "value": 6.36
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -2999,7 +2999,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.11
+          "value": 5.71
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -3021,7 +3021,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.06
+          "value": 5.66
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -3043,7 +3043,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 5.9
+          "value": 5.5
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -3065,7 +3065,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 5.92
+          "value": 5.52
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -3087,7 +3087,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.24
+          "value": 5.84
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -3109,7 +3109,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.38
+          "value": 5.98
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -3131,7 +3131,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.34
+          "value": 5.94
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -3153,7 +3153,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.77
+          "value": 6.37
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -3175,7 +3175,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.7
+          "value": 6.3
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -3197,7 +3197,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.89
+          "value": 6.49
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -3219,7 +3219,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.49
+          "value": 6.09
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -3241,7 +3241,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.52
+          "value": 6.12
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -3263,7 +3263,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.18
+          "value": 5.78
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -3285,7 +3285,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 5.97
+          "value": 5.57
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -3307,7 +3307,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.54
+          "value": 6.14
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -3329,7 +3329,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.5
+          "value": 6.1
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -3351,7 +3351,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.3
+          "value": 5.9
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -3373,7 +3373,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.83
+          "value": 6.43
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -3395,7 +3395,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.31
+          "value": 5.91
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -3417,7 +3417,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.4
+          "value": 6.0
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -3439,7 +3439,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.06
+          "value": 5.66
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -3461,7 +3461,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.88
+          "value": 6.48
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -3483,7 +3483,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.1
+          "value": 5.7
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -3505,7 +3505,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.08
+          "value": 5.68
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -3527,7 +3527,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.61
+          "value": 6.21
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -3549,7 +3549,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.41
+          "value": 6.01
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -3571,7 +3571,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.3
+          "value": 5.9
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -3593,7 +3593,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.23
+          "value": 5.83
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -3615,7 +3615,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.36
+          "value": 5.96
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -3637,7 +3637,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.22
+          "value": 5.82
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -3659,7 +3659,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.67
+          "value": 6.27
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -3681,7 +3681,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.86
+          "value": 6.46
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -3703,7 +3703,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.79
+          "value": 6.39
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -3725,7 +3725,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.18
+          "value": 5.78
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -3747,7 +3747,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.13
+          "value": 5.73
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -3769,7 +3769,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.45
+          "value": 6.05
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -3791,7 +3791,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.58
+          "value": 6.18
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -3813,7 +3813,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.27
+          "value": 5.87
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -3835,7 +3835,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.64
+          "value": 6.24
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -3857,7 +3857,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.67
+          "value": 6.27
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -3879,7 +3879,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.64
+          "value": 6.24
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -3901,7 +3901,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.1
+          "value": 5.7
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -3923,7 +3923,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.87
+          "value": 6.07
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -3945,7 +3945,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.9
+          "value": 6.1
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -3967,7 +3967,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 7.26
+          "value": 6.46
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -3989,7 +3989,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.46
+          "value": 5.66
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -4011,7 +4011,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.39
+          "value": 5.59
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -4033,7 +4033,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 7.09
+          "value": 6.29
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -4055,7 +4055,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.61
+          "value": 5.81
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -4077,7 +4077,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.56
+          "value": 5.76
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -4099,7 +4099,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 7.1
+          "value": 6.3
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -4121,7 +4121,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.88
+          "value": 6.08
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -4143,7 +4143,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.82
+          "value": 6.02
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -4165,7 +4165,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 7.28
+          "value": 6.48
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -4187,7 +4187,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.64
+          "value": 5.84
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -4209,7 +4209,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.74
+          "value": 5.94
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -4231,7 +4231,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.9
+          "value": 6.1
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -4253,7 +4253,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.61
+          "value": 5.81
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -4275,7 +4275,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.61
+          "value": 5.81
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -4297,7 +4297,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 7.28
+          "value": 6.48
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -4319,7 +4319,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 7.29
+          "value": 6.49
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -4341,7 +4341,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 7.01
+          "value": 6.21
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -4363,7 +4363,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.96
+          "value": 6.16
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -4385,7 +4385,7 @@
       "reason_features": [
         {
           "name": "traffic_spike_ratio",
-          "value": 6.38
+          "value": 5.58
         },
         {
           "name": "lateral_movement_pattern_match",
@@ -4402,11 +4402,11 @@
     }
   ],
   "summary": {
-    "attack_success_rate": 0.355,
-    "damage": 42.75,
+    "attack_success_rate": 0.32,
+    "damage": 31.55,
     "exfiltration_count": 26,
-    "mean_detection_latency_ms": 127.5,
-    "rewards_sum": 488.6,
+    "mean_detection_latency_ms": 136.0,
+    "rewards_sum": 510.6,
     "sync_drift_ms": 13.0
   },
   "timeseries": [
@@ -4859,1154 +4859,1154 @@
       "ts_ms": 1712412362776
     },
     {
-      "compromised_hosts": 10,
-      "damage_score": 12.3,
-      "detection_count": 39,
-      "rewards_sum": 141.05,
+      "compromised_hosts": 9,
+      "damage_score": 10.7,
+      "detection_count": 38,
+      "rewards_sum": 143.05,
       "step": 57,
       "ts_ms": 1712412362896
     },
     {
-      "compromised_hosts": 10,
-      "damage_score": 11.85,
-      "detection_count": 39,
-      "rewards_sum": 143.9,
+      "compromised_hosts": 9,
+      "damage_score": 10.25,
+      "detection_count": 38,
+      "rewards_sum": 145.9,
       "step": 58,
       "ts_ms": 1712412363016
     },
     {
-      "compromised_hosts": 10,
-      "damage_score": 11.4,
-      "detection_count": 40,
-      "rewards_sum": 148.75,
+      "compromised_hosts": 9,
+      "damage_score": 9.8,
+      "detection_count": 39,
+      "rewards_sum": 150.75,
       "step": 59,
       "ts_ms": 1712412363136
     },
     {
-      "compromised_hosts": 10,
-      "damage_score": 13.15,
-      "detection_count": 40,
-      "rewards_sum": 145.6,
+      "compromised_hosts": 9,
+      "damage_score": 11.55,
+      "detection_count": 39,
+      "rewards_sum": 147.6,
       "step": 60,
       "ts_ms": 1712412363256
     },
     {
-      "compromised_hosts": 10,
-      "damage_score": 12.7,
-      "detection_count": 41,
-      "rewards_sum": 150.45,
+      "compromised_hosts": 9,
+      "damage_score": 11.1,
+      "detection_count": 40,
+      "rewards_sum": 152.45,
       "step": 61,
       "ts_ms": 1712412363376
     },
     {
-      "compromised_hosts": 10,
-      "damage_score": 12.25,
-      "detection_count": 41,
-      "rewards_sum": 153.3,
+      "compromised_hosts": 9,
+      "damage_score": 10.65,
+      "detection_count": 40,
+      "rewards_sum": 155.3,
       "step": 62,
       "ts_ms": 1712412363496
     },
     {
-      "compromised_hosts": 10,
-      "damage_score": 13.4,
-      "detection_count": 41,
-      "rewards_sum": 152.15,
+      "compromised_hosts": 9,
+      "damage_score": 11.8,
+      "detection_count": 40,
+      "rewards_sum": 154.15,
       "step": 63,
       "ts_ms": 1712412363616
     },
     {
-      "compromised_hosts": 10,
-      "damage_score": 12.95,
-      "detection_count": 42,
-      "rewards_sum": 157.0,
+      "compromised_hosts": 9,
+      "damage_score": 11.35,
+      "detection_count": 41,
+      "rewards_sum": 159.0,
       "step": 64,
       "ts_ms": 1712412363736
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 14.1,
-      "detection_count": 43,
-      "rewards_sum": 157.85,
+      "compromised_hosts": 10,
+      "damage_score": 12.5,
+      "detection_count": 42,
+      "rewards_sum": 159.85,
       "step": 65,
       "ts_ms": 1712412363856
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 15.85,
-      "detection_count": 44,
-      "rewards_sum": 156.7,
+      "compromised_hosts": 10,
+      "damage_score": 14.25,
+      "detection_count": 43,
+      "rewards_sum": 158.7,
       "step": 66,
       "ts_ms": 1712412363976
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 15.4,
-      "detection_count": 45,
-      "rewards_sum": 161.55,
+      "compromised_hosts": 10,
+      "damage_score": 13.8,
+      "detection_count": 44,
+      "rewards_sum": 163.55,
       "step": 67,
       "ts_ms": 1712412364096
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 14.95,
-      "detection_count": 46,
-      "rewards_sum": 166.4,
+      "compromised_hosts": 10,
+      "damage_score": 13.35,
+      "detection_count": 45,
+      "rewards_sum": 168.4,
       "step": 68,
       "ts_ms": 1712412364216
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 14.5,
-      "detection_count": 46,
-      "rewards_sum": 169.25,
+      "compromised_hosts": 10,
+      "damage_score": 12.9,
+      "detection_count": 45,
+      "rewards_sum": 171.25,
       "step": 69,
       "ts_ms": 1712412364336
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 15.65,
-      "detection_count": 47,
-      "rewards_sum": 170.1,
+      "compromised_hosts": 10,
+      "damage_score": 14.05,
+      "detection_count": 46,
+      "rewards_sum": 172.1,
       "step": 70,
       "ts_ms": 1712412364456
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 15.2,
-      "detection_count": 48,
-      "rewards_sum": 174.95,
+      "compromised_hosts": 10,
+      "damage_score": 13.6,
+      "detection_count": 47,
+      "rewards_sum": 176.95,
       "step": 71,
       "ts_ms": 1712412364576
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 16.95,
-      "detection_count": 48,
-      "rewards_sum": 171.8,
+      "compromised_hosts": 10,
+      "damage_score": 15.35,
+      "detection_count": 47,
+      "rewards_sum": 173.8,
       "step": 72,
       "ts_ms": 1712412364696
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 16.5,
-      "detection_count": 48,
-      "rewards_sum": 174.65,
+      "compromised_hosts": 10,
+      "damage_score": 14.9,
+      "detection_count": 47,
+      "rewards_sum": 176.65,
       "step": 73,
       "ts_ms": 1712412364816
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 16.05,
-      "detection_count": 49,
-      "rewards_sum": 179.5,
+      "compromised_hosts": 10,
+      "damage_score": 14.45,
+      "detection_count": 48,
+      "rewards_sum": 181.5,
       "step": 74,
       "ts_ms": 1712412364936
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 15.6,
-      "detection_count": 50,
-      "rewards_sum": 184.35,
+      "compromised_hosts": 10,
+      "damage_score": 14.0,
+      "detection_count": 49,
+      "rewards_sum": 186.35,
       "step": 75,
       "ts_ms": 1712412365056
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 16.75,
-      "detection_count": 51,
-      "rewards_sum": 185.2,
+      "compromised_hosts": 10,
+      "damage_score": 15.15,
+      "detection_count": 50,
+      "rewards_sum": 187.2,
       "step": 76,
       "ts_ms": 1712412365176
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 16.3,
-      "detection_count": 52,
-      "rewards_sum": 190.05,
+      "compromised_hosts": 10,
+      "damage_score": 14.7,
+      "detection_count": 51,
+      "rewards_sum": 192.05,
       "step": 77,
       "ts_ms": 1712412365296
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 15.85,
-      "detection_count": 52,
-      "rewards_sum": 192.9,
+      "compromised_hosts": 10,
+      "damage_score": 14.25,
+      "detection_count": 51,
+      "rewards_sum": 194.9,
       "step": 78,
       "ts_ms": 1712412365416
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 15.4,
-      "detection_count": 52,
-      "rewards_sum": 195.75,
+      "compromised_hosts": 10,
+      "damage_score": 13.8,
+      "detection_count": 51,
+      "rewards_sum": 197.75,
       "step": 79,
       "ts_ms": 1712412365536
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 14.95,
-      "detection_count": 53,
-      "rewards_sum": 200.6,
+      "compromised_hosts": 10,
+      "damage_score": 13.35,
+      "detection_count": 52,
+      "rewards_sum": 202.6,
       "step": 80,
       "ts_ms": 1712412365656
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 16.1,
-      "detection_count": 54,
-      "rewards_sum": 201.45,
+      "compromised_hosts": 10,
+      "damage_score": 14.5,
+      "detection_count": 53,
+      "rewards_sum": 203.45,
       "step": 81,
       "ts_ms": 1712412365776
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 15.65,
-      "detection_count": 55,
-      "rewards_sum": 206.3,
+      "compromised_hosts": 10,
+      "damage_score": 14.05,
+      "detection_count": 54,
+      "rewards_sum": 208.3,
       "step": 82,
       "ts_ms": 1712412365896
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 15.2,
-      "detection_count": 56,
-      "rewards_sum": 211.15,
+      "compromised_hosts": 10,
+      "damage_score": 13.6,
+      "detection_count": 55,
+      "rewards_sum": 213.15,
       "step": 83,
       "ts_ms": 1712412366016
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 16.95,
-      "detection_count": 57,
-      "rewards_sum": 210.0,
+      "compromised_hosts": 10,
+      "damage_score": 15.35,
+      "detection_count": 56,
+      "rewards_sum": 212.0,
       "step": 84,
       "ts_ms": 1712412366136
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 16.5,
-      "detection_count": 58,
-      "rewards_sum": 214.85,
+      "compromised_hosts": 10,
+      "damage_score": 14.9,
+      "detection_count": 57,
+      "rewards_sum": 216.85,
       "step": 85,
       "ts_ms": 1712412366256
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 16.05,
-      "detection_count": 59,
-      "rewards_sum": 219.7,
+      "compromised_hosts": 10,
+      "damage_score": 14.45,
+      "detection_count": 58,
+      "rewards_sum": 221.7,
       "step": 86,
       "ts_ms": 1712412366376
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 17.2,
-      "detection_count": 60,
-      "rewards_sum": 220.55,
+      "compromised_hosts": 10,
+      "damage_score": 15.6,
+      "detection_count": 59,
+      "rewards_sum": 222.55,
       "step": 87,
       "ts_ms": 1712412366496
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 16.75,
-      "detection_count": 60,
-      "rewards_sum": 223.4,
+      "compromised_hosts": 10,
+      "damage_score": 15.15,
+      "detection_count": 59,
+      "rewards_sum": 225.4,
       "step": 88,
       "ts_ms": 1712412366616
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 16.3,
-      "detection_count": 60,
-      "rewards_sum": 226.25,
+      "compromised_hosts": 10,
+      "damage_score": 14.7,
+      "detection_count": 59,
+      "rewards_sum": 228.25,
       "step": 89,
       "ts_ms": 1712412366736
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 18.05,
-      "detection_count": 61,
+      "compromised_hosts": 10,
+      "damage_score": 16.45,
+      "detection_count": 59,
       "rewards_sum": 225.1,
       "step": 90,
       "ts_ms": 1712412366856
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 17.6,
-      "detection_count": 62,
+      "compromised_hosts": 10,
+      "damage_score": 16.0,
+      "detection_count": 60,
       "rewards_sum": 229.95,
       "step": 91,
       "ts_ms": 1712412366976
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 17.15,
-      "detection_count": 62,
+      "compromised_hosts": 10,
+      "damage_score": 15.55,
+      "detection_count": 60,
       "rewards_sum": 232.8,
       "step": 92,
       "ts_ms": 1712412367096
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 16.7,
-      "detection_count": 63,
+      "compromised_hosts": 10,
+      "damage_score": 15.1,
+      "detection_count": 61,
       "rewards_sum": 237.65,
       "step": 93,
       "ts_ms": 1712412367216
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 16.25,
-      "detection_count": 64,
+      "compromised_hosts": 10,
+      "damage_score": 14.65,
+      "detection_count": 62,
       "rewards_sum": 242.5,
       "step": 94,
       "ts_ms": 1712412367336
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 17.4,
-      "detection_count": 65,
+      "compromised_hosts": 10,
+      "damage_score": 15.8,
+      "detection_count": 63,
       "rewards_sum": 243.35,
       "step": 95,
       "ts_ms": 1712412367456
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 19.15,
-      "detection_count": 66,
+      "compromised_hosts": 10,
+      "damage_score": 17.55,
+      "detection_count": 64,
       "rewards_sum": 242.2,
       "step": 96,
       "ts_ms": 1712412367576
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 18.7,
-      "detection_count": 67,
+      "compromised_hosts": 10,
+      "damage_score": 17.1,
+      "detection_count": 65,
       "rewards_sum": 247.05,
       "step": 97,
       "ts_ms": 1712412367696
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 18.25,
-      "detection_count": 68,
+      "compromised_hosts": 10,
+      "damage_score": 16.65,
+      "detection_count": 66,
       "rewards_sum": 251.9,
       "step": 98,
       "ts_ms": 1712412367816
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 19.4,
-      "detection_count": 68,
+      "compromised_hosts": 10,
+      "damage_score": 17.8,
+      "detection_count": 66,
       "rewards_sum": 250.75,
       "step": 99,
       "ts_ms": 1712412367936
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 18.95,
-      "detection_count": 68,
+      "compromised_hosts": 10,
+      "damage_score": 17.35,
+      "detection_count": 66,
       "rewards_sum": 253.6,
       "step": 100,
       "ts_ms": 1712412368056
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 18.5,
-      "detection_count": 69,
+      "compromised_hosts": 10,
+      "damage_score": 16.9,
+      "detection_count": 67,
       "rewards_sum": 258.45,
       "step": 101,
       "ts_ms": 1712412368176
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 20.25,
-      "detection_count": 70,
+      "compromised_hosts": 10,
+      "damage_score": 18.65,
+      "detection_count": 68,
       "rewards_sum": 257.3,
       "step": 102,
       "ts_ms": 1712412368296
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 19.8,
-      "detection_count": 71,
+      "compromised_hosts": 10,
+      "damage_score": 18.2,
+      "detection_count": 69,
       "rewards_sum": 262.15,
       "step": 103,
       "ts_ms": 1712412368416
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 19.35,
-      "detection_count": 72,
+      "compromised_hosts": 10,
+      "damage_score": 17.75,
+      "detection_count": 70,
       "rewards_sum": 267.0,
       "step": 104,
       "ts_ms": 1712412368536
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 20.5,
-      "detection_count": 72,
-      "rewards_sum": 265.85,
+      "compromised_hosts": 10,
+      "damage_score": 17.3,
+      "detection_count": 70,
+      "rewards_sum": 269.85,
       "step": 105,
       "ts_ms": 1712412368656
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 21.65,
-      "detection_count": 72,
-      "rewards_sum": 264.7,
+      "compromised_hosts": 10,
+      "damage_score": 18.45,
+      "detection_count": 70,
+      "rewards_sum": 268.7,
       "step": 106,
       "ts_ms": 1712412368776
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 21.2,
-      "detection_count": 73,
-      "rewards_sum": 269.55,
+      "compromised_hosts": 10,
+      "damage_score": 18.0,
+      "detection_count": 71,
+      "rewards_sum": 273.55,
       "step": 107,
       "ts_ms": 1712412368896
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 22.95,
-      "detection_count": 74,
-      "rewards_sum": 268.4,
+      "compromised_hosts": 10,
+      "damage_score": 19.75,
+      "detection_count": 72,
+      "rewards_sum": 272.4,
       "step": 108,
       "ts_ms": 1712412369016
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 22.5,
-      "detection_count": 75,
-      "rewards_sum": 273.25,
+      "compromised_hosts": 10,
+      "damage_score": 19.3,
+      "detection_count": 73,
+      "rewards_sum": 277.25,
       "step": 109,
       "ts_ms": 1712412369136
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 22.05,
-      "detection_count": 76,
-      "rewards_sum": 278.1,
+      "compromised_hosts": 10,
+      "damage_score": 18.85,
+      "detection_count": 74,
+      "rewards_sum": 282.1,
       "step": 110,
       "ts_ms": 1712412369256
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 21.6,
-      "detection_count": 76,
-      "rewards_sum": 280.95,
+      "compromised_hosts": 10,
+      "damage_score": 18.4,
+      "detection_count": 74,
+      "rewards_sum": 284.95,
       "step": 111,
       "ts_ms": 1712412369376
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 21.15,
-      "detection_count": 77,
-      "rewards_sum": 285.8,
+      "compromised_hosts": 10,
+      "damage_score": 17.95,
+      "detection_count": 75,
+      "rewards_sum": 289.8,
       "step": 112,
       "ts_ms": 1712412369496
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 22.3,
-      "detection_count": 78,
-      "rewards_sum": 286.65,
+      "compromised_hosts": 10,
+      "damage_score": 19.1,
+      "detection_count": 76,
+      "rewards_sum": 290.65,
       "step": 113,
       "ts_ms": 1712412369616
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 24.05,
-      "detection_count": 78,
-      "rewards_sum": 283.5,
+      "compromised_hosts": 10,
+      "damage_score": 20.85,
+      "detection_count": 76,
+      "rewards_sum": 287.5,
       "step": 114,
       "ts_ms": 1712412369736
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 23.6,
-      "detection_count": 79,
-      "rewards_sum": 288.35,
+      "compromised_hosts": 10,
+      "damage_score": 20.4,
+      "detection_count": 77,
+      "rewards_sum": 292.35,
       "step": 115,
       "ts_ms": 1712412369856
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 23.15,
-      "detection_count": 79,
-      "rewards_sum": 291.2,
+      "compromised_hosts": 10,
+      "damage_score": 19.95,
+      "detection_count": 77,
+      "rewards_sum": 295.2,
       "step": 116,
       "ts_ms": 1712412369976
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 24.3,
-      "detection_count": 80,
-      "rewards_sum": 292.05,
+      "compromised_hosts": 10,
+      "damage_score": 21.1,
+      "detection_count": 78,
+      "rewards_sum": 296.05,
       "step": 117,
       "ts_ms": 1712412370096
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 23.85,
-      "detection_count": 81,
-      "rewards_sum": 296.9,
+      "compromised_hosts": 10,
+      "damage_score": 20.65,
+      "detection_count": 79,
+      "rewards_sum": 300.9,
       "step": 118,
       "ts_ms": 1712412370216
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 25.0,
-      "detection_count": 82,
-      "rewards_sum": 297.75,
+      "compromised_hosts": 10,
+      "damage_score": 21.8,
+      "detection_count": 80,
+      "rewards_sum": 301.75,
       "step": 119,
       "ts_ms": 1712412370336
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 24.55,
-      "detection_count": 82,
-      "rewards_sum": 300.6,
+      "compromised_hosts": 10,
+      "damage_score": 21.35,
+      "detection_count": 80,
+      "rewards_sum": 304.6,
       "step": 120,
       "ts_ms": 1712412370456
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 24.1,
-      "detection_count": 83,
-      "rewards_sum": 305.45,
+      "compromised_hosts": 10,
+      "damage_score": 20.9,
+      "detection_count": 81,
+      "rewards_sum": 309.45,
       "step": 121,
       "ts_ms": 1712412370576
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 23.65,
-      "detection_count": 83,
-      "rewards_sum": 308.3,
+      "compromised_hosts": 10,
+      "damage_score": 20.45,
+      "detection_count": 81,
+      "rewards_sum": 312.3,
       "step": 122,
       "ts_ms": 1712412370696
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 23.2,
-      "detection_count": 83,
-      "rewards_sum": 311.15,
+      "compromised_hosts": 10,
+      "damage_score": 20.0,
+      "detection_count": 81,
+      "rewards_sum": 315.15,
       "step": 123,
       "ts_ms": 1712412370816
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 24.35,
-      "detection_count": 84,
-      "rewards_sum": 312.0,
+      "compromised_hosts": 10,
+      "damage_score": 21.15,
+      "detection_count": 82,
+      "rewards_sum": 316.0,
       "step": 124,
       "ts_ms": 1712412370936
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 23.9,
-      "detection_count": 85,
-      "rewards_sum": 316.85,
+      "compromised_hosts": 10,
+      "damage_score": 20.7,
+      "detection_count": 83,
+      "rewards_sum": 320.85,
       "step": 125,
       "ts_ms": 1712412371056
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 25.65,
-      "detection_count": 86,
-      "rewards_sum": 315.7,
+      "compromised_hosts": 10,
+      "damage_score": 22.45,
+      "detection_count": 84,
+      "rewards_sum": 319.7,
       "step": 126,
       "ts_ms": 1712412371176
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 25.2,
-      "detection_count": 87,
-      "rewards_sum": 320.55,
+      "compromised_hosts": 10,
+      "damage_score": 22.0,
+      "detection_count": 85,
+      "rewards_sum": 324.55,
       "step": 127,
       "ts_ms": 1712412371296
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 24.75,
-      "detection_count": 88,
-      "rewards_sum": 325.4,
+      "compromised_hosts": 10,
+      "damage_score": 21.55,
+      "detection_count": 86,
+      "rewards_sum": 329.4,
       "step": 128,
       "ts_ms": 1712412371416
     },
     {
-      "compromised_hosts": 11,
-      "damage_score": 24.3,
-      "detection_count": 88,
-      "rewards_sum": 328.25,
+      "compromised_hosts": 10,
+      "damage_score": 21.1,
+      "detection_count": 86,
+      "rewards_sum": 332.25,
       "step": 129,
       "ts_ms": 1712412371536
     },
     {
-      "compromised_hosts": 12,
-      "damage_score": 25.45,
-      "detection_count": 89,
-      "rewards_sum": 329.1,
+      "compromised_hosts": 11,
+      "damage_score": 22.25,
+      "detection_count": 87,
+      "rewards_sum": 333.1,
       "step": 130,
       "ts_ms": 1712412371656
     },
     {
-      "compromised_hosts": 12,
-      "damage_score": 25.0,
-      "detection_count": 90,
-      "rewards_sum": 333.95,
+      "compromised_hosts": 11,
+      "damage_score": 21.8,
+      "detection_count": 88,
+      "rewards_sum": 337.95,
       "step": 131,
       "ts_ms": 1712412371776
     },
     {
-      "compromised_hosts": 12,
-      "damage_score": 26.75,
-      "detection_count": 90,
-      "rewards_sum": 330.8,
+      "compromised_hosts": 11,
+      "damage_score": 23.55,
+      "detection_count": 88,
+      "rewards_sum": 334.8,
       "step": 132,
       "ts_ms": 1712412371896
     },
     {
-      "compromised_hosts": 12,
-      "damage_score": 26.3,
-      "detection_count": 90,
-      "rewards_sum": 333.65,
+      "compromised_hosts": 11,
+      "damage_score": 23.1,
+      "detection_count": 88,
+      "rewards_sum": 337.65,
       "step": 133,
       "ts_ms": 1712412372016
     },
     {
-      "compromised_hosts": 12,
-      "damage_score": 25.85,
-      "detection_count": 91,
-      "rewards_sum": 338.5,
+      "compromised_hosts": 11,
+      "damage_score": 22.65,
+      "detection_count": 89,
+      "rewards_sum": 342.5,
       "step": 134,
       "ts_ms": 1712412372136
     },
     {
-      "compromised_hosts": 12,
-      "damage_score": 25.4,
-      "detection_count": 91,
-      "rewards_sum": 341.35,
+      "compromised_hosts": 11,
+      "damage_score": 22.2,
+      "detection_count": 89,
+      "rewards_sum": 345.35,
       "step": 135,
       "ts_ms": 1712412372256
     },
     {
-      "compromised_hosts": 12,
-      "damage_score": 24.95,
-      "detection_count": 92,
-      "rewards_sum": 346.2,
+      "compromised_hosts": 11,
+      "damage_score": 21.75,
+      "detection_count": 90,
+      "rewards_sum": 350.2,
       "step": 136,
       "ts_ms": 1712412372376
     },
     {
-      "compromised_hosts": 12,
-      "damage_score": 26.1,
-      "detection_count": 93,
-      "rewards_sum": 347.05,
+      "compromised_hosts": 11,
+      "damage_score": 22.9,
+      "detection_count": 91,
+      "rewards_sum": 351.05,
       "step": 137,
       "ts_ms": 1712412372496
     },
     {
-      "compromised_hosts": 12,
-      "damage_score": 27.85,
-      "detection_count": 93,
-      "rewards_sum": 343.9,
+      "compromised_hosts": 11,
+      "damage_score": 24.65,
+      "detection_count": 91,
+      "rewards_sum": 347.9,
       "step": 138,
       "ts_ms": 1712412372616
     },
     {
-      "compromised_hosts": 12,
-      "damage_score": 27.4,
-      "detection_count": 94,
-      "rewards_sum": 348.75,
+      "compromised_hosts": 11,
+      "damage_score": 24.2,
+      "detection_count": 92,
+      "rewards_sum": 352.75,
       "step": 139,
       "ts_ms": 1712412372736
     },
     {
-      "compromised_hosts": 12,
-      "damage_score": 26.95,
-      "detection_count": 95,
-      "rewards_sum": 353.6,
+      "compromised_hosts": 11,
+      "damage_score": 23.75,
+      "detection_count": 93,
+      "rewards_sum": 357.6,
       "step": 140,
       "ts_ms": 1712412372856
     },
     {
-      "compromised_hosts": 12,
-      "damage_score": 28.1,
-      "detection_count": 96,
-      "rewards_sum": 354.45,
+      "compromised_hosts": 11,
+      "damage_score": 24.9,
+      "detection_count": 94,
+      "rewards_sum": 358.45,
       "step": 141,
       "ts_ms": 1712412372976
     },
     {
-      "compromised_hosts": 12,
-      "damage_score": 29.25,
-      "detection_count": 96,
-      "rewards_sum": 353.3,
+      "compromised_hosts": 11,
+      "damage_score": 26.05,
+      "detection_count": 94,
+      "rewards_sum": 357.3,
       "step": 142,
       "ts_ms": 1712412373096
     },
     {
-      "compromised_hosts": 12,
-      "damage_score": 28.8,
-      "detection_count": 97,
-      "rewards_sum": 358.15,
+      "compromised_hosts": 11,
+      "damage_score": 25.6,
+      "detection_count": 95,
+      "rewards_sum": 362.15,
       "step": 143,
       "ts_ms": 1712412373216
     },
     {
-      "compromised_hosts": 12,
-      "damage_score": 30.55,
-      "detection_count": 98,
-      "rewards_sum": 357.0,
+      "compromised_hosts": 11,
+      "damage_score": 27.35,
+      "detection_count": 96,
+      "rewards_sum": 361.0,
       "step": 144,
       "ts_ms": 1712412373336
     },
     {
-      "compromised_hosts": 12,
-      "damage_score": 30.1,
-      "detection_count": 99,
-      "rewards_sum": 361.85,
+      "compromised_hosts": 11,
+      "damage_score": 26.9,
+      "detection_count": 97,
+      "rewards_sum": 365.85,
       "step": 145,
       "ts_ms": 1712412373456
     },
     {
-      "compromised_hosts": 12,
-      "damage_score": 29.65,
-      "detection_count": 99,
-      "rewards_sum": 364.7,
+      "compromised_hosts": 11,
+      "damage_score": 26.45,
+      "detection_count": 97,
+      "rewards_sum": 368.7,
       "step": 146,
       "ts_ms": 1712412373576
     },
     {
-      "compromised_hosts": 12,
-      "damage_score": 29.2,
-      "detection_count": 99,
-      "rewards_sum": 367.55,
+      "compromised_hosts": 11,
+      "damage_score": 26.0,
+      "detection_count": 97,
+      "rewards_sum": 371.55,
       "step": 147,
       "ts_ms": 1712412373696
     },
     {
-      "compromised_hosts": 12,
-      "damage_score": 28.75,
-      "detection_count": 99,
-      "rewards_sum": 370.4,
+      "compromised_hosts": 11,
+      "damage_score": 25.55,
+      "detection_count": 97,
+      "rewards_sum": 374.4,
       "step": 148,
       "ts_ms": 1712412373816
     },
     {
-      "compromised_hosts": 12,
-      "damage_score": 28.3,
-      "detection_count": 100,
-      "rewards_sum": 375.25,
+      "compromised_hosts": 11,
+      "damage_score": 25.1,
+      "detection_count": 98,
+      "rewards_sum": 379.25,
       "step": 149,
       "ts_ms": 1712412373936
     },
     {
-      "compromised_hosts": 12,
-      "damage_score": 30.05,
-      "detection_count": 101,
-      "rewards_sum": 374.1,
+      "compromised_hosts": 11,
+      "damage_score": 26.85,
+      "detection_count": 99,
+      "rewards_sum": 378.1,
       "step": 150,
       "ts_ms": 1712412374056
     },
     {
-      "compromised_hosts": 12,
-      "damage_score": 29.6,
-      "detection_count": 101,
-      "rewards_sum": 376.95,
+      "compromised_hosts": 11,
+      "damage_score": 26.4,
+      "detection_count": 99,
+      "rewards_sum": 380.95,
       "step": 151,
       "ts_ms": 1712412374176
     },
     {
-      "compromised_hosts": 12,
-      "damage_score": 29.15,
-      "detection_count": 101,
-      "rewards_sum": 379.8,
+      "compromised_hosts": 11,
+      "damage_score": 25.95,
+      "detection_count": 99,
+      "rewards_sum": 383.8,
       "step": 152,
       "ts_ms": 1712412374296
     },
     {
-      "compromised_hosts": 12,
-      "damage_score": 30.3,
-      "detection_count": 102,
-      "rewards_sum": 380.65,
+      "compromised_hosts": 11,
+      "damage_score": 25.5,
+      "detection_count": 100,
+      "rewards_sum": 388.65,
       "step": 153,
       "ts_ms": 1712412374416
     },
     {
-      "compromised_hosts": 12,
-      "damage_score": 31.45,
-      "detection_count": 103,
-      "rewards_sum": 381.5,
+      "compromised_hosts": 11,
+      "damage_score": 26.65,
+      "detection_count": 101,
+      "rewards_sum": 389.5,
       "step": 154,
       "ts_ms": 1712412374536
     },
     {
-      "compromised_hosts": 12,
-      "damage_score": 31.0,
-      "detection_count": 104,
-      "rewards_sum": 386.35,
+      "compromised_hosts": 11,
+      "damage_score": 26.2,
+      "detection_count": 102,
+      "rewards_sum": 394.35,
       "step": 155,
       "ts_ms": 1712412374656
     },
     {
-      "compromised_hosts": 12,
-      "damage_score": 32.75,
-      "detection_count": 104,
-      "rewards_sum": 383.2,
+      "compromised_hosts": 11,
+      "damage_score": 27.95,
+      "detection_count": 102,
+      "rewards_sum": 391.2,
       "step": 156,
       "ts_ms": 1712412374776
     },
     {
-      "compromised_hosts": 12,
-      "damage_score": 32.3,
-      "detection_count": 105,
-      "rewards_sum": 388.05,
+      "compromised_hosts": 11,
+      "damage_score": 27.5,
+      "detection_count": 103,
+      "rewards_sum": 396.05,
       "step": 157,
       "ts_ms": 1712412374896
     },
     {
-      "compromised_hosts": 12,
-      "damage_score": 31.85,
-      "detection_count": 106,
-      "rewards_sum": 392.9,
+      "compromised_hosts": 11,
+      "damage_score": 27.05,
+      "detection_count": 104,
+      "rewards_sum": 400.9,
       "step": 158,
       "ts_ms": 1712412375016
     },
     {
-      "compromised_hosts": 12,
-      "damage_score": 31.4,
-      "detection_count": 107,
-      "rewards_sum": 397.75,
+      "compromised_hosts": 11,
+      "damage_score": 26.6,
+      "detection_count": 105,
+      "rewards_sum": 405.75,
       "step": 159,
       "ts_ms": 1712412375136
     },
     {
-      "compromised_hosts": 12,
-      "damage_score": 30.95,
-      "detection_count": 108,
-      "rewards_sum": 402.6,
+      "compromised_hosts": 11,
+      "damage_score": 26.15,
+      "detection_count": 106,
+      "rewards_sum": 410.6,
       "step": 160,
       "ts_ms": 1712412375256
     },
     {
-      "compromised_hosts": 12,
-      "damage_score": 30.5,
-      "detection_count": 108,
-      "rewards_sum": 405.45,
+      "compromised_hosts": 11,
+      "damage_score": 25.7,
+      "detection_count": 106,
+      "rewards_sum": 413.45,
       "step": 161,
       "ts_ms": 1712412375376
     },
     {
-      "compromised_hosts": 12,
-      "damage_score": 32.25,
-      "detection_count": 109,
-      "rewards_sum": 404.3,
+      "compromised_hosts": 11,
+      "damage_score": 27.45,
+      "detection_count": 107,
+      "rewards_sum": 412.3,
       "step": 162,
       "ts_ms": 1712412375496
     },
     {
-      "compromised_hosts": 12,
-      "damage_score": 31.8,
-      "detection_count": 109,
-      "rewards_sum": 407.15,
+      "compromised_hosts": 11,
+      "damage_score": 27.0,
+      "detection_count": 107,
+      "rewards_sum": 415.15,
       "step": 163,
       "ts_ms": 1712412375616
     },
     {
-      "compromised_hosts": 12,
-      "damage_score": 31.35,
-      "detection_count": 109,
-      "rewards_sum": 410.0,
+      "compromised_hosts": 11,
+      "damage_score": 26.55,
+      "detection_count": 107,
+      "rewards_sum": 418.0,
       "step": 164,
       "ts_ms": 1712412375736
     },
     {
-      "compromised_hosts": 12,
-      "damage_score": 30.9,
-      "detection_count": 109,
-      "rewards_sum": 412.85,
+      "compromised_hosts": 11,
+      "damage_score": 26.1,
+      "detection_count": 107,
+      "rewards_sum": 420.85,
       "step": 165,
       "ts_ms": 1712412375856
     },
     {
-      "compromised_hosts": 12,
-      "damage_score": 32.05,
-      "detection_count": 109,
-      "rewards_sum": 411.7,
+      "compromised_hosts": 11,
+      "damage_score": 27.25,
+      "detection_count": 107,
+      "rewards_sum": 419.7,
       "step": 166,
       "ts_ms": 1712412375976
     },
     {
-      "compromised_hosts": 12,
-      "damage_score": 31.6,
-      "detection_count": 110,
-      "rewards_sum": 416.55,
+      "compromised_hosts": 11,
+      "damage_score": 26.8,
+      "detection_count": 108,
+      "rewards_sum": 424.55,
       "step": 167,
       "ts_ms": 1712412376096
     },
     {
-      "compromised_hosts": 12,
-      "damage_score": 33.35,
-      "detection_count": 111,
-      "rewards_sum": 415.4,
+      "compromised_hosts": 11,
+      "damage_score": 28.55,
+      "detection_count": 109,
+      "rewards_sum": 423.4,
       "step": 168,
       "ts_ms": 1712412376216
     },
     {
-      "compromised_hosts": 12,
-      "damage_score": 32.9,
-      "detection_count": 112,
-      "rewards_sum": 420.25,
+      "compromised_hosts": 11,
+      "damage_score": 28.1,
+      "detection_count": 110,
+      "rewards_sum": 428.25,
       "step": 169,
       "ts_ms": 1712412376336
     },
     {
-      "compromised_hosts": 12,
-      "damage_score": 32.45,
-      "detection_count": 112,
-      "rewards_sum": 423.1,
+      "compromised_hosts": 11,
+      "damage_score": 27.65,
+      "detection_count": 110,
+      "rewards_sum": 431.1,
       "step": 170,
       "ts_ms": 1712412376456
     },
     {
-      "compromised_hosts": 12,
-      "damage_score": 32.0,
-      "detection_count": 112,
-      "rewards_sum": 425.95,
+      "compromised_hosts": 11,
+      "damage_score": 27.2,
+      "detection_count": 110,
+      "rewards_sum": 433.95,
       "step": 171,
       "ts_ms": 1712412376576
     },
     {
-      "compromised_hosts": 12,
-      "damage_score": 31.55,
-      "detection_count": 113,
-      "rewards_sum": 430.8,
+      "compromised_hosts": 11,
+      "damage_score": 26.75,
+      "detection_count": 111,
+      "rewards_sum": 438.8,
       "step": 172,
       "ts_ms": 1712412376696
     },
     {
-      "compromised_hosts": 12,
-      "damage_score": 31.1,
-      "detection_count": 114,
-      "rewards_sum": 435.65,
+      "compromised_hosts": 11,
+      "damage_score": 26.3,
+      "detection_count": 112,
+      "rewards_sum": 443.65,
       "step": 173,
       "ts_ms": 1712412376816
     },
     {
-      "compromised_hosts": 12,
-      "damage_score": 32.85,
-      "detection_count": 115,
-      "rewards_sum": 434.5,
+      "compromised_hosts": 11,
+      "damage_score": 28.05,
+      "detection_count": 113,
+      "rewards_sum": 442.5,
       "step": 174,
       "ts_ms": 1712412376936
     },
     {
-      "compromised_hosts": 12,
-      "damage_score": 32.4,
-      "detection_count": 116,
-      "rewards_sum": 439.35,
+      "compromised_hosts": 11,
+      "damage_score": 27.6,
+      "detection_count": 114,
+      "rewards_sum": 447.35,
       "step": 175,
       "ts_ms": 1712412377056
     },
     {
-      "compromised_hosts": 12,
-      "damage_score": 31.95,
-      "detection_count": 117,
-      "rewards_sum": 444.2,
+      "compromised_hosts": 11,
+      "damage_score": 27.15,
+      "detection_count": 115,
+      "rewards_sum": 452.2,
       "step": 176,
       "ts_ms": 1712412377176
     },
     {
-      "compromised_hosts": 12,
-      "damage_score": 33.1,
-      "detection_count": 118,
-      "rewards_sum": 445.05,
+      "compromised_hosts": 11,
+      "damage_score": 28.3,
+      "detection_count": 116,
+      "rewards_sum": 453.05,
       "step": 177,
       "ts_ms": 1712412377296
     },
     {
-      "compromised_hosts": 12,
-      "damage_score": 34.25,
-      "detection_count": 119,
-      "rewards_sum": 445.9,
+      "compromised_hosts": 11,
+      "damage_score": 29.45,
+      "detection_count": 117,
+      "rewards_sum": 453.9,
       "step": 178,
       "ts_ms": 1712412377416
     },
     {
-      "compromised_hosts": 13,
-      "damage_score": 35.4,
-      "detection_count": 120,
-      "rewards_sum": 446.75,
+      "compromised_hosts": 11,
+      "damage_score": 29.0,
+      "detection_count": 117,
+      "rewards_sum": 456.75,
       "step": 179,
       "ts_ms": 1712412377536
     },
     {
-      "compromised_hosts": 13,
-      "damage_score": 37.15,
-      "detection_count": 121,
-      "rewards_sum": 445.6,
+      "compromised_hosts": 11,
+      "damage_score": 30.75,
+      "detection_count": 118,
+      "rewards_sum": 455.6,
       "step": 180,
       "ts_ms": 1712412377656
     },
     {
-      "compromised_hosts": 13,
-      "damage_score": 36.7,
-      "detection_count": 121,
-      "rewards_sum": 448.45,
+      "compromised_hosts": 11,
+      "damage_score": 30.3,
+      "detection_count": 118,
+      "rewards_sum": 458.45,
       "step": 181,
       "ts_ms": 1712412377776
     },
     {
-      "compromised_hosts": 13,
-      "damage_score": 36.25,
-      "detection_count": 122,
-      "rewards_sum": 453.3,
+      "compromised_hosts": 11,
+      "damage_score": 29.85,
+      "detection_count": 119,
+      "rewards_sum": 463.3,
       "step": 182,
       "ts_ms": 1712412377896
     },
     {
-      "compromised_hosts": 13,
-      "damage_score": 35.8,
-      "detection_count": 123,
-      "rewards_sum": 458.15,
+      "compromised_hosts": 11,
+      "damage_score": 29.4,
+      "detection_count": 120,
+      "rewards_sum": 468.15,
       "step": 183,
       "ts_ms": 1712412378016
     },
     {
-      "compromised_hosts": 13,
-      "damage_score": 36.95,
-      "detection_count": 124,
-      "rewards_sum": 459.0,
+      "compromised_hosts": 11,
+      "damage_score": 28.95,
+      "detection_count": 121,
+      "rewards_sum": 473.0,
       "step": 184,
       "ts_ms": 1712412378136
     },
     {
-      "compromised_hosts": 13,
-      "damage_score": 36.5,
-      "detection_count": 125,
-      "rewards_sum": 463.85,
+      "compromised_hosts": 11,
+      "damage_score": 28.5,
+      "detection_count": 122,
+      "rewards_sum": 477.85,
       "step": 185,
       "ts_ms": 1712412378256
     },
     {
-      "compromised_hosts": 13,
-      "damage_score": 38.25,
-      "detection_count": 125,
-      "rewards_sum": 460.7,
+      "compromised_hosts": 11,
+      "damage_score": 30.25,
+      "detection_count": 122,
+      "rewards_sum": 474.7,
       "step": 186,
       "ts_ms": 1712412378376
     },
     {
-      "compromised_hosts": 13,
-      "damage_score": 37.8,
-      "detection_count": 126,
-      "rewards_sum": 465.55,
+      "compromised_hosts": 11,
+      "damage_score": 29.8,
+      "detection_count": 123,
+      "rewards_sum": 479.55,
       "step": 187,
       "ts_ms": 1712412378496
     },
     {
-      "compromised_hosts": 13,
-      "damage_score": 37.35,
-      "detection_count": 126,
-      "rewards_sum": 468.4,
+      "compromised_hosts": 11,
+      "damage_score": 29.35,
+      "detection_count": 123,
+      "rewards_sum": 482.4,
       "step": 188,
       "ts_ms": 1712412378616
     },
     {
-      "compromised_hosts": 13,
-      "damage_score": 38.5,
-      "detection_count": 127,
-      "rewards_sum": 469.25,
+      "compromised_hosts": 11,
+      "damage_score": 28.9,
+      "detection_count": 124,
+      "rewards_sum": 487.25,
       "step": 189,
       "ts_ms": 1712412378736
     },
     {
-      "compromised_hosts": 13,
-      "damage_score": 38.05,
-      "detection_count": 127,
-      "rewards_sum": 472.1,
+      "compromised_hosts": 11,
+      "damage_score": 28.45,
+      "detection_count": 124,
+      "rewards_sum": 490.1,
       "step": 190,
       "ts_ms": 1712412378856
     },
     {
-      "compromised_hosts": 13,
-      "damage_score": 39.2,
-      "detection_count": 128,
-      "rewards_sum": 472.95,
+      "compromised_hosts": 11,
+      "damage_score": 28.0,
+      "detection_count": 125,
+      "rewards_sum": 494.95,
       "step": 191,
       "ts_ms": 1712412378976
     },
     {
-      "compromised_hosts": 13,
-      "damage_score": 40.95,
-      "detection_count": 129,
-      "rewards_sum": 471.8,
+      "compromised_hosts": 11,
+      "damage_score": 29.75,
+      "detection_count": 126,
+      "rewards_sum": 493.8,
       "step": 192,
       "ts_ms": 1712412379096
     },
     {
-      "compromised_hosts": 13,
-      "damage_score": 40.5,
-      "detection_count": 130,
-      "rewards_sum": 476.65,
+      "compromised_hosts": 11,
+      "damage_score": 29.3,
+      "detection_count": 127,
+      "rewards_sum": 498.65,
       "step": 193,
       "ts_ms": 1712412379216
     },
     {
-      "compromised_hosts": 13,
-      "damage_score": 40.05,
-      "detection_count": 130,
-      "rewards_sum": 479.5,
+      "compromised_hosts": 11,
+      "damage_score": 28.85,
+      "detection_count": 127,
+      "rewards_sum": 501.5,
       "step": 194,
       "ts_ms": 1712412379336
     },
     {
-      "compromised_hosts": 13,
-      "damage_score": 39.6,
-      "detection_count": 131,
-      "rewards_sum": 484.35,
+      "compromised_hosts": 11,
+      "damage_score": 28.4,
+      "detection_count": 128,
+      "rewards_sum": 506.35,
       "step": 195,
       "ts_ms": 1712412379456
     },
     {
-      "compromised_hosts": 13,
-      "damage_score": 40.75,
-      "detection_count": 131,
-      "rewards_sum": 483.2,
+      "compromised_hosts": 11,
+      "damage_score": 29.55,
+      "detection_count": 128,
+      "rewards_sum": 505.2,
       "step": 196,
       "ts_ms": 1712412379576
     },
     {
-      "compromised_hosts": 13,
-      "damage_score": 41.9,
-      "detection_count": 131,
-      "rewards_sum": 482.05,
+      "compromised_hosts": 11,
+      "damage_score": 30.7,
+      "detection_count": 128,
+      "rewards_sum": 504.05,
       "step": 197,
       "ts_ms": 1712412379696
     },
     {
-      "compromised_hosts": 13,
-      "damage_score": 43.65,
-      "detection_count": 131,
-      "rewards_sum": 478.9,
+      "compromised_hosts": 11,
+      "damage_score": 32.45,
+      "detection_count": 128,
+      "rewards_sum": 500.9,
       "step": 198,
       "ts_ms": 1712412379816
     },
     {
-      "compromised_hosts": 13,
-      "damage_score": 43.2,
-      "detection_count": 132,
-      "rewards_sum": 483.75,
+      "compromised_hosts": 11,
+      "damage_score": 32.0,
+      "detection_count": 129,
+      "rewards_sum": 505.75,
       "step": 199,
       "ts_ms": 1712412379936
     },
     {
-      "compromised_hosts": 13,
-      "damage_score": 42.75,
-      "detection_count": 133,
-      "rewards_sum": 488.6,
+      "compromised_hosts": 11,
+      "damage_score": 31.55,
+      "detection_count": 130,
+      "rewards_sum": 510.6,
       "step": 200,
       "ts_ms": 1712412380056
     }
