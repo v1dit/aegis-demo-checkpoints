@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Graph from "../components/Graph";
 import {
   connectEventsStream,
@@ -63,6 +63,18 @@ type EpisodeCard = {
   createdAt: string;
   runId: string;
   status: "ACTIVE" | "READY" | "ARCHIVED";
+};
+
+type RiskLevel = "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
+
+type FormattedIncident = {
+  step: number;
+  actor: ReplayEvent["actor"];
+  target: string;
+  action: string;
+  narrative: string;
+  riskLevel: RiskLevel;
+  riskScore: number;
 };
 
 const SCENARIO_LANES: Array<{
@@ -177,6 +189,95 @@ function replayStatus(index: number): EpisodeCard["status"] {
   if (index === 0) return "ACTIVE";
   if (index < 4) return "READY";
   return "ARCHIVED";
+}
+
+function clamp(value: number, min: number, max: number): number {
+  return Math.max(min, Math.min(max, value));
+}
+
+function humanizeAction(action: string): string {
+  return action
+    .replaceAll("_", " ")
+    .replaceAll("-", " ")
+    .trim()
+    .replace(/\s+/g, " ")
+    .toLowerCase();
+}
+
+function scoreRisk(event: ReplayEvent): number {
+  const action = event.action.toLowerCase();
+  const target = event.target.toLowerCase();
+  let score = event.actor === "RED" ? 50 : 30;
+
+  if (action.includes("scan") || action.includes("enumerate") || action.includes("recon")) score += 10;
+  if (action.includes("exploit") || action.includes("execute")) score += 16;
+  if (action.includes("credential") || action.includes("phish")) score += 20;
+  if (action.includes("lateral") || action.includes("pivot")) score += 18;
+  if (action.includes("traffic_spike") || action.includes("anomaly")) score += 12;
+  if (action.includes("exfil") || action.includes("dump") || action.includes("ransom")) score += 28;
+  if (action.includes("isolate") || action.includes("block") || action.includes("quarantine")) score -= 14;
+  if (action.includes("step_marker")) score -= 20;
+
+  if (target.includes("engine") || target.includes("identity") || target.includes("vault")) score += 16;
+  if (target.includes("db") || target.includes("core") || target.includes("gateway")) score += 12;
+  if (target.startsWith("host-0")) score += 6;
+
+  return clamp(score, 0, 100);
+}
+
+function riskLevelFromScore(score: number): RiskLevel {
+  if (score <= 29) return "LOW";
+  if (score <= 59) return "MEDIUM";
+  if (score <= 79) return "HIGH";
+  return "CRITICAL";
+}
+
+function buildNarrative(event: ReplayEvent, riskLevel: RiskLevel, riskScore: number): string {
+  const action = event.action.toLowerCase();
+  const actionLabel = humanizeAction(event.action);
+  const actorLabel = event.actor === "RED" ? "Red-team" : "Blue-team";
+  const targetLabel = event.target;
+
+  if (action.includes("traffic_spike")) {
+    return `${actorLabel} telemetry detected abnormal traffic on ${targetLabel}, indicating possible lateral movement pressure. This event is assessed as ${riskLevel} risk at ${riskScore}%.`;
+  }
+
+  if (action.includes("scan")) {
+    return `${actorLabel} reconnaissance scanned ${targetLabel} to map exposed services and entry paths. This event is assessed as ${riskLevel} risk at ${riskScore}%.`;
+  }
+
+  if (action.includes("enumerate")) {
+    return `${actorLabel} service enumeration profiled ${targetLabel} to identify exploitable interfaces. This event is assessed as ${riskLevel} risk at ${riskScore}%.`;
+  }
+
+  if (action.includes("isolate")) {
+    return `${actorLabel} containment isolated ${targetLabel} from connected systems to limit adversary spread. This event is assessed as ${riskLevel} risk at ${riskScore}%.`;
+  }
+
+  if (action.includes("monitor")) {
+    return `${actorLabel} monitoring intensified observation on ${targetLabel} after suspicious signals were detected. This event is assessed as ${riskLevel} risk at ${riskScore}%.`;
+  }
+
+  if (action.includes("step_marker")) {
+    return `The simulator recorded a campaign checkpoint at ${targetLabel} to preserve the current attack-defense state. This point-in-time signal is assessed as ${riskLevel} risk at ${riskScore}%.`;
+  }
+
+  return `${actorLabel} executed ${actionLabel} against ${targetLabel} as part of the active engagement sequence. This event is assessed as ${riskLevel} risk at ${riskScore}%.`;
+}
+
+function formatIncident(event: ReplayEvent): FormattedIncident {
+  const riskScore = scoreRisk(event);
+  const riskLevel = riskLevelFromScore(riskScore);
+
+  return {
+    step: event.step,
+    actor: event.actor,
+    target: event.target,
+    action: event.action,
+    narrative: buildNarrative(event, riskLevel, riskScore),
+    riskLevel,
+    riskScore,
+  };
 }
 
 export default function Home() {
@@ -386,9 +487,7 @@ export default function Home() {
     };
 
     events.forEach((event) => {
-      if (event.actor === "RED") {
-        counts[classifyAction(event.action)] += 1;
-      }
+      counts[classifyAction(event.action)] += 1;
     });
 
     return ALERT_ORDER.map((label, idx) => ({
@@ -471,6 +570,10 @@ export default function Home() {
   }, [replayCatalog, selectedReplayId, selectedLane]);
 
   const logFeed = useMemo(() => events.slice(-100).reverse(), [events]);
+  const formattedLogFeed = useMemo(
+    () => logFeed.map((event) => formatIncident(event)),
+    [logFeed],
+  );
 
   const statusTone =
     dataSource.mode === "mock"
@@ -553,7 +656,7 @@ export default function Home() {
             <CommandSlide
               alertData={alertData}
               threatBalance={threatBalance}
-              logFeed={logFeed}
+              logFeed={formattedLogFeed}
               hotTargets={hotTargets}
               graphTopology={graphTopology}
               graphEvents={log}
@@ -561,7 +664,7 @@ export default function Home() {
           ) : null}
 
           {activeSlide === "episodes" ? (
-            <EpisodesSlide episodes={episodes} trendBins={trendBins} logFeed={logFeed} />
+            <EpisodesSlide episodes={episodes} trendBins={trendBins} logFeed={formattedLogFeed} />
           ) : null}
 
           {activeSlide === "mission" ? (
@@ -588,12 +691,50 @@ function CommandSlide({
 }: {
   alertData: AlertDatum[];
   threatBalance: ThreatBalance;
-  logFeed: ReplayEvent[];
+  logFeed: FormattedIncident[];
   hotTargets: Array<{ target: string; value: number }>;
   graphTopology: ReplayTopology | null;
   graphEvents: ReplayEvent[];
 }) {
+  const threatStatusRef = useRef<HTMLElement | null>(null);
+  const liveLogRef = useRef<HTMLElement | null>(null);
+  const [desktopThreatHeight, setDesktopThreatHeight] = useState<number | null>(null);
+
   const maxAlert = Math.max(...alertData.map((item) => item.count), 1);
+  const totalAlerts = alertData.reduce((sum, item) => sum + item.count, 0);
+  const dominantAlert = alertData.reduce(
+    (best, item) => (item.count > best.count ? item : best),
+    alertData[0],
+  );
+  const dominantShare = totalAlerts > 0 ? Math.round((dominantAlert.count / totalAlerts) * 100) : 0;
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const threatEl = threatStatusRef.current;
+    if (!threatEl) return;
+
+    const sync = () => {
+      if (window.innerWidth < 1280) {
+        setDesktopThreatHeight(null);
+        return;
+      }
+      const nextHeight = Math.ceil(threatEl.getBoundingClientRect().height);
+      setDesktopThreatHeight(nextHeight > 0 ? nextHeight : null);
+    };
+
+    sync();
+
+    const observer = new ResizeObserver(() => {
+      sync();
+    });
+    observer.observe(threatEl);
+    window.addEventListener("resize", sync);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", sync);
+    };
+  }, []);
 
   return (
     <div className="grid gap-5 xl:grid-cols-12">
@@ -607,20 +748,43 @@ function CommandSlide({
           </span>
         </div>
 
-        <div className="mt-5 flex h-44 items-end gap-2">
+        <div className="mt-4 text-[11px] text-red-100/80">
+          {totalAlerts > 0 ? (
+            <span>
+              Dominant signal: <span className="font-semibold text-red-100">{dominantAlert.label}</span> with{" "}
+              <span className="font-semibold text-red-100">{dominantAlert.count}</span> events (
+              {dominantShare}%). Current open pressure remains {threatBalance.open} incidents.
+            </span>
+          ) : (
+            <span>
+              Waiting for incoming telemetry. Classification bars remain visible and will update as soon as
+              events arrive.
+            </span>
+          )}
+        </div>
+
+        <div className="mt-4 flex h-56 items-end gap-2 rounded-lg border border-red-500/25 bg-black/30 p-3">
           {alertData.map((item) => {
-            const heightPct = Math.max((item.count / maxAlert) * 100, item.count > 0 ? 16 : 7);
+            const sharePct = totalAlerts > 0 ? Math.round((item.count / totalAlerts) * 100) : 0;
+            const fillPct = item.count > 0 ? Math.max((item.count / maxAlert) * 100, 14) : 0;
             return (
               <div key={item.label} className="flex flex-1 flex-col items-center gap-2">
-                <div
-                  className="w-full rounded-t-md border border-black/30 bg-gradient-to-t from-black/60"
-                  style={{
-                    height: `${heightPct}%`,
-                    backgroundImage: `linear-gradient(to top, rgba(3,7,18,0.7), ${item.accent})`,
-                  }}
-                />
+                <div className="relative h-36 w-full rounded-md border border-white/10 bg-[#070a13]">
+                  <div className="absolute inset-x-2 bottom-2 top-2 rounded-sm border border-red-500/15 bg-black/30" />
+                  <div
+                    className="absolute inset-x-3 bottom-3 rounded-sm"
+                    style={{
+                      height: `${fillPct}%`,
+                      backgroundImage: `linear-gradient(to top, rgba(3,7,18,0.78), ${item.accent})`,
+                      opacity: item.count > 0 ? 0.95 : 0.35,
+                    }}
+                  />
+                </div>
                 <span className="text-center text-[10px] uppercase tracking-[0.12em] text-red-100/80">
                   {item.label}
+                </span>
+                <span className="text-[10px] font-semibold uppercase tracking-[0.1em] text-red-200/90">
+                  {item.count} · {sharePct}%
                 </span>
               </div>
             );
@@ -636,7 +800,7 @@ function CommandSlide({
         />
       </article>
 
-      <article className="aegis-card p-4 xl:col-span-4">
+      <article ref={threatStatusRef} className="aegis-card p-4 xl:col-span-4">
         <div className="flex items-center justify-between">
           <h2 className="font-display text-sm uppercase tracking-[0.2em] text-[#fecaca]">Threat Status</h2>
           <span className="text-xs uppercase tracking-[0.12em] text-red-100/80">Blue vs Red</span>
@@ -686,7 +850,11 @@ function CommandSlide({
         </div>
       </article>
 
-      <article className="aegis-card p-4 xl:col-span-8">
+      <article
+        ref={liveLogRef}
+        className="aegis-card p-4 xl:col-span-8 flex min-h-[440px] flex-col overflow-hidden"
+        style={desktopThreatHeight ? { height: `${desktopThreatHeight}px` } : undefined}
+      >
         <div className="mb-3 flex items-center justify-between">
           <h2 className="font-display text-sm uppercase tracking-[0.2em] text-[#fecaca]">Live Tactical Log</h2>
           <span className="text-[11px] uppercase tracking-[0.12em] text-red-100/80">
@@ -694,11 +862,11 @@ function CommandSlide({
           </span>
         </div>
 
-        <div className="h-[260px] overflow-auto rounded-lg border border-red-500/25 bg-black/40 p-2">
+        <div className="min-h-[260px] flex-1 overflow-y-auto rounded-lg border border-red-500/25 bg-black/40 p-2">
           {logFeed.map((event) => (
             <div
-              key={`${event.step}-${event.target}-${event.action}`}
-              className="mb-2 grid grid-cols-[68px_72px_1fr_180px] gap-2 rounded-md border border-white/8 bg-black/30 px-2 py-2 text-xs"
+              key={`${event.step}-${event.target}-${event.action}-${event.riskScore}`}
+              className="mb-2 grid gap-2 rounded-md border border-white/8 bg-black/30 px-2 py-2 text-xs md:grid-cols-[68px_72px_minmax(0,1fr)_150px_130px]"
             >
               <span className="font-mono text-red-100/80">#{event.step.toString().padStart(3, "0")}</span>
               <span
@@ -710,8 +878,9 @@ function CommandSlide({
               >
                 {event.actor}
               </span>
-              <span className="truncate text-red-50/95">{event.action}</span>
+              <span className="text-red-50/95">{event.narrative}</span>
               <span className="truncate text-red-200/80">{event.target}</span>
+              <RiskBadge level={event.riskLevel} score={event.riskScore} />
             </div>
           ))}
         </div>
@@ -727,7 +896,7 @@ function EpisodesSlide({
 }: {
   episodes: EpisodeCard[];
   trendBins: TrendBin[];
-  logFeed: ReplayEvent[];
+  logFeed: FormattedIncident[];
 }) {
   const maxBinValue = Math.max(
     ...trendBins.map((bin) => Math.max(bin.red, bin.blue)),
@@ -796,21 +965,22 @@ function EpisodesSlide({
         </div>
       </article>
 
-      <article className="aegis-card p-4 xl:col-span-12">
+      <article className="aegis-card p-4 xl:col-span-12 flex min-h-[500px] flex-col">
         <h2 className="font-display text-sm uppercase tracking-[0.2em] text-[#fecaca]">Complete Incident Chronicle</h2>
-        <div className="mt-3 h-[300px] overflow-auto rounded-lg border border-red-500/20 bg-black/35">
+        <div className="mt-3 min-h-[300px] flex-1 overflow-auto rounded-lg border border-red-500/20 bg-black/35">
           <table className="w-full text-left text-xs">
             <thead className="sticky top-0 bg-[#0c0f19] text-red-200">
               <tr>
                 <th className="px-3 py-2 font-semibold uppercase tracking-[0.12em]">Step</th>
                 <th className="px-3 py-2 font-semibold uppercase tracking-[0.12em]">Actor</th>
-                <th className="px-3 py-2 font-semibold uppercase tracking-[0.12em]">Action</th>
+                <th className="px-3 py-2 font-semibold uppercase tracking-[0.12em]">Narrative</th>
                 <th className="px-3 py-2 font-semibold uppercase tracking-[0.12em]">Target</th>
+                <th className="px-3 py-2 font-semibold uppercase tracking-[0.12em]">Risk</th>
               </tr>
             </thead>
             <tbody>
               {logFeed.map((event) => (
-                <tr key={`${event.step}-${event.target}-${event.action}`} className="border-t border-white/8">
+                <tr key={`${event.step}-${event.target}-${event.action}-${event.riskScore}`} className="border-t border-white/8 align-top">
                   <td className="px-3 py-2 font-mono text-red-100/80">{event.step}</td>
                   <td className="px-3 py-2">
                     <span
@@ -823,8 +993,11 @@ function EpisodesSlide({
                       {event.actor}
                     </span>
                   </td>
-                  <td className="px-3 py-2 text-red-50/95">{event.action}</td>
+                  <td className="px-3 py-2 text-red-50/95">{event.narrative}</td>
                   <td className="px-3 py-2 text-red-200/80">{event.target}</td>
+                  <td className="px-3 py-2">
+                    <RiskBadge level={event.riskLevel} score={event.riskScore} />
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -935,6 +1108,29 @@ function ShieldLogo() {
         <path d="M64 35v24h18V43l-18-8Z" fill="#fb7185" opacity="0.9" />
       </svg>
     </div>
+  );
+}
+
+function riskToneClass(level: RiskLevel): string {
+  if (level === "LOW") return "border-cyan-400/60 bg-cyan-500/15 text-cyan-100";
+  if (level === "MEDIUM") return "border-yellow-400/60 bg-yellow-500/15 text-yellow-100";
+  if (level === "HIGH") return "border-orange-400/60 bg-orange-500/20 text-orange-100";
+  return "border-red-400/65 bg-red-500/20 text-red-100";
+}
+
+function RiskBadge({
+  level,
+  score,
+}: {
+  level: RiskLevel;
+  score: number;
+}) {
+  return (
+    <span
+      className={`inline-flex items-center justify-center rounded px-2 py-0.5 text-[11px] font-semibold uppercase tracking-[0.08em] ${riskToneClass(level)}`}
+    >
+      {level} · {score}%
+    </span>
   );
 }
 
