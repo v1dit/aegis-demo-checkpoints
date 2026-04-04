@@ -22,11 +22,8 @@ def _scenario_id_for_suite(suite_id: str) -> str:
     return f"scenario_{suite_id}"
 
 
-def _checkpoint_bias(checkpoint_id: str, run_id: str | None) -> float:
-    payload = read_checkpoint_payload(checkpoint_id=checkpoint_id, run_id=run_id)
-    if not payload:
-        return 0.82
-    return float(payload.get("policy_bias", 0.82))
+def _checkpoint_payload(checkpoint_id: str, run_id: str | None) -> dict:
+    return read_checkpoint_payload(checkpoint_id=checkpoint_id, run_id=run_id) or {}
 
 
 def evaluate_checkpoint(
@@ -40,7 +37,10 @@ def evaluate_checkpoint(
 ) -> EvalReport:
     scenario_id = _scenario_id_for_suite(suite_id)
     per_scenario: list[PerScenarioEval] = []
-    checkpoint_bias = _checkpoint_bias(checkpoint_id, run_id)
+    checkpoint_payload = _checkpoint_payload(checkpoint_id, run_id)
+    checkpoint_bias = (
+        float(checkpoint_payload["policy_bias"]) if "policy_bias" in checkpoint_payload else None
+    )
 
     total_blue_damage = 0.0
     total_none_damage = 0.0
@@ -67,6 +67,8 @@ def evaluate_checkpoint(
             checkpoint_id=checkpoint_id,
             defender_mode="ppo",
             checkpoint_bias=checkpoint_bias,
+            checkpoint_payload=checkpoint_payload,
+            run_id=run_id,
         )
 
         replay_id = f"replay_eval_{index:02d}"
