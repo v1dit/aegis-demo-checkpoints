@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { Core } from 'cytoscape';
+import type { ReplayTopology } from '../lib/api';
 
 type Actor = 'RED' | 'BLUE';
 
@@ -18,6 +19,7 @@ type GraphProps = {
    * Graph consumes the same data used to render logs.
    */
   events?: ReplayEvent[];
+  topology?: ReplayTopology | null;
   className?: string;
 };
 
@@ -56,11 +58,13 @@ const MOCK_EDGES: Array<[string, string]> = [
   ['host-09', 'host-10'],
 ];
 
-export default function Graph({ events = [], className }: GraphProps) {
+export default function Graph({ events = [], topology = null, className }: GraphProps) {
   const cyContainerRef = useRef<HTMLDivElement | null>(null);
   const cyRef = useRef<Core | null>(null);
   const processedEventsRef = useRef(0);
   const pendingTimeoutsRef = useRef<number[]>([]);
+  const lastTouchedNodeRef = useRef<string | null>(null);
+  const baseNodeIdsRef = useRef<string[]>(MOCK_NODES);
 
   const [statusByNode, setStatusByNode] = useState<Record<string, NodeStatus>>(() =>
     Object.fromEntries(MOCK_NODES.map((id) => [id, 'neutral'])) as Record<string, NodeStatus>,
@@ -87,7 +91,36 @@ export default function Graph({ events = [], className }: GraphProps) {
     const cy = cyRef.current;
     if (!cy) return;
 
-    const node = cy.getElementById(evt.target);
+    let node = cy.getElementById(evt.target);
+    if (!node?.length) {
+      cy.add({
+        group: 'nodes',
+        data: {
+          id: evt.target,
+          label: evt.target.toUpperCase(),
+        },
+      });
+
+      const previous = lastTouchedNodeRef.current;
+      if (previous && previous !== evt.target) {
+        const edgeId = `${previous}=>${evt.target}`;
+        if (!cy.getElementById(edgeId).length) {
+          cy.add({
+            group: 'edges',
+            data: {
+              id: edgeId,
+              source: previous,
+              target: evt.target,
+            },
+          });
+        }
+      }
+      cy.layout({ name: 'cose', animate: true, animationDuration: 280 }).run();
+      node = cy.getElementById(evt.target);
+    }
+
+    lastTouchedNodeRef.current = evt.target;
+
     if (node?.length) {
       node.animate(
         {
@@ -100,7 +133,8 @@ export default function Graph({ events = [], className }: GraphProps) {
         },
       );
 
-      if (evt.action === 'isolate' || evt.action === 'disconnect' || evt.action === 'remove_edge') {
+      const action = evt.action.toLowerCase();
+      if (action.includes('isolate') || action.includes('disconnect') || action.includes('remove')) {
         const connectedEdges = node.connectedEdges();
         connectedEdges.animate(
           {
@@ -151,8 +185,8 @@ export default function Graph({ events = [], className }: GraphProps) {
               'text-valign': 'center',
               'text-halign': 'center',
               'background-color': STATUS_COLORS.neutral,
-              width: 34,
-              height: 34,
+              width: 30,
+              height: 30,
               'border-width': 2,
               'border-color': '#111827',
             },
@@ -186,10 +220,12 @@ export default function Graph({ events = [], className }: GraphProps) {
   useEffect(() => {
     if (!events?.length) return;
 
-    // If caller resets the event list, reset graph replay cursor.
     if (events.length < processedEventsRef.current) {
       processedEventsRef.current = 0;
-      setStatusByNode(Object.fromEntries(MOCK_NODES.map((id) => [id, 'neutral'])) as Record<string, NodeStatus>);
+      const baseNodeIds = baseNodeIdsRef.current;
+      setStatusByNode(
+        Object.fromEntries(baseNodeIds.map((id) => [id, 'neutral'])) as Record<string, NodeStatus>,
+      );
     }
 
     const freshEvents = events.slice(processedEventsRef.current);
@@ -207,6 +243,49 @@ export default function Graph({ events = [], className }: GraphProps) {
       pendingTimeoutsRef.current = [];
     };
   }, [events]);
+
+  useEffect(() => {
+    const cy = cyRef.current;
+    if (!cy) return;
+
+    const graphTopology = topology;
+    if (!graphTopology || graphTopology.nodes.length === 0) {
+      baseNodeIdsRef.current = [...MOCK_NODES];
+      return;
+    }
+
+    const nodeIds = graphTopology.nodes.map((node) => node.id);
+    baseNodeIdsRef.current = [...nodeIds];
+    setStatusByNode(
+      Object.fromEntries(nodeIds.map((id) => [id, 'neutral'])) as Record<string, NodeStatus>,
+    );
+
+    processedEventsRef.current = 0;
+    lastTouchedNodeRef.current = null;
+
+    cy.elements().remove();
+
+    cy.add(
+      graphTopology.nodes.map((node) => ({
+        group: 'nodes',
+        data: {
+          id: node.id,
+          label: node.id.toUpperCase(),
+        },
+      })),
+    );
+    cy.add(
+      graphTopology.edges.map((edge) => ({
+        group: 'edges',
+        data: {
+          id: edge.id,
+          source: edge.source,
+          target: edge.target,
+        },
+      })),
+    );
+    cy.layout({ name: 'cose', animate: true, animationDuration: 520, nodeRepulsion: 7000 }).run();
+  }, [topology]);
 
   return (
     <section className={`h-full w-full bg-[#0b0f17] p-4 text-gray-100 ${className ?? ''}`}>
