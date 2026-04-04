@@ -1,31 +1,32 @@
 from __future__ import annotations
 
 import json
+import math
 import threading
 from pathlib import Path
 from typing import Any
 
 from backend.app.core.config import settings
-from backend.app.core.ids import prefixed_id
+from backend.app.core.ids import next_sequential_id
 from backend.app.core.runs import (
     ParentInfo,
     initialize_run_bundle,
+    list_run_ids,
     mirror_checkpoint_to_legacy,
     resolve_parent_info,
     run_stage_dirs,
     update_train_manifest,
 )
 from backend.app.core.state import shared_state
-from backend.app.rl.rllib_runner import RLlibUnavailableError, run_ppo_training
+from backend.app.rl.rllib_runner import (
+    RLlibUnavailableError,
+    preflight_gate_status,
+    run_ppo_training,
+)
 from backend.app.schemas.contracts import TrainRunRequest, TrainStatusResponse
 
-_train_counter = 0
-
-
-def _next_run_id() -> str:
-    global _train_counter
-    _train_counter += 1
-    return prefixed_id("run", _train_counter)
+def _next_run_id(existing_ids: list[str]) -> str:
+    return next_sequential_id(existing_ids, prefix="run", min_start=1)
 
 
 def _checkpoint_id_for_run(run_id: str) -> str:
@@ -52,6 +53,56 @@ def _runner_config(
         "scenario_id": settings.ppo_scenario_id,
         "red_stochastic_probability": settings.red_stochastic_probability,
     }
+
+
+def _preflight_config(
+    *,
+    run_id: str,
+    request: TrainRunRequest,
+    checkpoint_output_dir: Path,
+) -> dict[str, Any]:
+    config = _runner_config(
+        run_id=run_id,
+        request=request,
+        checkpoint_output_dir=checkpoint_output_dir,
+    )
+    config["max_iterations"] = settings.ppo_preflight_iterations
+    config["max_timesteps"] = min(
+        request.max_timesteps,
+        settings.ppo_preflight_iterations * settings.ppo_train_batch_size,
+    )
+    return config
+
+
+def _requires_preflight_gate(request: TrainRunRequest) -> bool:
+    if not settings.ppo_require_preflight_gate:
+        return False
+    return request.max_timesteps >= settings.ppo_heavy_timesteps_threshold
+
+
+def _preflight_learning_metrics(result: dict[str, Any]) -> dict[str, float]:
+    metrics = result.get("learning_metrics", {})
+    if not isinstance(metrics, dict):
+        return {}
+    payload = {
+        "preflight_episode_reward_mean": float(metrics.get("episode_reward_mean", 0.0)),
+        "preflight_timesteps_total": float(metrics.get("timesteps_total", 0.0)),
+        "preflight_policy_entropy": float(metrics.get("policy_entropy", 0.0)),
+        "preflight_prevention_events": float(metrics.get("prevention_events", 0.0)),
+        "preflight_repeat_penalty_events": float(metrics.get("repeat_penalty_events", 0.0)),
+    }
+    payload["preflight_repeat_penalty_probe"] = float(
+        result.get("reward_shaping_probe_repeat_penalties", 0.0)
+    )
+    return payload
+
+
+def _require_finite_metrics(metrics: dict[str, float]) -> list[str]:
+    invalid: list[str] = []
+    for key, value in metrics.items():
+        if not math.isfinite(float(value)):
+            invalid.append(key)
+    return invalid
 
 
 def _update_running_state(
@@ -123,6 +174,37 @@ def _run_ppo_training_job(run_id: str, request: TrainRunRequest, checkpoint_dir:
         shared_state.train_runs[run_id]["parent_checkpoint"] = parent_info.parent_checkpoint
 
     try:
+        if _requires_preflight_gate(request):
+            _update_running_state(
+                run_id,
+                phase="preflight",
+                timesteps=0,
+                learning_metrics={"preflight_started": 1.0},
+            )
+            preflight_result = run_ppo_training(
+                _preflight_config(
+                    run_id=run_id,
+                    request=request,
+                    checkpoint_output_dir=run_dirs["train"] / "preflight",
+                )
+            )
+            gate = preflight_gate_status(
+                preflight_result,
+                min_entropy=settings.ppo_preflight_min_entropy,
+            )
+            preflight_metrics = _preflight_learning_metrics(preflight_result)
+            invalid_metrics = _require_finite_metrics(preflight_metrics)
+            if invalid_metrics:
+                gate.errors.append(f"non_finite_metrics:{','.join(sorted(invalid_metrics))}")
+            _update_running_state(
+                run_id,
+                phase="preflight_completed",
+                timesteps=int(preflight_metrics.get("preflight_timesteps_total", 0.0)),
+                learning_metrics=preflight_metrics,
+            )
+            if not gate.passed:
+                raise RuntimeError(f"Preflight gate failed: {', '.join(gate.errors)}")
+
         _update_running_state(
             run_id,
             phase="initializing",
@@ -230,8 +312,9 @@ def _run_ppo_training_job(run_id: str, request: TrainRunRequest, checkpoint_dir:
 
 def start_training_job(request: TrainRunRequest, checkpoint_dir: Path) -> tuple[str, ParentInfo]:
     parent_info = resolve_parent_info(request.fresh_start)
-    run_id = request.run_id or _next_run_id()
     with shared_state.lock:
+        existing_ids = list_run_ids() + list(shared_state.train_runs.keys())
+        run_id = request.run_id or _next_run_id(existing_ids)
         shared_state.train_runs[run_id] = {
             "run_id": run_id,
             "status": "queued",

@@ -16,10 +16,22 @@ from backend.app.rl.policy_features import (
 )
 from backend.app.rl.red_policy import ScriptedRedPolicy
 from backend.app.rl.reward import compute_blue_reward
+from backend.app.rl.reward_shaping import (
+    ActionRepeatTracker,
+    prevention_success_for_transition,
+    repeat_penalty_probe_events,
+    survival_bonus_for_step,
+)
 
 
 class RLlibUnavailableError(RuntimeError):
     pass
+
+
+@dataclass
+class PreflightGateStatus:
+    passed: bool
+    errors: list[str]
 
 
 def rllib_available() -> bool:
@@ -51,6 +63,103 @@ def compute_deterministic_action(algo: Any, observation: list[float]) -> int:
     return int(prediction)
 
 
+def _first_finite_number(values: list[Any]) -> float | None:
+    for value in values:
+        if isinstance(value, int | float):
+            numeric = float(value)
+            if math.isfinite(numeric):
+                return numeric
+    return None
+
+
+def extract_policy_entropy(result: dict[str, Any]) -> float | None:
+    candidates: list[Any] = [
+        result.get("policy_entropy"),
+        result.get("entropy"),
+    ]
+
+    info = result.get("info", {})
+    if isinstance(info, dict):
+        learner = info.get("learner", {})
+        if isinstance(learner, dict):
+            for row in learner.values():
+                if not isinstance(row, dict):
+                    continue
+                stats = row.get("learner_stats", {})
+                if isinstance(stats, dict):
+                    candidates.extend(
+                        [
+                            stats.get("entropy"),
+                            stats.get("policy_entropy"),
+                            stats.get("mean_entropy"),
+                        ]
+                    )
+
+    learner_results = result.get("learner_results", {})
+    if isinstance(learner_results, dict):
+        for row in learner_results.values():
+            if not isinstance(row, dict):
+                continue
+            stats = row.get("learner_stats", {})
+            if isinstance(stats, dict):
+                candidates.extend(
+                    [
+                        stats.get("entropy"),
+                        stats.get("policy_entropy"),
+                        stats.get("mean_entropy"),
+                    ]
+                )
+
+    return _first_finite_number(candidates)
+
+
+def preflight_gate_status(
+    result: dict[str, Any],
+    *,
+    min_entropy: float = 0.01,
+) -> PreflightGateStatus:
+    errors: list[str] = []
+    learning_metrics = result.get("learning_metrics", {})
+    if not isinstance(learning_metrics, dict):
+        errors.append("learning_metrics_missing")
+        return PreflightGateStatus(passed=False, errors=errors)
+
+    reward_mean = learning_metrics.get("episode_reward_mean")
+    timesteps_total = learning_metrics.get("timesteps_total")
+    policy_entropy = learning_metrics.get("policy_entropy")
+
+    if not isinstance(reward_mean, int | float) or not math.isfinite(float(reward_mean)):
+        errors.append("episode_reward_mean_invalid")
+    if not isinstance(timesteps_total, int | float) or not math.isfinite(float(timesteps_total)):
+        errors.append("timesteps_total_invalid")
+    if not isinstance(policy_entropy, int | float):
+        errors.append("policy_entropy_missing")
+    elif not math.isfinite(float(policy_entropy)):
+        errors.append("policy_entropy_invalid")
+    elif float(policy_entropy) <= min_entropy:
+        errors.append("policy_entropy_collapsed")
+
+    repeat_probe = result.get("reward_shaping_probe_repeat_penalties")
+    if not isinstance(repeat_probe, int | float):
+        errors.append("repeat_penalty_probe_missing")
+    elif float(repeat_probe) <= 0:
+        errors.append("repeat_penalty_probe_not_triggered")
+
+    return PreflightGateStatus(passed=not errors, errors=errors)
+
+
+def _extract_custom_metric(result: dict[str, Any], name: str) -> float | None:
+    custom_metrics = result.get("custom_metrics", {})
+    if not isinstance(custom_metrics, dict):
+        return None
+    return _first_finite_number(
+        [
+            custom_metrics.get(name),
+            custom_metrics.get(f"{name}_mean"),
+        ]
+    )
+
+
 def restore_algorithm_from_checkpoint(checkpoint_path: str) -> Any:
     if not rllib_available():
         raise RLlibUnavailableError("ray[rllib] and gymnasium are required for PPO inference")
@@ -77,19 +186,31 @@ def _apply_blue_action(
     edge_status: dict[str, str],
     recent_red_target: str,
     cumulative_damage: float,
-) -> tuple[float, bool, float, float]:
+    repeat_tracker: ActionRepeatTracker,
+    step: int,
+) -> tuple[float, bool, float, float, bool, float, bool]:
     containment_success = False
     false_positive_cost = 0.0
     isolation_cost = 0.0
+    meaningful_state_change = False
 
     target_state = runtime[target_host]
+    previous_defense_state = target_state.defense_state
+    was_compromised = target_state.compromised
     if action_type == "monitor_host":
-        target_state.defense_state = "monitored"
+        if target_state.defense_state != "monitored":
+            target_state.defense_state = "monitored"
+            meaningful_state_change = True
     elif action_type == "patch_service":
         _ = target_service
-        target_state.defense_state = "hardened"
-        cumulative_damage = max(0.0, cumulative_damage - 0.15)
+        if target_state.defense_state not in {"hardened", "monitored"}:
+            target_state.defense_state = "hardened"
+            meaningful_state_change = True
+            if not target_state.compromised:
+                cumulative_damage = max(0.0, cumulative_damage - 0.15)
     elif action_type == "isolate_host":
+        if target_state.defense_state != "isolated" or not target_state.isolated:
+            meaningful_state_change = True
         target_state.defense_state = "isolated"
         target_state.isolated = True
         containment_success = target_state.compromised
@@ -99,21 +220,49 @@ def _apply_blue_action(
         for edge_id in sorted(edge_status.keys()):
             if target_host in edge_id and edge_status[edge_id] == "active":
                 edge_status[edge_id] = "blocked"
+                meaningful_state_change = True
     elif action_type == "block_connection":
         for edge_id in sorted(edge_status.keys()):
             if recent_red_target in edge_id and edge_status[edge_id] == "active":
                 edge_status[edge_id] = "blocked"
                 containment_success = True
+                meaningful_state_change = True
                 break
     elif action_type == "rotate_credentials":
-        target_state.defense_state = "hardened"
+        if target_state.defense_state != "hardened":
+            target_state.defense_state = "hardened"
+            meaningful_state_change = True
     elif action_type == "deploy_deception":
-        target_state.defense_state = "deception"
+        if target_state.defense_state != "deception":
+            target_state.defense_state = "deception"
+            meaningful_state_change = True
 
     if not target_state.compromised and action_type in {"isolate_host", "block_connection"}:
         false_positive_cost = 0.05
 
-    return cumulative_damage, containment_success, false_positive_cost, isolation_cost
+    prevention_success = prevention_success_for_transition(
+        action_type=action_type,
+        was_compromised=was_compromised,
+        previous_defense_state=previous_defense_state,
+        new_defense_state=target_state.defense_state,
+        meaningful_state_change=meaningful_state_change,
+    )
+    action_repeat_penalty = repeat_tracker.penalty_for(
+        action_type=action_type,
+        target_host=target_host,
+        step=step,
+        meaningful_state_change=meaningful_state_change,
+    )
+
+    return (
+        cumulative_damage,
+        containment_success,
+        false_positive_cost,
+        isolation_cost,
+        prevention_success,
+        action_repeat_penalty,
+        meaningful_state_change,
+    )
 
 
 def run_ppo_training(config: dict[str, Any]) -> dict[str, Any]:
@@ -163,6 +312,9 @@ def run_ppo_training(config: dict[str, Any]) -> dict[str, Any]:
             self._red_policy = ScriptedRedPolicy(seed=self._base_seed)
             self._recent_red_target = ""
             self._cumulative_damage = 0.0
+            self._repeat_tracker = ActionRepeatTracker()
+            self._prevention_events = 0
+            self._repeat_penalty_events = 0
 
         def _observation(self) -> np.ndarray:
             compromised_hosts = {
@@ -194,6 +346,9 @@ def run_ppo_training(config: dict[str, Any]) -> dict[str, Any]:
                 stochastic_branch_probability=self._red_stochastic_probability,
             )
             self._recent_red_target = self._hosts[0]
+            self._repeat_tracker = ActionRepeatTracker()
+            self._prevention_events = 0
+            self._repeat_penalty_events = 0
             return self._observation(), {}
 
         def step(self, action: int):
@@ -216,15 +371,18 @@ def run_ppo_training(config: dict[str, Any]) -> dict[str, Any]:
             exploit_probability = max(0.05, min(0.95, 0.55 - exploit_penalty - 0.08))
             red_success = False
             exfil_success = False
+            new_compromise = False
 
             if red_decision.action_type in {
                 "exploit_vulnerability",
                 "lateral_move",
                 "privilege_escalate",
             }:
+                target_was_compromised = red_target_runtime.compromised
                 red_success = step_rng.random() < exploit_probability
                 if red_success:
                     red_target_runtime.compromised = True
+                    new_compromise = not target_was_compromised
                     self._cumulative_damage += 1.6
 
             if red_decision.action_type == "exfiltrate_data":
@@ -249,6 +407,9 @@ def run_ppo_training(config: dict[str, Any]) -> dict[str, Any]:
                 containment_success,
                 false_positive_cost,
                 isolation_cost,
+                prevention_success,
+                action_repeat_penalty,
+                _,
             ) = _apply_blue_action(
                 action_type=action_type,
                 target_host=target_host,
@@ -257,7 +418,13 @@ def run_ppo_training(config: dict[str, Any]) -> dict[str, Any]:
                 edge_status=self._edge_status,
                 recent_red_target=self._recent_red_target,
                 cumulative_damage=self._cumulative_damage,
+                repeat_tracker=self._repeat_tracker,
+                step=self._step,
             )
+            if prevention_success:
+                self._prevention_events += 1
+            if action_repeat_penalty > 0:
+                self._repeat_penalty_events += 1
 
             monitored_target = self._runtime[self._recent_red_target]
             detect_prob = 0.3
@@ -275,9 +442,22 @@ def run_ppo_training(config: dict[str, Any]) -> dict[str, Any]:
                 containment_success=containment_success,
                 false_positive_cost=false_positive_cost,
                 isolation_cost=isolation_cost,
+                prevention_success=prevention_success,
+                survival_bonus=survival_bonus_for_step(
+                    exfil_success=exfil_success,
+                    new_compromise=new_compromise,
+                ),
+                service_disruption_penalty=(false_positive_cost + isolation_cost),
+                action_repeat_penalty=action_repeat_penalty,
             )
             terminated = self._step >= self._horizon
-            return self._observation(), reward, terminated, False, {}
+            info = {}
+            if terminated:
+                info = {
+                    "prevention_events": float(self._prevention_events),
+                    "repeat_penalty_events": float(self._repeat_penalty_events),
+                }
+            return self._observation(), reward, terminated, False, info
 
     checkpoint_output_dir = Path(str(config["checkpoint_output_dir"]))
     checkpoint_output_dir.mkdir(parents=True, exist_ok=True)
@@ -292,7 +472,12 @@ def run_ppo_training(config: dict[str, Any]) -> dict[str, Any]:
     run_id = str(config.get("run_id", "run_unknown"))
     max_timesteps = int(config.get("max_timesteps", 100000))
     train_batch_size = int(config.get("train_batch_size", 4000))
-    target_iterations = max(1, math.ceil(max_timesteps / float(max(1, train_batch_size))))
+    configured_iterations = int(config.get("max_iterations", 0))
+    target_iterations = (
+        max(1, configured_iterations)
+        if configured_iterations > 0
+        else max(1, math.ceil(max_timesteps / float(max(1, train_batch_size))))
+    )
     env_config = {
         "seed": int(config.get("seed", 42)),
         "scenario_id": str(config.get("scenario_id", "scenario_unseen_web_rce")),
@@ -339,6 +524,7 @@ def run_ppo_training(config: dict[str, Any]) -> dict[str, Any]:
         algo = config_obj.build()
         for index in range(1, target_iterations + 1):
             result = algo.train()
+            policy_entropy = extract_policy_entropy(result)
             iteration_metrics = {
                 "iteration": float(index),
                 "episode_reward_mean": float(result.get("episode_reward_mean", 0.0)),
@@ -348,6 +534,11 @@ def run_ppo_training(config: dict[str, Any]) -> dict[str, Any]:
                         "timesteps_total",
                         result.get("num_env_steps_sampled_lifetime", index * train_batch_size),
                     )
+                ),
+                "policy_entropy": float(policy_entropy) if policy_entropy is not None else 0.0,
+                "prevention_events": float(_extract_custom_metric(result, "prevention_events") or 0.0),
+                "repeat_penalty_events": float(
+                    _extract_custom_metric(result, "repeat_penalty_events") or 0.0
                 ),
             }
             metrics_history.append(iteration_metrics)
@@ -369,7 +560,11 @@ def run_ppo_training(config: dict[str, Any]) -> dict[str, Any]:
         "episode_reward_mean": 0.0,
         "episode_len_mean": 0.0,
         "timesteps_total": float(max_timesteps),
+        "policy_entropy": 0.0,
+        "prevention_events": 0.0,
+        "repeat_penalty_events": 0.0,
     }
+    repeat_probe = repeat_penalty_probe_events()
     return {
         "trainer": "rllib_ppo",
         "status": "completed",
@@ -380,6 +575,9 @@ def run_ppo_training(config: dict[str, Any]) -> dict[str, Any]:
             "episode_reward_mean": round(float(final_metrics["episode_reward_mean"]), 6),
             "episode_len_mean": round(float(final_metrics["episode_len_mean"]), 6),
             "timesteps_total": int(final_metrics["timesteps_total"]),
+            "policy_entropy": round(float(final_metrics["policy_entropy"]), 6),
+            "prevention_events": round(float(final_metrics["prevention_events"]), 6),
+            "repeat_penalty_events": round(float(final_metrics["repeat_penalty_events"]), 6),
         },
         "seed_strategy": {
             "base_seed": int(config.get("seed", 42)),
@@ -394,5 +592,6 @@ def run_ppo_training(config: dict[str, Any]) -> dict[str, Any]:
             "horizon": int(config.get("horizon", 200)),
             "scenario_id": str(config.get("scenario_id", "scenario_unseen_web_rce")),
         },
+        "reward_shaping_probe_repeat_penalties": repeat_probe,
         "iterations": metrics_history,
     }

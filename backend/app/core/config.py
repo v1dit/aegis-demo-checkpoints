@@ -19,6 +19,10 @@ class Settings(BaseSettings):
     ppo_horizon: int = 200
     ppo_scenario_id: str = "scenario_unseen_web_rce"
     red_stochastic_probability: float = 0.3
+    ppo_require_preflight_gate: bool = True
+    ppo_heavy_timesteps_threshold: int = 100000
+    ppo_preflight_iterations: int = 5
+    ppo_preflight_min_entropy: float = 0.01
 
     model_config = SettingsConfigDict(
         env_file=".env",
