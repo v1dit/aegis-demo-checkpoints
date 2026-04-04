@@ -21,11 +21,8 @@ DEMO_REPLAY_PLAN = [
 ]
 
 
-def _checkpoint_bias(checkpoint_id: str, run_id: str | None) -> float:
-    payload = read_checkpoint_payload(checkpoint_id=checkpoint_id, run_id=run_id)
-    if not payload:
-        return 0.82
-    return float(payload.get("policy_bias", 0.82))
+def _checkpoint_payload(checkpoint_id: str, run_id: str | None) -> dict:
+    return read_checkpoint_payload(checkpoint_id=checkpoint_id, run_id=run_id) or {}
 
 
 def package_demo_replays(
@@ -35,7 +32,10 @@ def package_demo_replays(
 ) -> list[ReplayManifest]:
     replay_root.mkdir(parents=True, exist_ok=True)
     manifests: list[ReplayManifest] = []
-    checkpoint_bias = _checkpoint_bias(checkpoint_id, run_id)
+    checkpoint_payload = _checkpoint_payload(checkpoint_id, run_id)
+    checkpoint_bias = (
+        float(checkpoint_payload["policy_bias"]) if "policy_bias" in checkpoint_payload else None
+    )
 
     for replay_id, scenario_id, seed in DEMO_REPLAY_PLAN:
         simulation = simulate_episode(
@@ -44,6 +44,8 @@ def package_demo_replays(
             checkpoint_id=checkpoint_id,
             defender_mode="ppo",
             checkpoint_bias=checkpoint_bias,
+            checkpoint_payload=checkpoint_payload,
+            run_id=run_id,
         )
         manifests.append(
             build_replay_bundle(
