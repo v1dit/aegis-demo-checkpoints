@@ -39,11 +39,15 @@ class TrainRunRequest(BaseModel):
     gpu_ids: list[int]
     max_timesteps: int = Field(ge=1)
     config_profile: str
+    fresh_start: bool = False
+    run_id: str | None = None
 
 
 class TrainRunResponse(BaseModel):
     run_id: str
     status: Literal["started"]
+    parent_run_id: str | None = None
+    parent_checkpoint: str | None = None
 
 
 class TrainStatusResponse(BaseModel):
@@ -51,6 +55,8 @@ class TrainStatusResponse(BaseModel):
     status: Literal["queued", "running", "completed", "failed"]
     phase: str
     timesteps: int
+    parent_run_id: str | None = None
+    parent_checkpoint: str | None = None
     checkpoint_path: str | None = None
     learning_metrics: dict[str, float] = Field(default_factory=dict)
 
@@ -59,11 +65,13 @@ class EvalRunRequest(BaseModel):
     checkpoint_id: str
     suite_id: str
     seeds: list[int]
+    run_id: str | None = None
 
 
 class EvalRunResponse(BaseModel):
     eval_id: str
     status: Literal["started"]
+    run_id: str
 
 
 class FeatureValue(BaseModel):
@@ -158,8 +166,10 @@ class PerScenarioEval(BaseModel):
 class EvalReport(BaseModel):
     eval_id: str
     suite_id: str
+    run_id: str | None = None
     kpis: EvalKpis
     per_scenario: list[PerScenarioEval]
+    improvement_delta_vs_parent: dict[str, float] | None = None
 
 
 class ReplayListItem(BaseModel):
@@ -170,10 +180,12 @@ class ReplayListItem(BaseModel):
 
 
 class ReplayListResponse(BaseModel):
+    run_id: str | None = None
     replays: list[ReplayListItem]
 
 
 class ReplayBundleResponse(BaseModel):
+    run_id: str | None = None
     replay_id: str
     bundle_dir: str
     manifest: ReplayManifest
