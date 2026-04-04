@@ -18,6 +18,7 @@ DEMO_REPLAY_PLAN = [
     ("replay_alt_02", "scenario_phishing_entry", 1001),
     ("replay_alt_03", "scenario_creds_chain", 1002),
     ("replay_alt_04", "scenario_data_zone_pivot", 1004),
+    ("replay_enterprise_05", "scenario_enterprise_crm_identity_chain_v1", 2005),
 ]
 
 
