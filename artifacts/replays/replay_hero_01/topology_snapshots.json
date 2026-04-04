@@ -331,6 +331,10 @@
         {
           "edge_id": "host_02->host_06",
           "status": "blocked"
+        },
+        {
+          "edge_id": "host_13->host_02",
+          "status": "blocked"
         }
       ],
       "node_changes": [
@@ -504,285 +508,237 @@
     "edges": [
       {
         "edge_id": "host_01->host_02",
+        "edge_type": "network",
         "source": "host_01",
         "status": "active",
         "target": "host_02"
       },
       {
-        "edge_id": "host_01->host_04",
-        "source": "host_01",
-        "status": "active",
-        "target": "host_04"
-      },
-      {
         "edge_id": "host_01->host_05",
+        "edge_type": "network",
         "source": "host_01",
         "status": "active",
         "target": "host_05"
       },
       {
-        "edge_id": "host_01->host_14",
-        "source": "host_01",
-        "status": "active",
-        "target": "host_14"
-      },
-      {
         "edge_id": "host_02->host_03",
+        "edge_type": "network",
         "source": "host_02",
         "status": "active",
         "target": "host_03"
       },
       {
         "edge_id": "host_02->host_06",
+        "edge_type": "network",
         "source": "host_02",
         "status": "active",
         "target": "host_06"
       },
       {
         "edge_id": "host_03->host_04",
+        "edge_type": "network",
         "source": "host_03",
         "status": "active",
         "target": "host_04"
       },
       {
         "edge_id": "host_03->host_07",
+        "edge_type": "network",
         "source": "host_03",
         "status": "active",
         "target": "host_07"
       },
       {
-        "edge_id": "host_04->host_06",
-        "source": "host_04",
-        "status": "active",
-        "target": "host_06"
-      },
-      {
         "edge_id": "host_04->host_08",
+        "edge_type": "network",
         "source": "host_04",
         "status": "active",
         "target": "host_08"
       },
       {
         "edge_id": "host_05->host_09",
+        "edge_type": "network",
         "source": "host_05",
         "status": "active",
         "target": "host_09"
       },
       {
+        "edge_id": "host_06->host_01",
+        "edge_type": "network",
+        "source": "host_06",
+        "status": "active",
+        "target": "host_01"
+      },
+      {
         "edge_id": "host_06->host_10",
+        "edge_type": "network",
         "source": "host_06",
         "status": "active",
         "target": "host_10"
       },
       {
         "edge_id": "host_07->host_11",
+        "edge_type": "network",
         "source": "host_07",
         "status": "active",
         "target": "host_11"
       },
       {
         "edge_id": "host_08->host_12",
+        "edge_type": "network",
         "source": "host_08",
         "status": "active",
         "target": "host_12"
       },
       {
         "edge_id": "host_09->host_13",
+        "edge_type": "network",
         "source": "host_09",
         "status": "active",
         "target": "host_13"
       },
       {
         "edge_id": "host_10->host_14",
+        "edge_type": "network",
         "source": "host_10",
         "status": "active",
         "target": "host_14"
       },
       {
         "edge_id": "host_11->host_15",
+        "edge_type": "network",
         "source": "host_11",
         "status": "active",
         "target": "host_15"
+      },
+      {
+        "edge_id": "host_13->host_02",
+        "edge_type": "network",
+        "source": "host_13",
+        "status": "active",
+        "target": "host_02"
+      },
+      {
+        "edge_id": "host_15->host_07",
+        "edge_type": "network",
+        "source": "host_15",
+        "status": "active",
+        "target": "host_07"
       }
     ],
     "nodes": [
       {
+        "asset_type": "server",
+        "criticality": "low",
         "node_id": "host_01",
         "services": [
-          "api",
-          "dns",
           "queue"
         ],
         "vulnerabilities": [
           {
-            "service": "api",
-            "severity": "low",
-            "vuln_id": "SYNTH-CVE-2026-1102"
-          },
-          {
-            "service": "dns",
-            "severity": "low",
-            "vuln_id": "SYNTH-CVE-2026-1501"
-          },
-          {
             "service": "queue",
-            "severity": "high",
+            "severity": "medium",
             "vuln_id": "SYNTH-CVE-2026-1701"
           }
         ],
         "zone": "public"
       },
       {
+        "asset_type": "server",
+        "criticality": "low",
         "node_id": "host_02",
-        "services": [
-          "cache",
-          "dns"
-        ],
-        "vulnerabilities": [
-          {
-            "service": "cache",
-            "severity": "low",
-            "vuln_id": "SYNTH-CVE-2026-1401"
-          },
-          {
-            "service": "dns",
-            "severity": "high",
-            "vuln_id": "SYNTH-CVE-2026-1501"
-          }
-        ],
-        "zone": "app"
-      },
-      {
-        "node_id": "host_03",
-        "services": [
-          "web"
-        ],
-        "vulnerabilities": [
-          {
-            "service": "web",
-            "severity": "low",
-            "vuln_id": "SYNTH-CVE-2026-1002"
-          }
-        ],
-        "zone": "data"
-      },
-      {
-        "node_id": "host_04",
         "services": [
           "db",
           "dns",
-          "queue"
+          "web"
         ],
         "vulnerabilities": [
           {
             "service": "db",
             "severity": "low",
-            "vuln_id": "SYNTH-CVE-2026-1302"
+            "vuln_id": "SYNTH-CVE-2026-1301"
           },
           {
             "service": "dns",
-            "severity": "critical",
+            "severity": "medium",
             "vuln_id": "SYNTH-CVE-2026-1501"
           },
           {
-            "service": "queue",
-            "severity": "critical",
-            "vuln_id": "SYNTH-CVE-2026-1701"
-          }
-        ],
-        "zone": "admin"
-      },
-      {
-        "node_id": "host_05",
-        "services": [
-          "queue",
-          "ssh"
-        ],
-        "vulnerabilities": [
-          {
-            "service": "queue",
-            "severity": "critical",
-            "vuln_id": "SYNTH-CVE-2026-1701"
-          },
-          {
-            "service": "ssh",
-            "severity": "high",
-            "vuln_id": "SYNTH-CVE-2026-1601"
-          }
-        ],
-        "zone": "public"
-      },
-      {
-        "node_id": "host_06",
-        "services": [
-          "ssh"
-        ],
-        "vulnerabilities": [
-          {
-            "service": "ssh",
-            "severity": "low",
-            "vuln_id": "SYNTH-CVE-2026-1601"
+            "service": "web",
+            "severity": "medium",
+            "vuln_id": "SYNTH-CVE-2026-1001"
           }
         ],
         "zone": "app"
       },
       {
-        "node_id": "host_07",
+        "asset_type": "data_store",
+        "criticality": "high",
+        "node_id": "host_03",
         "services": [
           "api",
           "cache",
-          "dns"
+          "db"
         ],
         "vulnerabilities": [
           {
             "service": "api",
-            "severity": "low",
-            "vuln_id": "SYNTH-CVE-2026-1102"
+            "severity": "medium",
+            "vuln_id": "SYNTH-CVE-2026-1101"
           },
           {
             "service": "cache",
-            "severity": "high",
+            "severity": "critical",
             "vuln_id": "SYNTH-CVE-2026-1401"
           },
           {
-            "service": "dns",
-            "severity": "medium",
-            "vuln_id": "SYNTH-CVE-2026-1501"
+            "service": "db",
+            "severity": "low",
+            "vuln_id": "SYNTH-CVE-2026-1301"
           }
         ],
         "zone": "data"
       },
       {
-        "node_id": "host_08",
+        "asset_type": "server",
+        "criticality": "medium",
+        "node_id": "host_04",
         "services": [
-          "queue"
+          "api",
+          "db"
         ],
         "vulnerabilities": [
           {
-            "service": "queue",
+            "service": "api",
             "severity": "medium",
-            "vuln_id": "SYNTH-CVE-2026-1701"
+            "vuln_id": "SYNTH-CVE-2026-1101"
+          },
+          {
+            "service": "api",
+            "severity": "high",
+            "vuln_id": "SYNTH-CVE-2026-1102"
+          },
+          {
+            "service": "db",
+            "severity": "low",
+            "vuln_id": "SYNTH-CVE-2026-1302"
           }
         ],
         "zone": "admin"
       },
       {
-        "node_id": "host_09",
+        "asset_type": "endpoint",
+        "criticality": "low",
+        "node_id": "host_05",
         "services": [
-          "auth",
-          "cache",
+          "dns",
           "web"
         ],
         "vulnerabilities": [
           {
-            "service": "auth",
+            "service": "dns",
             "severity": "medium",
-            "vuln_id": "SYNTH-CVE-2026-1201"
-          },
-          {
-            "service": "cache",
-            "severity": "low",
-            "vuln_id": "SYNTH-CVE-2026-1401"
+            "vuln_id": "SYNTH-CVE-2026-1501"
           },
           {
             "service": "web",
@@ -793,61 +749,128 @@
         "zone": "public"
       },
       {
+        "asset_type": "server",
+        "criticality": "low",
+        "node_id": "host_06",
+        "services": [
+          "web"
+        ],
+        "vulnerabilities": [
+          {
+            "service": "web",
+            "severity": "medium",
+            "vuln_id": "SYNTH-CVE-2026-1001"
+          }
+        ],
+        "zone": "app"
+      },
+      {
+        "asset_type": "data_store",
+        "criticality": "high",
+        "node_id": "host_07",
+        "services": [
+          "cache"
+        ],
+        "vulnerabilities": [
+          {
+            "service": "cache",
+            "severity": "high",
+            "vuln_id": "SYNTH-CVE-2026-1401"
+          }
+        ],
+        "zone": "data"
+      },
+      {
+        "asset_type": "server",
+        "criticality": "medium",
+        "node_id": "host_08",
+        "services": [
+          "dns",
+          "ssh",
+          "web"
+        ],
+        "vulnerabilities": [
+          {
+            "service": "dns",
+            "severity": "low",
+            "vuln_id": "SYNTH-CVE-2026-1501"
+          },
+          {
+            "service": "ssh",
+            "severity": "high",
+            "vuln_id": "SYNTH-CVE-2026-1601"
+          },
+          {
+            "service": "web",
+            "severity": "critical",
+            "vuln_id": "SYNTH-CVE-2026-1002"
+          }
+        ],
+        "zone": "admin"
+      },
+      {
+        "asset_type": "endpoint",
+        "criticality": "low",
+        "node_id": "host_09",
+        "services": [
+          "dns"
+        ],
+        "vulnerabilities": [
+          {
+            "service": "dns",
+            "severity": "critical",
+            "vuln_id": "SYNTH-CVE-2026-1501"
+          }
+        ],
+        "zone": "public"
+      },
+      {
+        "asset_type": "integration_service",
+        "criticality": "low",
         "node_id": "host_10",
         "services": [
           "api",
-          "db",
-          "web"
+          "queue"
         ],
         "vulnerabilities": [
           {
             "service": "api",
-            "severity": "low",
+            "severity": "critical",
             "vuln_id": "SYNTH-CVE-2026-1102"
           },
           {
-            "service": "db",
-            "severity": "low",
-            "vuln_id": "SYNTH-CVE-2026-1302"
-          },
-          {
-            "service": "web",
+            "service": "queue",
             "severity": "high",
-            "vuln_id": "SYNTH-CVE-2026-1002"
+            "vuln_id": "SYNTH-CVE-2026-1701"
           }
         ],
         "zone": "app"
       },
       {
+        "asset_type": "server",
+        "criticality": "high",
         "node_id": "host_11",
         "services": [
-          "web"
+          "api"
         ],
         "vulnerabilities": [
           {
-            "service": "web",
-            "severity": "low",
-            "vuln_id": "SYNTH-CVE-2026-1002"
+            "service": "api",
+            "severity": "critical",
+            "vuln_id": "SYNTH-CVE-2026-1101"
+          },
+          {
+            "service": "api",
+            "severity": "medium",
+            "vuln_id": "SYNTH-CVE-2026-1102"
           }
         ],
         "zone": "data"
       },
       {
+        "asset_type": "server",
+        "criticality": "medium",
         "node_id": "host_12",
-        "services": [
-          "auth"
-        ],
-        "vulnerabilities": [
-          {
-            "service": "auth",
-            "severity": "critical",
-            "vuln_id": "SYNTH-CVE-2026-1201"
-          }
-        ],
-        "zone": "admin"
-      },
-      {
-        "node_id": "host_13",
         "services": [
           "api",
           "auth",
@@ -870,32 +893,76 @@
             "vuln_id": "SYNTH-CVE-2026-1301"
           }
         ],
-        "zone": "public"
+        "zone": "admin"
       },
       {
-        "node_id": "host_14",
+        "asset_type": "endpoint",
+        "criticality": "low",
+        "node_id": "host_13",
         "services": [
-          "ssh"
+          "dns",
+          "ssh",
+          "web"
         ],
         "vulnerabilities": [
           {
+            "service": "dns",
+            "severity": "critical",
+            "vuln_id": "SYNTH-CVE-2026-1501"
+          },
+          {
             "service": "ssh",
-            "severity": "low",
+            "severity": "critical",
             "vuln_id": "SYNTH-CVE-2026-1601"
+          },
+          {
+            "service": "web",
+            "severity": "low",
+            "vuln_id": "SYNTH-CVE-2026-1002"
+          }
+        ],
+        "zone": "public"
+      },
+      {
+        "asset_type": "server",
+        "criticality": "low",
+        "node_id": "host_14",
+        "services": [
+          "queue"
+        ],
+        "vulnerabilities": [
+          {
+            "service": "queue",
+            "severity": "critical",
+            "vuln_id": "SYNTH-CVE-2026-1701"
           }
         ],
         "zone": "app"
       },
       {
+        "asset_type": "data_store",
+        "criticality": "high",
         "node_id": "host_15",
         "services": [
-          "ssh"
+          "api",
+          "cache",
+          "db"
         ],
         "vulnerabilities": [
           {
-            "service": "ssh",
+            "service": "api",
+            "severity": "medium",
+            "vuln_id": "SYNTH-CVE-2026-1101"
+          },
+          {
+            "service": "cache",
             "severity": "critical",
-            "vuln_id": "SYNTH-CVE-2026-1601"
+            "vuln_id": "SYNTH-CVE-2026-1401"
+          },
+          {
+            "service": "db",
+            "severity": "high",
+            "vuln_id": "SYNTH-CVE-2026-1301"
           }
         ],
         "zone": "data"

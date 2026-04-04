@@ -4403,7 +4403,9 @@
   ],
   "summary": {
     "attack_success_rate": 0.305,
+    "critical_asset_compromise_rate": 1.0,
     "damage": 23.8,
+    "exfiltration_attempts": 33,
     "exfiltration_count": 22,
     "mean_detection_latency_ms": 795.0,
     "rewards_sum": -5.5,
