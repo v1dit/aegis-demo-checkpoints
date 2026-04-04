@@ -10,6 +10,7 @@ from backend.app.core.runs import (
     get_parent_kpis,
     load_manifest,
     mirror_eval_to_legacy,
+    resolve_canonical_run_id,
     run_stage_dirs,
     set_active_run_id,
     update_eval_manifest,
@@ -63,7 +64,7 @@ def _run_train(run_id: str | None, fresh_start: bool) -> str:
 
 
 def _run_eval(run_id: str | None) -> str:
-    resolved_run = run_id or get_active_run_id()
+    resolved_run = run_id or resolve_canonical_run_id() or get_active_run_id()
     checkpoint_id = (
         latest_completed_checkpoint()
         or _latest_checkpoint_from_run(resolved_run)
@@ -76,7 +77,7 @@ def _run_eval(run_id: str | None) -> str:
         run_id=resolved_run,
     )
     eval_id = f"eval_cli_{int(time.time())}"
-    run_dirs = run_stage_dirs(resolved_run or get_active_run_id() or "run_adhoc")
+    run_dirs = run_stage_dirs(resolved_run or "run_adhoc")
     report = evaluate_checkpoint(
         eval_id=eval_id,
         checkpoint_id=request.checkpoint_id,
@@ -121,12 +122,12 @@ def _run_eval(run_id: str | None) -> str:
 
 
 def _package_replays(run_id: str | None = None) -> None:
-    resolved_run = run_id or get_active_run_id()
+    resolved_run = run_id or resolve_canonical_run_id() or get_active_run_id()
     checkpoint_id = latest_completed_checkpoint() or _latest_checkpoint_from_run(resolved_run)
     checkpoint_id = checkpoint_id or "checkpoint_blue_demo_best"
     if resolved_run:
         set_active_run_id(resolved_run)
-    run_dirs = run_stage_dirs(resolved_run or get_active_run_id() or "run_adhoc")
+    run_dirs = run_stage_dirs(resolved_run or "run_adhoc")
     manifests = package_demo_replays(
         checkpoint_id=checkpoint_id,
         replay_root=run_dirs["replays"],
@@ -141,7 +142,7 @@ def _package_replays(run_id: str | None = None) -> None:
 
 
 def _demo(run_id: str | None) -> None:
-    resolved_run = run_id or get_active_run_id()
+    resolved_run = run_id or resolve_canonical_run_id() or get_active_run_id()
     _package_replays(resolved_run)
     _run_eval(resolved_run)
     print(

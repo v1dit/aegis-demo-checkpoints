@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 import shutil
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -16,6 +17,7 @@ from backend.app.core.paths import (
 )
 
 ACTIVE_RUN_FILE = RUNS_DIR / ".active_run"
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -98,8 +100,31 @@ def get_active_run_id() -> str | None:
     if ACTIVE_RUN_FILE.exists():
         value = ACTIVE_RUN_FILE.read_text(encoding="utf-8").strip()
         if value:
-            return value
+            if _manifest_path(value).exists():
+                return value
+            logger.warning(
+                "Ignoring stale active run id '%s': manifest not found, falling back to latest run",
+                value,
+            )
     return latest_run_id()
+
+
+def resolve_canonical_run_id() -> str | None:
+    for run_id in reversed(list_run_ids()):
+        manifest = load_manifest(run_id)
+        train = manifest.get("train", {})
+        eval_data = manifest.get("eval", {})
+        replays = manifest.get("replays", {})
+        gates = eval_data.get("gates") or {}
+        if (
+            train.get("status") == "completed"
+            and eval_data.get("status") == "completed"
+            and replays.get("status") == "completed"
+            and bool(gates)
+            and all(bool(value) for value in gates.values())
+        ):
+            return run_id
+    return None
 
 
 def resolve_best_run() -> dict[str, Any] | None:

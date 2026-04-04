@@ -1,7 +1,7 @@
 {
-  "eval_id": "eval_cli_1775290324",
+  "eval_id": "eval_20260404_081153_001",
   "suite_id": "heldout_suite_v1",
-  "run_id": "run_20260404_080336_001",
+  "run_id": "run_20260404_081152_001",
   "kpis": {
     "damage_reduction_vs_no_defense": 0.8627,
     "damage_reduction_vs_rule_based": 0.4366,

@@ -1,4 +1,5 @@
 .PHONY: bootstrap up train eval package-replays demo down test
+RUN_ID ?=
 
 bootstrap:
 	@echo "Checking local prerequisites"
@@ -13,16 +14,16 @@ up:
 	docker compose -f infra/compose/docker-compose.yml up -d --build
 
 train:
-	uv run python -m backend.app.cli train
+	uv run python -m backend.app.cli $(if $(RUN_ID),--run-id $(RUN_ID),) train
 
 eval:
-	uv run python -m backend.app.cli eval
+	uv run python -m backend.app.cli $(if $(RUN_ID),--run-id $(RUN_ID),) eval
 
 package-replays:
-	uv run python -m backend.app.cli package-replays
+	uv run python -m backend.app.cli $(if $(RUN_ID),--run-id $(RUN_ID),) package-replays
 
 demo:
-	uv run python -m backend.app.cli demo
+	uv run python -m backend.app.cli $(if $(RUN_ID),--run-id $(RUN_ID),) demo
 
 down:
 	docker compose -f infra/compose/docker-compose.yml down

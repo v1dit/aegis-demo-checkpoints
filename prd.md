@@ -545,10 +545,12 @@ docker volume ls --filter "label=project=pantherhacks" -q | xargs -r docker volu
 - If needed later, add Apptainer wrappers around the same artifact/API contracts.
 
 ## 21. Final Acceptance Checklist
-- [ ] Blue checkpoint exists and is demo-usable.
-- [ ] Eval report confirms KPI thresholds.
-- [ ] Hero + 3 replay bundles generated.
+- [x] Blue checkpoint exists and is demo-usable.
+- [x] Eval report confirms KPI thresholds.
+- [x] Hero + 3 replay bundles generated.
 - [ ] 3-layer dashboard synchronized and polished.
-- [ ] Explainability panel active for Blue actions.
-- [ ] Live 20-30s burst works.
-- [ ] Disk hygiene cleanup completed post-demo.
+- [x] Explainability panel active for Blue actions (Track A backend payload complete; Track B renders panel).
+- [x] Live 20-30s burst works.
+- [x] Disk hygiene cleanup completed post-demo.
+
+Track B dependency: UI dashboard must consume Track A canonical run artifacts and replay/live stream contracts.

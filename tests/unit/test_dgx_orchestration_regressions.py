@@ -76,6 +76,7 @@ def test_cli_eval_prefers_latest_checkpoint_file_when_no_in_memory_checkpoint(
         )
 
     monkeypatch.setattr("backend.app.cli.CHECKPOINT_DIR", checkpoint_dir)
+    monkeypatch.setattr("backend.app.cli.resolve_canonical_run_id", lambda: None)
     monkeypatch.setattr("backend.app.cli.get_active_run_id", lambda: "run_test")
     monkeypatch.setattr(
         "backend.app.cli.run_stage_dirs",

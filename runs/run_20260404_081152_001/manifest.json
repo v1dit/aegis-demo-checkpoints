@@ -1,8 +1,8 @@
 {
   "best_score": 1.7483000000000002,
-  "created_at": "2026-04-04T08:03:36.835882+00:00",
+  "created_at": "2026-04-04T08:11:52.809475+00:00",
   "eval": {
-    "eval_id": "eval_cli_1775290324",
+    "eval_id": "eval_20260404_081153_001",
     "gates": {
       "damage_reduction_vs_no_defense": true,
       "damage_reduction_vs_rule_based": true,
@@ -18,26 +18,21 @@
       "damage_reduction_vs_rule_based": 0.4366,
       "detection_latency_improvement_vs_rule_based": 0.449
     },
-    "report_path": "/Users/krishgarg/Documents/Projects/pantherHacks/runs/run_20260404_080336_001/eval/eval_cli_1775290324.json",
+    "report_path": "/Users/krishgarg/Documents/Projects/pantherHacks/runs/run_20260404_081152_001/eval/eval_20260404_081153_001.json",
     "status": "completed"
   },
   "fresh_start": false,
   "parent_checkpoint": "ckpt_blue_main_001",
   "parent_run_id": "run_20260404_075919_001",
   "replays": {
-    "replay_ids": [
-      "replay_hero_01",
-      "replay_alt_02",
-      "replay_alt_03",
-      "replay_alt_04"
-    ],
-    "replay_root": "/Users/krishgarg/Documents/Projects/pantherHacks/runs/run_20260404_080336_001/replays",
-    "status": "completed"
+    "replay_ids": [],
+    "replay_root": "/Users/krishgarg/Documents/Projects/pantherHacks/runs/run_20260404_081152_001/replays",
+    "status": "not_started"
   },
-  "run_id": "run_20260404_080336_001",
+  "run_id": "run_20260404_081152_001",
   "train": {
     "checkpoint_id": "ckpt_blue_main_001",
-    "checkpoint_path": "/Users/krishgarg/Documents/Projects/pantherHacks/runs/run_20260404_080336_001/train/ckpt_blue_main_001.json",
+    "checkpoint_path": "/Users/krishgarg/Documents/Projects/pantherHacks/runs/run_20260404_081152_001/train/ckpt_blue_main_001.json",
     "learning_metrics": {
       "attack_success_rate": 0.3774,
       "blue_pressure_score": 0.3729,
@@ -60,5 +55,5 @@
     "status": "completed",
     "timesteps": 2000
   },
-  "updated_at": "2026-04-04T08:12:04.916459+00:00"
+  "updated_at": "2026-04-04T08:11:53.835821+00:00"
 }
