@@ -12,6 +12,11 @@ from backend.app.explainability.reasoner import build_explainability_record
 from backend.app.rl.blue_policy import BlueDecision, policy_for
 from backend.app.rl.red_policy import ScriptedRedPolicy
 from backend.app.rl.reward import compute_blue_reward
+from backend.app.rl.reward_shaping import (
+    ActionRepeatTracker,
+    prevention_success_for_transition,
+    survival_bonus_for_step,
+)
 from backend.app.schemas.contracts import (
     ActionEvent,
     DetectionEvent,
@@ -106,10 +111,13 @@ def simulate_episode(
     rewards_sum = 0.0
     exfiltration_count = 0
     detection_latencies: list[float] = []
+    prevention_events = 0
+    repeat_penalty_events = 0
 
     action_counter = 1
     detect_counter = 1
     recent_red_target = hosts[0]
+    repeat_tracker = ActionRepeatTracker()
 
     for step in range(1, horizon + 1):
         red_decision = red_policy.decide(step, hosts, services_by_host)
@@ -117,6 +125,7 @@ def simulate_episode(
 
         red_success = False
         exfil_success = False
+        new_compromise = False
         changed_nodes: list[NodeChange] = []
         changed_edges: list[EdgeChange] = []
 
@@ -142,9 +151,11 @@ def simulate_episode(
             "lateral_move",
             "privilege_escalate",
         }:
+            target_was_compromised = red_target_runtime.compromised
             red_success = step_rng.random() < max(0.05, min(0.95, exploit_probability))
             if red_success:
                 red_target_runtime.compromised = True
+                new_compromise = not target_was_compromised
                 if red_target_runtime.first_compromise_step is None:
                     red_target_runtime.first_compromise_step = step
                 attack_successes += 1
@@ -221,15 +232,28 @@ def simulate_episode(
         containment_success = False
         false_positive_cost = 0.0
         isolation_cost = 0.0
+        prevention_success = False
+        action_repeat_penalty = 0.0
+        service_disruption_penalty = 0.0
+        meaningful_state_change = False
 
         if blue_decision is not None:
             target_state = runtime[blue_decision.target_host]
+            previous_defense_state = target_state.defense_state
+            target_was_compromised = target_state.compromised
             if blue_decision.action_type == "monitor_host":
-                target_state.defense_state = "monitored"
+                if target_state.defense_state != "monitored":
+                    target_state.defense_state = "monitored"
+                    meaningful_state_change = True
             elif blue_decision.action_type == "patch_service":
-                target_state.defense_state = "hardened"
-                cumulative_damage = max(0.0, cumulative_damage - 0.15)
+                if target_state.defense_state not in {"hardened", "monitored"}:
+                    target_state.defense_state = "hardened"
+                    meaningful_state_change = True
+                    if not target_state.compromised:
+                        cumulative_damage = max(0.0, cumulative_damage - 0.15)
             elif blue_decision.action_type == "isolate_host":
+                if target_state.defense_state != "isolated" or not target_state.isolated:
+                    meaningful_state_change = True
                 target_state.defense_state = "isolated"
                 target_state.isolated = True
                 containment_success = target_state.compromised
@@ -240,23 +264,48 @@ def simulate_episode(
                     if blue_decision.target_host in edge_id and edge_status[edge_id] == "active":
                         edge_status[edge_id] = "blocked"
                         changed_edges.append(EdgeChange(edge_id=edge_id, status="blocked"))
+                        meaningful_state_change = True
             elif blue_decision.action_type == "block_connection":
                 for edge_id in sorted(edge_status.keys()):
                     if recent_red_target in edge_id and edge_status[edge_id] == "active":
                         edge_status[edge_id] = "blocked"
                         changed_edges.append(EdgeChange(edge_id=edge_id, status="blocked"))
                         containment_success = True
+                        meaningful_state_change = True
                         break
             elif blue_decision.action_type == "rotate_credentials":
-                target_state.defense_state = "hardened"
+                if target_state.defense_state != "hardened":
+                    target_state.defense_state = "hardened"
+                    meaningful_state_change = True
             elif blue_decision.action_type == "deploy_deception":
-                target_state.defense_state = "deception"
+                if target_state.defense_state != "deception":
+                    target_state.defense_state = "deception"
+                    meaningful_state_change = True
 
             if (
                 not target_state.compromised
                 and blue_decision.action_type in {"isolate_host", "block_connection"}
             ):
                 false_positive_cost = 0.05
+
+            prevention_success = prevention_success_for_transition(
+                action_type=blue_decision.action_type,
+                was_compromised=target_was_compromised,
+                previous_defense_state=previous_defense_state,
+                new_defense_state=target_state.defense_state,
+                meaningful_state_change=meaningful_state_change,
+            )
+            if prevention_success:
+                prevention_events += 1
+            action_repeat_penalty = repeat_tracker.penalty_for(
+                blue_decision.action_type,
+                blue_decision.target_host,
+                step=step,
+                meaningful_state_change=meaningful_state_change,
+            )
+            if action_repeat_penalty > 0:
+                repeat_penalty_events += 1
+            service_disruption_penalty = false_positive_cost + isolation_cost
 
             action_events.append(
                 ActionEvent(
@@ -294,6 +343,13 @@ def simulate_episode(
             containment_success=containment_success,
             false_positive_cost=false_positive_cost,
             isolation_cost=isolation_cost,
+            prevention_success=prevention_success,
+            survival_bonus=survival_bonus_for_step(
+                exfil_success=exfil_success,
+                new_compromise=new_compromise,
+            ),
+            service_disruption_penalty=service_disruption_penalty,
+            action_repeat_penalty=action_repeat_penalty,
         )
 
         if changed_nodes or changed_edges:
@@ -344,6 +400,8 @@ def simulate_episode(
                 "compromised_hosts": sum(1 for state in runtime.values() if state.compromised),
                 "rewards_sum": round(rewards_sum, 4),
                 "detection_count": len(detection_events),
+                "prevention_events": prevention_events,
+                "repeat_penalty_events": repeat_penalty_events,
             }
         )
 

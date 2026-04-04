@@ -45,6 +45,54 @@ def test_reward_penalizes_damage_and_rewards_detection() -> None:
     assert negative < 0
 
 
+def test_reward_is_clipped_to_normalized_range() -> None:
+    highest = compute_blue_reward(
+        compromise_success=False,
+        exfil_success=False,
+        detection_success=True,
+        containment_success=True,
+        false_positive_cost=0.0,
+        isolation_cost=0.0,
+        prevention_success=True,
+        survival_bonus=0.05,
+    )
+    lowest = compute_blue_reward(
+        compromise_success=True,
+        exfil_success=True,
+        detection_success=False,
+        containment_success=False,
+        false_positive_cost=1.0,
+        isolation_cost=1.0,
+        service_disruption_penalty=1.0,
+        action_repeat_penalty=1.0,
+    )
+    assert -1.0 <= highest <= 1.0
+    assert -1.0 <= lowest <= 1.0
+    assert highest > 0
+    assert lowest == -1.0
+
+
+def test_reward_penalizes_repeated_action_farming() -> None:
+    base = compute_blue_reward(
+        compromise_success=False,
+        exfil_success=False,
+        detection_success=True,
+        containment_success=False,
+        false_positive_cost=0.0,
+        isolation_cost=0.0,
+    )
+    repeated = compute_blue_reward(
+        compromise_success=False,
+        exfil_success=False,
+        detection_success=True,
+        containment_success=False,
+        false_positive_cost=0.0,
+        isolation_cost=0.0,
+        action_repeat_penalty=0.1,
+    )
+    assert repeated < base
+
+
 
 def test_explainability_record_is_deterministic() -> None:
     first = build_explainability_record(
