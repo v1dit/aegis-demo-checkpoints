@@ -60,6 +60,8 @@ def build_replay_bundle(
             "attack_success_rate": sim_result.summary.attack_success_rate,
             "rewards_sum": sim_result.summary.rewards_sum,
             "exfiltration_count": sim_result.summary.exfiltration_count,
+            "exfiltration_attempts": sim_result.summary.exfiltration_attempts,
+            "critical_asset_compromise_rate": sim_result.summary.critical_asset_compromise_rate,
             "sync_drift_ms": compute_sync_drift_ms(sim_result),
         },
         "explainability": [record.model_dump(mode="json") for record in sim_result.explainability],
