@@ -15,8 +15,9 @@ class RedDecision:
 
 
 class ScriptedRedPolicy:
-    def __init__(self, seed: int) -> None:
+    def __init__(self, seed: int, stochastic_branch_probability: float = 0.0) -> None:
         self._rng = random.Random(seed)
+        self._stochastic_branch_probability = max(0.0, min(1.0, stochastic_branch_probability))
 
     def decide(
         self,
@@ -24,7 +25,12 @@ class ScriptedRedPolicy:
         hosts: list[str],
         service_lookup: dict[str, list[str]],
     ) -> RedDecision:
-        action_type = RED_ACTIONS[(step - 1) % len(RED_ACTIONS)]
+        scripted_action = RED_ACTIONS[(step - 1) % len(RED_ACTIONS)]
+        action_type = scripted_action
+        if self._stochastic_branch_probability > 0.0 and (
+            self._rng.random() < self._stochastic_branch_probability
+        ):
+            action_type = self._rng.choice(RED_ACTIONS)
         source_host = hosts[(step - 1) % len(hosts)]
         if action_type == "lateral_move":
             target_host = hosts[(step + 3) % len(hosts)]
