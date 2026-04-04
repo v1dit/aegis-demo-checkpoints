@@ -192,6 +192,20 @@ class ReplayBundleResponse(BaseModel):
     files: dict[str, str]
 
 
+class RunListItem(BaseModel):
+    run_id: str
+    created_at: str | None = None
+    updated_at: str | None = None
+    train_status: str
+    eval_status: str
+    replay_status: str
+    replay_count: int
+
+
+class RunListResponse(BaseModel):
+    runs: list[RunListItem]
+
+
 class StreamEvent(BaseModel):
     event_type: Literal["action", "detection", "state_delta", "explainability", "metric", "marker"]
     payload: dict[str, Any]

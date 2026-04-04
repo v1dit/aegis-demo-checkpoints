@@ -29,11 +29,25 @@ This doc is the contract for Track B to build dashboard views on top of Track A 
   - Returns full eval report payload plus `run_id`.
 
 - `GET /replay/list`
-  - Lists replay bundles available for UI selection.
-  - Use for replay picker.
+  - Lists replay bundles for the current active run.
+  - Use for active-run replay picker.
 
 - `GET /replay/{id}/bundle`
-  - Returns bundle metadata/paths for selected replay.
+  - Returns bundle metadata/paths for selected replay in the active run.
+
+- `GET /replay/runs`
+  - Lists available run history with lifecycle summary:
+    - `run_id`
+    - `created_at`, `updated_at`
+    - `train_status`, `eval_status`, `replay_status`
+    - `replay_count`
+
+- `GET /replay/runs/{run_id}/list`
+  - Lists replay bundles for a specific historical run.
+  - Use for run-scoped replay picker.
+
+- `GET /replay/runs/{run_id}/{replay_id}/bundle`
+  - Returns replay bundle metadata/paths for a specific run + replay.
 
 ## 2) WebSocket Streams
 
@@ -42,8 +56,12 @@ This doc is the contract for Track B to build dashboard views on top of Track A 
   - Event ordering is deterministic by step clock.
 
 - `WS /stream/replay/{replay_id}`
-  - Replay stream from stored artifacts.
-  - Use this for scrubber/time-travel UI.
+  - Replay stream for active run replay, with legacy artifacts fallback.
+  - Use this for default scrubber/time-travel UI.
+
+- `WS /stream/replay/{run_id}/{replay_id}`
+  - Replay stream for a specific historical run.
+  - Use this when viewing run history pages.
 
 ## 3) Canonical Run Bundle Layout
 
@@ -118,7 +136,8 @@ Track B should prefer `runs/<run_id>/...` for correctness and history, but may u
 
 - Train page: poll `GET /train/status/{run_id}` every 2-5s.
 - Eval page: after `POST /eval/run`, poll until terminal state then fetch full report.
-- Replay page: call `GET /replay/list` on load, refresh on run completion.
+- Replay page (active): call `GET /replay/list` on load, refresh on run completion.
+- Replay page (history): call `GET /replay/runs`, then `GET /replay/runs/{run_id}/list`.
 
 ## 8) Demo-Ready Claims You Can Safely Make
 
@@ -136,5 +155,6 @@ Before integrating, verify these are available in API payloads or run manifest:
 - KPI summary + deltas
 - replay IDs and bundle pointers
 - eval gate statuses
+- run history summary (`train_status`, `eval_status`, `replay_status`, `replay_count`)
 
 If any key is missing, fall back to `runs/<run_id>/manifest.json` as canonical source.
