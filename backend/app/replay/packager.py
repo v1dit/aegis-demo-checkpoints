@@ -4,6 +4,11 @@ from pathlib import Path
 
 import orjson
 
+from backend.app.core.runs import (
+    mirror_replays_to_legacy,
+    read_checkpoint_payload,
+    update_replay_manifest,
+)
 from backend.app.env.simulator import simulate_episode
 from backend.app.replay.builder import build_replay_bundle
 from backend.app.schemas.contracts import ReplayManifest
@@ -16,9 +21,21 @@ DEMO_REPLAY_PLAN = [
 ]
 
 
-def package_demo_replays(checkpoint_id: str, replay_root: Path) -> list[ReplayManifest]:
+def _checkpoint_bias(checkpoint_id: str, run_id: str | None) -> float:
+    payload = read_checkpoint_payload(checkpoint_id=checkpoint_id, run_id=run_id)
+    if not payload:
+        return 0.82
+    return float(payload.get("policy_bias", 0.82))
+
+
+def package_demo_replays(
+    checkpoint_id: str,
+    replay_root: Path,
+    run_id: str | None = None,
+) -> list[ReplayManifest]:
     replay_root.mkdir(parents=True, exist_ok=True)
     manifests: list[ReplayManifest] = []
+    checkpoint_bias = _checkpoint_bias(checkpoint_id, run_id)
 
     for replay_id, scenario_id, seed in DEMO_REPLAY_PLAN:
         simulation = simulate_episode(
@@ -26,6 +43,7 @@ def package_demo_replays(checkpoint_id: str, replay_root: Path) -> list[ReplayMa
             scenario_id=scenario_id,
             checkpoint_id=checkpoint_id,
             defender_mode="ppo",
+            checkpoint_bias=checkpoint_bias,
         )
         manifests.append(
             build_replay_bundle(
@@ -34,6 +52,10 @@ def package_demo_replays(checkpoint_id: str, replay_root: Path) -> list[ReplayMa
                 replay_root=replay_root,
             )
         )
+
+    if run_id:
+        update_replay_manifest(run_id, [manifest.replay_id for manifest in manifests], replay_root)
+        mirror_replays_to_legacy(replay_root)
 
     return manifests
 
