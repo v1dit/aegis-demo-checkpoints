@@ -39,18 +39,6 @@
         {
           "compromise_state": "compromised",
           "defense_state": "none",
-          "node_id": "host_10"
-        }
-      ],
-      "step": 11,
-      "ts_ms": 1712412357333
-    },
-    {
-      "edge_changes": [],
-      "node_changes": [
-        {
-          "compromise_state": "compromised",
-          "defense_state": "none",
           "node_id": "host_20"
         }
       ],
@@ -68,18 +56,6 @@
       ],
       "step": 17,
       "ts_ms": 1712412358053
-    },
-    {
-      "edge_changes": [],
-      "node_changes": [
-        {
-          "compromise_state": "compromised",
-          "defense_state": "none",
-          "node_id": "host_08"
-        }
-      ],
-      "step": 21,
-      "ts_ms": 1712412358533
     },
     {
       "edge_changes": [],
@@ -136,30 +112,6 @@
         {
           "compromise_state": "compromised",
           "defense_state": "none",
-          "node_id": "host_14"
-        }
-      ],
-      "step": 41,
-      "ts_ms": 1712412360933
-    },
-    {
-      "edge_changes": [],
-      "node_changes": [
-        {
-          "compromise_state": "compromised",
-          "defense_state": "none",
-          "node_id": "host_20"
-        }
-      ],
-      "step": 47,
-      "ts_ms": 1712412361653
-    },
-    {
-      "edge_changes": [],
-      "node_changes": [
-        {
-          "compromise_state": "compromised",
-          "defense_state": "none",
           "node_id": "host_11"
         }
       ],
@@ -184,35 +136,11 @@
         {
           "compromise_state": "compromised",
           "defense_state": "none",
-          "node_id": "host_08"
-        }
-      ],
-      "step": 64,
-      "ts_ms": 1712412363693
-    },
-    {
-      "edge_changes": [],
-      "node_changes": [
-        {
-          "compromise_state": "compromised",
-          "defense_state": "none",
           "node_id": "host_14"
         }
       ],
       "step": 70,
       "ts_ms": 1712412364413
-    },
-    {
-      "edge_changes": [],
-      "node_changes": [
-        {
-          "compromise_state": "compromised",
-          "defense_state": "none",
-          "node_id": "host_17"
-        }
-      ],
-      "step": 71,
-      "ts_ms": 1712412364533
     },
     {
       "edge_changes": [
@@ -246,18 +174,6 @@
       ],
       "step": 93,
       "ts_ms": 1712412367173
-    },
-    {
-      "edge_changes": [],
-      "node_changes": [
-        {
-          "compromise_state": "compromised",
-          "defense_state": "none",
-          "node_id": "host_18"
-        }
-      ],
-      "step": 94,
-      "ts_ms": 1712412367293
     },
     {
       "edge_changes": [],
@@ -486,18 +402,6 @@
       ],
       "step": 189,
       "ts_ms": 1712412378693
-    },
-    {
-      "edge_changes": [],
-      "node_changes": [
-        {
-          "compromise_state": "compromised",
-          "defense_state": "none",
-          "node_id": "host_20"
-        }
-      ],
-      "step": 196,
-      "ts_ms": 1712412379533
     }
   ],
   "initial": {
