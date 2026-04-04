@@ -19,6 +19,8 @@ def _safe_ratio(numerator: float, denominator: float) -> float:
 def _scenario_id_for_suite(suite_id: str) -> str:
     if suite_id == "heldout_suite_v1":
         return "scenario_unseen_web_rce"
+    if suite_id == "enterprise_suite_v1":
+        return "scenario_enterprise_crm_identity_chain_v1"
     return f"scenario_{suite_id}"
 
 
@@ -47,6 +49,9 @@ def evaluate_checkpoint(
     total_rule_damage = 0.0
     total_blue_latency = 0.0
     total_rule_latency = 0.0
+    total_blue_exfil = 0.0
+    total_none_exfil = 0.0
+    total_blue_critical_compromise_rate = 0.0
 
     for index, seed in enumerate(seeds, start=1):
         no_defense = simulate_episode(
@@ -79,6 +84,9 @@ def evaluate_checkpoint(
         total_rule_damage += rule_based.summary.damage
         total_blue_latency += blue.summary.mean_detection_latency_ms
         total_rule_latency += rule_based.summary.mean_detection_latency_ms
+        total_blue_exfil += float(blue.summary.exfiltration_count)
+        total_none_exfil += float(no_defense.summary.exfiltration_count)
+        total_blue_critical_compromise_rate += float(blue.summary.critical_asset_compromise_rate)
 
         per_scenario.append(
             PerScenarioEval(
@@ -97,15 +105,24 @@ def evaluate_checkpoint(
     avg_rule_damage = total_rule_damage / len(seeds)
     avg_blue_latency = total_blue_latency / len(seeds)
     avg_rule_latency = total_rule_latency / len(seeds)
+    avg_blue_exfil = total_blue_exfil / len(seeds)
+    avg_none_exfil = total_none_exfil / len(seeds)
+    avg_blue_critical_compromise_rate = total_blue_critical_compromise_rate / len(seeds)
 
     damage_vs_none = 1.0 - _safe_ratio(avg_blue_damage, avg_none_damage)
     damage_vs_rule = 1.0 - _safe_ratio(avg_blue_damage, avg_rule_damage)
     latency_improvement = 1.0 - _safe_ratio(avg_blue_latency, avg_rule_latency)
+    exfiltration_prevention = 1.0 - _safe_ratio(avg_blue_exfil, avg_none_exfil)
 
     kpis = EvalKpis(
         damage_reduction_vs_no_defense=round(max(-1.0, damage_vs_none), 4),
         damage_reduction_vs_rule_based=round(max(-1.0, damage_vs_rule), 4),
         detection_latency_improvement_vs_rule_based=round(max(-1.0, latency_improvement), 4),
+        exfiltration_prevention_rate=round(max(-1.0, exfiltration_prevention), 4),
+        critical_asset_compromise_rate=round(
+            max(0.0, min(1.0, avg_blue_critical_compromise_rate)),
+            4,
+        ),
     )
 
     return EvalReport(
