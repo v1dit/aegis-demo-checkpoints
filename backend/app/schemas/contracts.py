@@ -151,6 +151,8 @@ class EvalKpis(BaseModel):
     damage_reduction_vs_no_defense: float
     damage_reduction_vs_rule_based: float
     detection_latency_improvement_vs_rule_based: float
+    exfiltration_prevention_rate: float | None = None
+    critical_asset_compromise_rate: float | None = None
 
 
 class PerScenarioEval(BaseModel):
