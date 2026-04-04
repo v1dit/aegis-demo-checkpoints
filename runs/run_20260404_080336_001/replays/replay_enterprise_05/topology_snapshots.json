@@ -1,0 +1,2124 @@
+{
+  "deltas": [
+    {
+      "edge_changes": [
+        {
+          "edge_id": "host_02->host_08",
+          "status": "blocked"
+        },
+        {
+          "edge_id": "host_08->host_06",
+          "status": "blocked"
+        },
+        {
+          "edge_id": "host_08->host_14",
+          "status": "blocked"
+        },
+        {
+          "edge_id": "host_08->host_25",
+          "status": "blocked"
+        }
+      ],
+      "node_changes": [
+        {
+          "compromise_state": "compromised",
+          "defense_state": "none",
+          "node_id": "host_08"
+        }
+      ],
+      "step": 3,
+      "ts_ms": 1712412367417
+    },
+    {
+      "edge_changes": [],
+      "node_changes": [
+        {
+          "compromise_state": "compromised",
+          "defense_state": "none",
+          "node_id": "host_41"
+        }
+      ],
+      "step": 15,
+      "ts_ms": 1712412368857
+    },
+    {
+      "edge_changes": [],
+      "node_changes": [
+        {
+          "compromise_state": "compromised",
+          "defense_state": "none",
+          "node_id": "host_40"
+        }
+      ],
+      "step": 23,
+      "ts_ms": 1712412369817
+    },
+    {
+      "edge_changes": [],
+      "node_changes": [
+        {
+          "compromise_state": "compromised",
+          "defense_state": "none",
+          "node_id": "host_38"
+        }
+      ],
+      "step": 35,
+      "ts_ms": 1712412371257
+    },
+    {
+      "edge_changes": [],
+      "node_changes": [
+        {
+          "compromise_state": "compromised",
+          "defense_state": "none",
+          "node_id": "host_10"
+        }
+      ],
+      "step": 39,
+      "ts_ms": 1712412371737
+    },
+    {
+      "edge_changes": [],
+      "node_changes": [
+        {
+          "compromise_state": "compromised",
+          "defense_state": "none",
+          "node_id": "host_43"
+        }
+      ],
+      "step": 41,
+      "ts_ms": 1712412371977
+    },
+    {
+      "edge_changes": [],
+      "node_changes": [
+        {
+          "compromise_state": "compromised",
+          "defense_state": "none",
+          "node_id": "host_32"
+        }
+      ],
+      "step": 45,
+      "ts_ms": 1712412372457
+    },
+    {
+      "edge_changes": [
+        {
+          "edge_id": "host_01->host_02",
+          "status": "blocked"
+        },
+        {
+          "edge_id": "host_01->host_07",
+          "status": "blocked"
+        },
+        {
+          "edge_id": "host_20->host_01",
+          "status": "blocked"
+        }
+      ],
+      "node_changes": [
+        {
+          "compromise_state": "compromised",
+          "defense_state": "none",
+          "node_id": "host_01"
+        }
+      ],
+      "step": 46,
+      "ts_ms": 1712412372577
+    },
+    {
+      "edge_changes": [],
+      "node_changes": [
+        {
+          "compromise_state": "compromised",
+          "defense_state": "none",
+          "node_id": "host_44"
+        }
+      ],
+      "step": 51,
+      "ts_ms": 1712412373177
+    },
+    {
+      "edge_changes": [],
+      "node_changes": [
+        {
+          "compromise_state": "compromised",
+          "defense_state": "monitored",
+          "node_id": "host_03"
+        }
+      ],
+      "step": 57,
+      "ts_ms": 1712412373897
+    },
+    {
+      "edge_changes": [],
+      "node_changes": [
+        {
+          "compromise_state": "compromised",
+          "defense_state": "none",
+          "node_id": "host_13"
+        }
+      ],
+      "step": 58,
+      "ts_ms": 1712412374017
+    },
+    {
+      "edge_changes": [],
+      "node_changes": [
+        {
+          "compromise_state": "compromised",
+          "defense_state": "none",
+          "node_id": "host_05"
+        }
+      ],
+      "step": 59,
+      "ts_ms": 1712412374137
+    },
+    {
+      "edge_changes": [],
+      "node_changes": [
+        {
+          "compromise_state": "compromised",
+          "defense_state": "none",
+          "node_id": "host_29"
+        }
+      ],
+      "step": 63,
+      "ts_ms": 1712412374617
+    },
+    {
+      "edge_changes": [],
+      "node_changes": [
+        {
+          "compromise_state": "compromised",
+          "defense_state": "none",
+          "node_id": "host_25"
+        }
+      ],
+      "step": 70,
+      "ts_ms": 1712412375457
+    },
+    {
+      "edge_changes": [],
+      "node_changes": [
+        {
+          "compromise_state": "compromised",
+          "defense_state": "none",
+          "node_id": "host_40"
+        }
+      ],
+      "step": 75,
+      "ts_ms": 1712412376057
+    },
+    {
+      "edge_changes": [],
+      "node_changes": [
+        {
+          "compromise_state": "compromised",
+          "defense_state": "none",
+          "node_id": "host_09"
+        }
+      ],
+      "step": 77,
+      "ts_ms": 1712412376297
+    },
+    {
+      "edge_changes": [],
+      "node_changes": [
+        {
+          "compromise_state": "compromised",
+          "defense_state": "none",
+          "node_id": "host_46"
+        }
+      ],
+      "step": 81,
+      "ts_ms": 1712412376777
+    },
+    {
+      "edge_changes": [],
+      "node_changes": [
+        {
+          "compromise_state": "compromised",
+          "defense_state": "none",
+          "node_id": "host_43"
+        }
+      ],
+      "step": 88,
+      "ts_ms": 1712412377617
+    },
+    {
+      "edge_changes": [],
+      "node_changes": [
+        {
+          "compromise_state": "compromised",
+          "defense_state": "none",
+          "node_id": "host_20"
+        }
+      ],
+      "step": 93,
+      "ts_ms": 1712412378217
+    },
+    {
+      "edge_changes": [],
+      "node_changes": [
+        {
+          "compromise_state": "compromised",
+          "defense_state": "none",
+          "node_id": "host_10"
+        }
+      ],
+      "step": 99,
+      "ts_ms": 1712412378937
+    },
+    {
+      "edge_changes": [],
+      "node_changes": [
+        {
+          "compromise_state": "compromised",
+          "defense_state": "none",
+          "node_id": "host_34"
+        }
+      ],
+      "step": 101,
+      "ts_ms": 1712412379177
+    },
+    {
+      "edge_changes": [],
+      "node_changes": [
+        {
+          "compromise_state": "compromised",
+          "defense_state": "none",
+          "node_id": "host_20"
+        }
+      ],
+      "step": 105,
+      "ts_ms": 1712412379657
+    },
+    {
+      "edge_changes": [],
+      "node_changes": [
+        {
+          "compromise_state": "compromised",
+          "defense_state": "none",
+          "node_id": "host_16"
+        }
+      ],
+      "step": 107,
+      "ts_ms": 1712412379897
+    },
+    {
+      "edge_changes": [],
+      "node_changes": [
+        {
+          "compromise_state": "compromised",
+          "defense_state": "none",
+          "node_id": "host_18"
+        }
+      ],
+      "step": 112,
+      "ts_ms": 1712412380497
+    },
+    {
+      "edge_changes": [],
+      "node_changes": [
+        {
+          "compromise_state": "compromised",
+          "defense_state": "none",
+          "node_id": "host_42"
+        }
+      ],
+      "step": 113,
+      "ts_ms": 1712412380617
+    },
+    {
+      "edge_changes": [],
+      "node_changes": [
+        {
+          "compromise_state": "compromised",
+          "defense_state": "none",
+          "node_id": "host_04"
+        }
+      ],
+      "step": 117,
+      "ts_ms": 1712412381097
+    },
+    {
+      "edge_changes": [],
+      "node_changes": [
+        {
+          "compromise_state": "compromised",
+          "defense_state": "none",
+          "node_id": "host_24"
+        }
+      ],
+      "step": 118,
+      "ts_ms": 1712412381217
+    },
+    {
+      "edge_changes": [],
+      "node_changes": [
+        {
+          "compromise_state": "compromised",
+          "defense_state": "none",
+          "node_id": "host_36"
+        }
+      ],
+      "step": 130,
+      "ts_ms": 1712412382657
+    },
+    {
+      "edge_changes": [],
+      "node_changes": [
+        {
+          "compromise_state": "compromised",
+          "defense_state": "none",
+          "node_id": "host_25"
+        }
+      ],
+      "step": 141,
+      "ts_ms": 1712412383977
+    },
+    {
+      "edge_changes": [],
+      "node_changes": [
+        {
+          "compromise_state": "compromised",
+          "defense_state": "none",
+          "node_id": "host_10"
+        }
+      ],
+      "step": 143,
+      "ts_ms": 1712412384217
+    },
+    {
+      "edge_changes": [],
+      "node_changes": [
+        {
+          "compromise_state": "compromised",
+          "defense_state": "none",
+          "node_id": "host_17"
+        }
+      ],
+      "step": 160,
+      "ts_ms": 1712412386257
+    },
+    {
+      "edge_changes": [],
+      "node_changes": [
+        {
+          "compromise_state": "compromised",
+          "defense_state": "none",
+          "node_id": "host_23"
+        }
+      ],
+      "step": 166,
+      "ts_ms": 1712412386977
+    },
+    {
+      "edge_changes": [],
+      "node_changes": [
+        {
+          "compromise_state": "compromised",
+          "defense_state": "none",
+          "node_id": "host_36"
+        }
+      ],
+      "step": 167,
+      "ts_ms": 1712412387097
+    },
+    {
+      "edge_changes": [],
+      "node_changes": [
+        {
+          "compromise_state": "compromised",
+          "defense_state": "none",
+          "node_id": "host_19"
+        }
+      ],
+      "step": 177,
+      "ts_ms": 1712412388297
+    },
+    {
+      "edge_changes": [],
+      "node_changes": [
+        {
+          "compromise_state": "compromised",
+          "defense_state": "none",
+          "node_id": "host_42"
+        }
+      ],
+      "step": 183,
+      "ts_ms": 1712412389017
+    },
+    {
+      "edge_changes": [],
+      "node_changes": [
+        {
+          "compromise_state": "compromised",
+          "defense_state": "none",
+          "node_id": "host_41"
+        }
+      ],
+      "step": 184,
+      "ts_ms": 1712412389137
+    },
+    {
+      "edge_changes": [],
+      "node_changes": [
+        {
+          "compromise_state": "compromised",
+          "defense_state": "none",
+          "node_id": "host_29"
+        }
+      ],
+      "step": 185,
+      "ts_ms": 1712412389257
+    },
+    {
+      "edge_changes": [],
+      "node_changes": [
+        {
+          "compromise_state": "compromised",
+          "defense_state": "none",
+          "node_id": "host_45"
+        }
+      ],
+      "step": 189,
+      "ts_ms": 1712412389737
+    },
+    {
+      "edge_changes": [],
+      "node_changes": [
+        {
+          "compromise_state": "compromised",
+          "defense_state": "none",
+          "node_id": "host_38"
+        }
+      ],
+      "step": 191,
+      "ts_ms": 1712412389977
+    },
+    {
+      "edge_changes": [],
+      "node_changes": [
+        {
+          "compromise_state": "compromised",
+          "defense_state": "none",
+          "node_id": "host_04"
+        }
+      ],
+      "step": 196,
+      "ts_ms": 1712412390577
+    }
+  ],
+  "initial": {
+    "edges": [
+      {
+        "edge_id": "host_01->host_02",
+        "edge_type": "network",
+        "source": "host_01",
+        "status": "active",
+        "target": "host_02"
+      },
+      {
+        "edge_id": "host_01->host_07",
+        "edge_type": "network",
+        "source": "host_01",
+        "status": "active",
+        "target": "host_07"
+      },
+      {
+        "edge_id": "host_02->host_03",
+        "edge_type": "network",
+        "source": "host_02",
+        "status": "active",
+        "target": "host_03"
+      },
+      {
+        "edge_id": "host_02->host_06",
+        "edge_type": "api_integration",
+        "source": "host_02",
+        "status": "active",
+        "target": "host_06"
+      },
+      {
+        "edge_id": "host_02->host_08",
+        "edge_type": "network",
+        "source": "host_02",
+        "status": "active",
+        "target": "host_08"
+      },
+      {
+        "edge_id": "host_03->host_04",
+        "edge_type": "network",
+        "source": "host_03",
+        "status": "active",
+        "target": "host_04"
+      },
+      {
+        "edge_id": "host_03->host_09",
+        "edge_type": "network",
+        "source": "host_03",
+        "status": "active",
+        "target": "host_09"
+      },
+      {
+        "edge_id": "host_04->host_05",
+        "edge_type": "privileged_access",
+        "source": "host_04",
+        "status": "active",
+        "target": "host_05"
+      },
+      {
+        "edge_id": "host_04->host_10",
+        "edge_type": "network",
+        "source": "host_04",
+        "status": "active",
+        "target": "host_10"
+      },
+      {
+        "edge_id": "host_05->host_06",
+        "edge_type": "identity_trust",
+        "source": "host_05",
+        "status": "active",
+        "target": "host_06"
+      },
+      {
+        "edge_id": "host_05->host_11",
+        "edge_type": "network",
+        "source": "host_05",
+        "status": "active",
+        "target": "host_11"
+      },
+      {
+        "edge_id": "host_05->host_12",
+        "edge_type": "identity_trust",
+        "source": "host_05",
+        "status": "active",
+        "target": "host_12"
+      },
+      {
+        "edge_id": "host_05->host_18",
+        "edge_type": "identity_trust",
+        "source": "host_05",
+        "status": "active",
+        "target": "host_18"
+      },
+      {
+        "edge_id": "host_05->host_24",
+        "edge_type": "identity_trust",
+        "source": "host_05",
+        "status": "active",
+        "target": "host_24"
+      },
+      {
+        "edge_id": "host_06->host_12",
+        "edge_type": "network",
+        "source": "host_06",
+        "status": "active",
+        "target": "host_12"
+      },
+      {
+        "edge_id": "host_07->host_02",
+        "edge_type": "network",
+        "source": "host_07",
+        "status": "active",
+        "target": "host_02"
+      },
+      {
+        "edge_id": "host_07->host_13",
+        "edge_type": "network",
+        "source": "host_07",
+        "status": "active",
+        "target": "host_13"
+      },
+      {
+        "edge_id": "host_08->host_06",
+        "edge_type": "api_integration",
+        "source": "host_08",
+        "status": "active",
+        "target": "host_06"
+      },
+      {
+        "edge_id": "host_08->host_14",
+        "edge_type": "network",
+        "source": "host_08",
+        "status": "active",
+        "target": "host_14"
+      },
+      {
+        "edge_id": "host_08->host_25",
+        "edge_type": "network",
+        "source": "host_08",
+        "status": "active",
+        "target": "host_25"
+      },
+      {
+        "edge_id": "host_09->host_15",
+        "edge_type": "network",
+        "source": "host_09",
+        "status": "active",
+        "target": "host_15"
+      },
+      {
+        "edge_id": "host_10->host_16",
+        "edge_type": "network",
+        "source": "host_10",
+        "status": "active",
+        "target": "host_16"
+      },
+      {
+        "edge_id": "host_11->host_17",
+        "edge_type": "network",
+        "source": "host_11",
+        "status": "active",
+        "target": "host_17"
+      },
+      {
+        "edge_id": "host_12->host_18",
+        "edge_type": "network",
+        "source": "host_12",
+        "status": "active",
+        "target": "host_18"
+      },
+      {
+        "edge_id": "host_13->host_19",
+        "edge_type": "network",
+        "source": "host_13",
+        "status": "active",
+        "target": "host_19"
+      },
+      {
+        "edge_id": "host_14->host_20",
+        "edge_type": "network",
+        "source": "host_14",
+        "status": "active",
+        "target": "host_20"
+      },
+      {
+        "edge_id": "host_14->host_36",
+        "edge_type": "api_integration",
+        "source": "host_14",
+        "status": "active",
+        "target": "host_36"
+      },
+      {
+        "edge_id": "host_15->host_21",
+        "edge_type": "network",
+        "source": "host_15",
+        "status": "active",
+        "target": "host_21"
+      },
+      {
+        "edge_id": "host_16->host_22",
+        "edge_type": "network",
+        "source": "host_16",
+        "status": "active",
+        "target": "host_22"
+      },
+      {
+        "edge_id": "host_17->host_23",
+        "edge_type": "network",
+        "source": "host_17",
+        "status": "active",
+        "target": "host_23"
+      },
+      {
+        "edge_id": "host_18->host_24",
+        "edge_type": "network",
+        "source": "host_18",
+        "status": "active",
+        "target": "host_24"
+      },
+      {
+        "edge_id": "host_19->host_04",
+        "edge_type": "network",
+        "source": "host_19",
+        "status": "active",
+        "target": "host_04"
+      },
+      {
+        "edge_id": "host_19->host_25",
+        "edge_type": "network",
+        "source": "host_19",
+        "status": "active",
+        "target": "host_25"
+      },
+      {
+        "edge_id": "host_20->host_01",
+        "edge_type": "network",
+        "source": "host_20",
+        "status": "active",
+        "target": "host_01"
+      },
+      {
+        "edge_id": "host_20->host_18",
+        "edge_type": "api_integration",
+        "source": "host_20",
+        "status": "active",
+        "target": "host_18"
+      },
+      {
+        "edge_id": "host_20->host_26",
+        "edge_type": "network",
+        "source": "host_20",
+        "status": "active",
+        "target": "host_26"
+      },
+      {
+        "edge_id": "host_21->host_27",
+        "edge_type": "network",
+        "source": "host_21",
+        "status": "active",
+        "target": "host_27"
+      },
+      {
+        "edge_id": "host_22->host_28",
+        "edge_type": "network",
+        "source": "host_22",
+        "status": "active",
+        "target": "host_28"
+      },
+      {
+        "edge_id": "host_23->host_29",
+        "edge_type": "network",
+        "source": "host_23",
+        "status": "active",
+        "target": "host_29"
+      },
+      {
+        "edge_id": "host_24->host_30",
+        "edge_type": "network",
+        "source": "host_24",
+        "status": "active",
+        "target": "host_30"
+      },
+      {
+        "edge_id": "host_24->host_31",
+        "edge_type": "network",
+        "source": "host_24",
+        "status": "active",
+        "target": "host_31"
+      },
+      {
+        "edge_id": "host_25->host_31",
+        "edge_type": "network",
+        "source": "host_25",
+        "status": "active",
+        "target": "host_31"
+      },
+      {
+        "edge_id": "host_26->host_30",
+        "edge_type": "network",
+        "source": "host_26",
+        "status": "active",
+        "target": "host_30"
+      },
+      {
+        "edge_id": "host_26->host_32",
+        "edge_type": "network",
+        "source": "host_26",
+        "status": "active",
+        "target": "host_32"
+      },
+      {
+        "edge_id": "host_27->host_21",
+        "edge_type": "network",
+        "source": "host_27",
+        "status": "active",
+        "target": "host_21"
+      },
+      {
+        "edge_id": "host_27->host_33",
+        "edge_type": "network",
+        "source": "host_27",
+        "status": "active",
+        "target": "host_33"
+      },
+      {
+        "edge_id": "host_28->host_34",
+        "edge_type": "network",
+        "source": "host_28",
+        "status": "active",
+        "target": "host_34"
+      },
+      {
+        "edge_id": "host_28->host_41",
+        "edge_type": "network",
+        "source": "host_28",
+        "status": "active",
+        "target": "host_41"
+      },
+      {
+        "edge_id": "host_29->host_35",
+        "edge_type": "network",
+        "source": "host_29",
+        "status": "active",
+        "target": "host_35"
+      },
+      {
+        "edge_id": "host_30->host_36",
+        "edge_type": "network",
+        "source": "host_30",
+        "status": "active",
+        "target": "host_36"
+      },
+      {
+        "edge_id": "host_31->host_37",
+        "edge_type": "network",
+        "source": "host_31",
+        "status": "active",
+        "target": "host_37"
+      },
+      {
+        "edge_id": "host_32->host_38",
+        "edge_type": "network",
+        "source": "host_32",
+        "status": "active",
+        "target": "host_38"
+      },
+      {
+        "edge_id": "host_33->host_39",
+        "edge_type": "network",
+        "source": "host_33",
+        "status": "active",
+        "target": "host_39"
+      },
+      {
+        "edge_id": "host_34->host_40",
+        "edge_type": "network",
+        "source": "host_34",
+        "status": "active",
+        "target": "host_40"
+      },
+      {
+        "edge_id": "host_35->host_41",
+        "edge_type": "network",
+        "source": "host_35",
+        "status": "active",
+        "target": "host_41"
+      },
+      {
+        "edge_id": "host_36->host_42",
+        "edge_type": "network",
+        "source": "host_36",
+        "status": "active",
+        "target": "host_42"
+      },
+      {
+        "edge_id": "host_37->host_43",
+        "edge_type": "network",
+        "source": "host_37",
+        "status": "active",
+        "target": "host_43"
+      },
+      {
+        "edge_id": "host_38->host_44",
+        "edge_type": "network",
+        "source": "host_38",
+        "status": "active",
+        "target": "host_44"
+      },
+      {
+        "edge_id": "host_39->host_45",
+        "edge_type": "network",
+        "source": "host_39",
+        "status": "active",
+        "target": "host_45"
+      },
+      {
+        "edge_id": "host_40->host_46",
+        "edge_type": "network",
+        "source": "host_40",
+        "status": "active",
+        "target": "host_46"
+      },
+      {
+        "edge_id": "host_41->host_47",
+        "edge_type": "network",
+        "source": "host_41",
+        "status": "active",
+        "target": "host_47"
+      },
+      {
+        "edge_id": "host_42->host_47",
+        "edge_type": "network",
+        "source": "host_42",
+        "status": "active",
+        "target": "host_47"
+      },
+      {
+        "edge_id": "host_42->host_48",
+        "edge_type": "network",
+        "source": "host_42",
+        "status": "active",
+        "target": "host_48"
+      },
+      {
+        "edge_id": "host_43->host_49",
+        "edge_type": "network",
+        "source": "host_43",
+        "status": "active",
+        "target": "host_49"
+      },
+      {
+        "edge_id": "host_44->host_09",
+        "edge_type": "network",
+        "source": "host_44",
+        "status": "active",
+        "target": "host_09"
+      },
+      {
+        "edge_id": "host_46->host_23",
+        "edge_type": "network",
+        "source": "host_46",
+        "status": "active",
+        "target": "host_23"
+      }
+    ],
+    "nodes": [
+      {
+        "asset_type": "endpoint",
+        "criticality": "low",
+        "node_id": "host_01",
+        "services": [
+          "dns"
+        ],
+        "vulnerabilities": [
+          {
+            "service": "dns",
+            "severity": "low",
+            "vuln_id": "SYNTH-CVE-2026-1501"
+          }
+        ],
+        "zone": "public"
+      },
+      {
+        "asset_type": "server",
+        "criticality": "low",
+        "node_id": "host_02",
+        "services": [
+          "db",
+          "dns"
+        ],
+        "vulnerabilities": [
+          {
+            "service": "db",
+            "severity": "high",
+            "vuln_id": "SYNTH-CVE-2026-1301"
+          },
+          {
+            "service": "db",
+            "severity": "critical",
+            "vuln_id": "SYNTH-CVE-2026-1302"
+          },
+          {
+            "service": "dns",
+            "severity": "critical",
+            "vuln_id": "SYNTH-CVE-2026-1501"
+          }
+        ],
+        "zone": "app"
+      },
+      {
+        "asset_type": "data_store",
+        "criticality": "high",
+        "node_id": "host_03",
+        "services": [
+          "db"
+        ],
+        "vulnerabilities": [
+          {
+            "service": "db",
+            "severity": "high",
+            "vuln_id": "SYNTH-CVE-2026-1301"
+          },
+          {
+            "service": "db",
+            "severity": "critical",
+            "vuln_id": "SYNTH-CVE-2026-1302"
+          }
+        ],
+        "zone": "data"
+      },
+      {
+        "asset_type": "server",
+        "criticality": "medium",
+        "node_id": "host_04",
+        "services": [
+          "auth",
+          "cache",
+          "web"
+        ],
+        "vulnerabilities": [
+          {
+            "service": "auth",
+            "severity": "critical",
+            "vuln_id": "SYNTH-CVE-2026-1201"
+          },
+          {
+            "service": "cache",
+            "severity": "high",
+            "vuln_id": "SYNTH-CVE-2026-1401"
+          },
+          {
+            "service": "web",
+            "severity": "low",
+            "vuln_id": "SYNTH-CVE-2026-1002"
+          }
+        ],
+        "zone": "admin"
+      },
+      {
+        "asset_type": "idp",
+        "criticality": "critical",
+        "node_id": "host_05",
+        "services": [
+          "auth",
+          "dns"
+        ],
+        "vulnerabilities": [
+          {
+            "service": "auth",
+            "severity": "high",
+            "vuln_id": "SYNTH-CVE-2026-1201"
+          },
+          {
+            "service": "dns",
+            "severity": "medium",
+            "vuln_id": "SYNTH-CVE-2026-1501"
+          }
+        ],
+        "zone": "identity"
+      },
+      {
+        "asset_type": "crm_saas",
+        "criticality": "critical",
+        "node_id": "host_06",
+        "services": [
+          "queue"
+        ],
+        "vulnerabilities": [
+          {
+            "service": "queue",
+            "severity": "critical",
+            "vuln_id": "SYNTH-CVE-2026-1701"
+          }
+        ],
+        "zone": "saas"
+      },
+      {
+        "asset_type": "endpoint",
+        "criticality": "low",
+        "node_id": "host_07",
+        "services": [
+          "dns",
+          "ssh",
+          "web"
+        ],
+        "vulnerabilities": [
+          {
+            "service": "dns",
+            "severity": "low",
+            "vuln_id": "SYNTH-CVE-2026-1501"
+          },
+          {
+            "service": "ssh",
+            "severity": "high",
+            "vuln_id": "SYNTH-CVE-2026-1601"
+          },
+          {
+            "service": "web",
+            "severity": "high",
+            "vuln_id": "SYNTH-CVE-2026-1001"
+          }
+        ],
+        "zone": "public"
+      },
+      {
+        "asset_type": "server",
+        "criticality": "low",
+        "node_id": "host_08",
+        "services": [
+          "queue"
+        ],
+        "vulnerabilities": [
+          {
+            "service": "queue",
+            "severity": "critical",
+            "vuln_id": "SYNTH-CVE-2026-1701"
+          }
+        ],
+        "zone": "app"
+      },
+      {
+        "asset_type": "server",
+        "criticality": "high",
+        "node_id": "host_09",
+        "services": [
+          "api"
+        ],
+        "vulnerabilities": [
+          {
+            "service": "api",
+            "severity": "critical",
+            "vuln_id": "SYNTH-CVE-2026-1101"
+          }
+        ],
+        "zone": "data"
+      },
+      {
+        "asset_type": "server",
+        "criticality": "medium",
+        "node_id": "host_10",
+        "services": [
+          "cache",
+          "queue",
+          "ssh"
+        ],
+        "vulnerabilities": [
+          {
+            "service": "cache",
+            "severity": "medium",
+            "vuln_id": "SYNTH-CVE-2026-1401"
+          },
+          {
+            "service": "queue",
+            "severity": "low",
+            "vuln_id": "SYNTH-CVE-2026-1701"
+          },
+          {
+            "service": "ssh",
+            "severity": "high",
+            "vuln_id": "SYNTH-CVE-2026-1601"
+          }
+        ],
+        "zone": "admin"
+      },
+      {
+        "asset_type": "idp",
+        "criticality": "critical",
+        "node_id": "host_11",
+        "services": [
+          "api",
+          "dns"
+        ],
+        "vulnerabilities": [
+          {
+            "service": "api",
+            "severity": "medium",
+            "vuln_id": "SYNTH-CVE-2026-1101"
+          },
+          {
+            "service": "api",
+            "severity": "critical",
+            "vuln_id": "SYNTH-CVE-2026-1102"
+          },
+          {
+            "service": "dns",
+            "severity": "high",
+            "vuln_id": "SYNTH-CVE-2026-1501"
+          }
+        ],
+        "zone": "identity"
+      },
+      {
+        "asset_type": "crm_saas",
+        "criticality": "critical",
+        "node_id": "host_12",
+        "services": [
+          "queue",
+          "web"
+        ],
+        "vulnerabilities": [
+          {
+            "service": "queue",
+            "severity": "medium",
+            "vuln_id": "SYNTH-CVE-2026-1701"
+          },
+          {
+            "service": "web",
+            "severity": "critical",
+            "vuln_id": "SYNTH-CVE-2026-1001"
+          },
+          {
+            "service": "web",
+            "severity": "low",
+            "vuln_id": "SYNTH-CVE-2026-1002"
+          }
+        ],
+        "zone": "saas"
+      },
+      {
+        "asset_type": "endpoint",
+        "criticality": "low",
+        "node_id": "host_13",
+        "services": [
+          "dns",
+          "web"
+        ],
+        "vulnerabilities": [
+          {
+            "service": "dns",
+            "severity": "medium",
+            "vuln_id": "SYNTH-CVE-2026-1501"
+          },
+          {
+            "service": "web",
+            "severity": "low",
+            "vuln_id": "SYNTH-CVE-2026-1002"
+          }
+        ],
+        "zone": "public"
+      },
+      {
+        "asset_type": "integration_service",
+        "criticality": "low",
+        "node_id": "host_14",
+        "services": [
+          "api",
+          "auth",
+          "queue"
+        ],
+        "vulnerabilities": [
+          {
+            "service": "api",
+            "severity": "high",
+            "vuln_id": "SYNTH-CVE-2026-1101"
+          },
+          {
+            "service": "auth",
+            "severity": "high",
+            "vuln_id": "SYNTH-CVE-2026-1201"
+          },
+          {
+            "service": "queue",
+            "severity": "high",
+            "vuln_id": "SYNTH-CVE-2026-1701"
+          }
+        ],
+        "zone": "app"
+      },
+      {
+        "asset_type": "server",
+        "criticality": "high",
+        "node_id": "host_15",
+        "services": [
+          "web"
+        ],
+        "vulnerabilities": [
+          {
+            "service": "web",
+            "severity": "high",
+            "vuln_id": "SYNTH-CVE-2026-1001"
+          }
+        ],
+        "zone": "data"
+      },
+      {
+        "asset_type": "server",
+        "criticality": "medium",
+        "node_id": "host_16",
+        "services": [
+          "api"
+        ],
+        "vulnerabilities": [
+          {
+            "service": "api",
+            "severity": "medium",
+            "vuln_id": "SYNTH-CVE-2026-1102"
+          }
+        ],
+        "zone": "admin"
+      },
+      {
+        "asset_type": "idp",
+        "criticality": "critical",
+        "node_id": "host_17",
+        "services": [
+          "dns"
+        ],
+        "vulnerabilities": [
+          {
+            "service": "dns",
+            "severity": "medium",
+            "vuln_id": "SYNTH-CVE-2026-1501"
+          }
+        ],
+        "zone": "identity"
+      },
+      {
+        "asset_type": "crm_saas",
+        "criticality": "critical",
+        "node_id": "host_18",
+        "services": [
+          "api",
+          "queue",
+          "web"
+        ],
+        "vulnerabilities": [
+          {
+            "service": "api",
+            "severity": "medium",
+            "vuln_id": "SYNTH-CVE-2026-1102"
+          },
+          {
+            "service": "queue",
+            "severity": "medium",
+            "vuln_id": "SYNTH-CVE-2026-1701"
+          },
+          {
+            "service": "web",
+            "severity": "high",
+            "vuln_id": "SYNTH-CVE-2026-1002"
+          }
+        ],
+        "zone": "saas"
+      },
+      {
+        "asset_type": "server",
+        "criticality": "low",
+        "node_id": "host_19",
+        "services": [
+          "auth"
+        ],
+        "vulnerabilities": [
+          {
+            "service": "auth",
+            "severity": "medium",
+            "vuln_id": "SYNTH-CVE-2026-1201"
+          }
+        ],
+        "zone": "public"
+      },
+      {
+        "asset_type": "integration_service",
+        "criticality": "low",
+        "node_id": "host_20",
+        "services": [
+          "api",
+          "queue"
+        ],
+        "vulnerabilities": [
+          {
+            "service": "api",
+            "severity": "medium",
+            "vuln_id": "SYNTH-CVE-2026-1101"
+          },
+          {
+            "service": "api",
+            "severity": "medium",
+            "vuln_id": "SYNTH-CVE-2026-1102"
+          },
+          {
+            "service": "queue",
+            "severity": "low",
+            "vuln_id": "SYNTH-CVE-2026-1701"
+          }
+        ],
+        "zone": "app"
+      },
+      {
+        "asset_type": "server",
+        "criticality": "high",
+        "node_id": "host_21",
+        "services": [
+          "queue",
+          "ssh"
+        ],
+        "vulnerabilities": [
+          {
+            "service": "queue",
+            "severity": "high",
+            "vuln_id": "SYNTH-CVE-2026-1701"
+          },
+          {
+            "service": "ssh",
+            "severity": "critical",
+            "vuln_id": "SYNTH-CVE-2026-1601"
+          }
+        ],
+        "zone": "data"
+      },
+      {
+        "asset_type": "server",
+        "criticality": "medium",
+        "node_id": "host_22",
+        "services": [
+          "auth",
+          "dns"
+        ],
+        "vulnerabilities": [
+          {
+            "service": "auth",
+            "severity": "medium",
+            "vuln_id": "SYNTH-CVE-2026-1201"
+          },
+          {
+            "service": "dns",
+            "severity": "low",
+            "vuln_id": "SYNTH-CVE-2026-1501"
+          }
+        ],
+        "zone": "admin"
+      },
+      {
+        "asset_type": "idp",
+        "criticality": "critical",
+        "node_id": "host_23",
+        "services": [
+          "api",
+          "auth",
+          "dns"
+        ],
+        "vulnerabilities": [
+          {
+            "service": "api",
+            "severity": "medium",
+            "vuln_id": "SYNTH-CVE-2026-1102"
+          },
+          {
+            "service": "auth",
+            "severity": "critical",
+            "vuln_id": "SYNTH-CVE-2026-1201"
+          },
+          {
+            "service": "dns",
+            "severity": "high",
+            "vuln_id": "SYNTH-CVE-2026-1501"
+          }
+        ],
+        "zone": "identity"
+      },
+      {
+        "asset_type": "crm_saas",
+        "criticality": "critical",
+        "node_id": "host_24",
+        "services": [
+          "api",
+          "queue",
+          "web"
+        ],
+        "vulnerabilities": [
+          {
+            "service": "api",
+            "severity": "critical",
+            "vuln_id": "SYNTH-CVE-2026-1101"
+          },
+          {
+            "service": "api",
+            "severity": "low",
+            "vuln_id": "SYNTH-CVE-2026-1102"
+          },
+          {
+            "service": "queue",
+            "severity": "high",
+            "vuln_id": "SYNTH-CVE-2026-1701"
+          },
+          {
+            "service": "web",
+            "severity": "critical",
+            "vuln_id": "SYNTH-CVE-2026-1001"
+          },
+          {
+            "service": "web",
+            "severity": "low",
+            "vuln_id": "SYNTH-CVE-2026-1002"
+          }
+        ],
+        "zone": "saas"
+      },
+      {
+        "asset_type": "server",
+        "criticality": "low",
+        "node_id": "host_25",
+        "services": [
+          "auth",
+          "dns",
+          "web"
+        ],
+        "vulnerabilities": [
+          {
+            "service": "auth",
+            "severity": "high",
+            "vuln_id": "SYNTH-CVE-2026-1201"
+          },
+          {
+            "service": "dns",
+            "severity": "high",
+            "vuln_id": "SYNTH-CVE-2026-1501"
+          },
+          {
+            "service": "web",
+            "severity": "medium",
+            "vuln_id": "SYNTH-CVE-2026-1002"
+          }
+        ],
+        "zone": "public"
+      },
+      {
+        "asset_type": "integration_service",
+        "criticality": "low",
+        "node_id": "host_26",
+        "services": [
+          "auth",
+          "queue"
+        ],
+        "vulnerabilities": [
+          {
+            "service": "auth",
+            "severity": "high",
+            "vuln_id": "SYNTH-CVE-2026-1201"
+          },
+          {
+            "service": "queue",
+            "severity": "low",
+            "vuln_id": "SYNTH-CVE-2026-1701"
+          }
+        ],
+        "zone": "app"
+      },
+      {
+        "asset_type": "server",
+        "criticality": "high",
+        "node_id": "host_27",
+        "services": [
+          "api",
+          "dns",
+          "ssh"
+        ],
+        "vulnerabilities": [
+          {
+            "service": "api",
+            "severity": "medium",
+            "vuln_id": "SYNTH-CVE-2026-1101"
+          },
+          {
+            "service": "api",
+            "severity": "medium",
+            "vuln_id": "SYNTH-CVE-2026-1102"
+          },
+          {
+            "service": "dns",
+            "severity": "high",
+            "vuln_id": "SYNTH-CVE-2026-1501"
+          },
+          {
+            "service": "ssh",
+            "severity": "high",
+            "vuln_id": "SYNTH-CVE-2026-1601"
+          }
+        ],
+        "zone": "data"
+      },
+      {
+        "asset_type": "server",
+        "criticality": "medium",
+        "node_id": "host_28",
+        "services": [
+          "api",
+          "queue"
+        ],
+        "vulnerabilities": [
+          {
+            "service": "api",
+            "severity": "medium",
+            "vuln_id": "SYNTH-CVE-2026-1101"
+          },
+          {
+            "service": "api",
+            "severity": "high",
+            "vuln_id": "SYNTH-CVE-2026-1102"
+          },
+          {
+            "service": "queue",
+            "severity": "critical",
+            "vuln_id": "SYNTH-CVE-2026-1701"
+          }
+        ],
+        "zone": "admin"
+      },
+      {
+        "asset_type": "idp",
+        "criticality": "critical",
+        "node_id": "host_29",
+        "services": [
+          "auth",
+          "dns"
+        ],
+        "vulnerabilities": [
+          {
+            "service": "auth",
+            "severity": "critical",
+            "vuln_id": "SYNTH-CVE-2026-1201"
+          },
+          {
+            "service": "dns",
+            "severity": "critical",
+            "vuln_id": "SYNTH-CVE-2026-1501"
+          }
+        ],
+        "zone": "identity"
+      },
+      {
+        "asset_type": "crm_saas",
+        "criticality": "critical",
+        "node_id": "host_30",
+        "services": [
+          "queue",
+          "web"
+        ],
+        "vulnerabilities": [
+          {
+            "service": "queue",
+            "severity": "high",
+            "vuln_id": "SYNTH-CVE-2026-1701"
+          },
+          {
+            "service": "web",
+            "severity": "critical",
+            "vuln_id": "SYNTH-CVE-2026-1001"
+          }
+        ],
+        "zone": "saas"
+      },
+      {
+        "asset_type": "server",
+        "criticality": "low",
+        "node_id": "host_31",
+        "services": [
+          "web"
+        ],
+        "vulnerabilities": [
+          {
+            "service": "web",
+            "severity": "high",
+            "vuln_id": "SYNTH-CVE-2026-1001"
+          }
+        ],
+        "zone": "public"
+      },
+      {
+        "asset_type": "integration_service",
+        "criticality": "low",
+        "node_id": "host_32",
+        "services": [
+          "queue"
+        ],
+        "vulnerabilities": [
+          {
+            "service": "queue",
+            "severity": "high",
+            "vuln_id": "SYNTH-CVE-2026-1701"
+          }
+        ],
+        "zone": "app"
+      },
+      {
+        "asset_type": "server",
+        "criticality": "high",
+        "node_id": "host_33",
+        "services": [
+          "auth",
+          "ssh"
+        ],
+        "vulnerabilities": [
+          {
+            "service": "auth",
+            "severity": "critical",
+            "vuln_id": "SYNTH-CVE-2026-1201"
+          },
+          {
+            "service": "ssh",
+            "severity": "low",
+            "vuln_id": "SYNTH-CVE-2026-1601"
+          }
+        ],
+        "zone": "data"
+      },
+      {
+        "asset_type": "server",
+        "criticality": "medium",
+        "node_id": "host_34",
+        "services": [
+          "dns"
+        ],
+        "vulnerabilities": [
+          {
+            "service": "dns",
+            "severity": "medium",
+            "vuln_id": "SYNTH-CVE-2026-1501"
+          }
+        ],
+        "zone": "admin"
+      },
+      {
+        "asset_type": "idp",
+        "criticality": "critical",
+        "node_id": "host_35",
+        "services": [
+          "api",
+          "auth",
+          "dns"
+        ],
+        "vulnerabilities": [
+          {
+            "service": "api",
+            "severity": "low",
+            "vuln_id": "SYNTH-CVE-2026-1101"
+          },
+          {
+            "service": "api",
+            "severity": "medium",
+            "vuln_id": "SYNTH-CVE-2026-1102"
+          },
+          {
+            "service": "auth",
+            "severity": "low",
+            "vuln_id": "SYNTH-CVE-2026-1201"
+          },
+          {
+            "service": "dns",
+            "severity": "medium",
+            "vuln_id": "SYNTH-CVE-2026-1501"
+          }
+        ],
+        "zone": "identity"
+      },
+      {
+        "asset_type": "crm_saas",
+        "criticality": "critical",
+        "node_id": "host_36",
+        "services": [
+          "api"
+        ],
+        "vulnerabilities": [
+          {
+            "service": "api",
+            "severity": "critical",
+            "vuln_id": "SYNTH-CVE-2026-1102"
+          }
+        ],
+        "zone": "saas"
+      },
+      {
+        "asset_type": "server",
+        "criticality": "low",
+        "node_id": "host_37",
+        "services": [
+          "ssh"
+        ],
+        "vulnerabilities": [
+          {
+            "service": "ssh",
+            "severity": "critical",
+            "vuln_id": "SYNTH-CVE-2026-1601"
+          }
+        ],
+        "zone": "public"
+      },
+      {
+        "asset_type": "integration_service",
+        "criticality": "low",
+        "node_id": "host_38",
+        "services": [
+          "queue"
+        ],
+        "vulnerabilities": [
+          {
+            "service": "queue",
+            "severity": "low",
+            "vuln_id": "SYNTH-CVE-2026-1701"
+          }
+        ],
+        "zone": "app"
+      },
+      {
+        "asset_type": "data_store",
+        "criticality": "high",
+        "node_id": "host_39",
+        "services": [
+          "api",
+          "db"
+        ],
+        "vulnerabilities": [
+          {
+            "service": "api",
+            "severity": "medium",
+            "vuln_id": "SYNTH-CVE-2026-1101"
+          },
+          {
+            "service": "api",
+            "severity": "low",
+            "vuln_id": "SYNTH-CVE-2026-1102"
+          },
+          {
+            "service": "db",
+            "severity": "critical",
+            "vuln_id": "SYNTH-CVE-2026-1302"
+          }
+        ],
+        "zone": "data"
+      },
+      {
+        "asset_type": "server",
+        "criticality": "medium",
+        "node_id": "host_40",
+        "services": [
+          "api",
+          "auth",
+          "db"
+        ],
+        "vulnerabilities": [
+          {
+            "service": "api",
+            "severity": "low",
+            "vuln_id": "SYNTH-CVE-2026-1101"
+          },
+          {
+            "service": "api",
+            "severity": "high",
+            "vuln_id": "SYNTH-CVE-2026-1102"
+          },
+          {
+            "service": "auth",
+            "severity": "high",
+            "vuln_id": "SYNTH-CVE-2026-1201"
+          },
+          {
+            "service": "db",
+            "severity": "medium",
+            "vuln_id": "SYNTH-CVE-2026-1301"
+          }
+        ],
+        "zone": "admin"
+      },
+      {
+        "asset_type": "idp",
+        "criticality": "critical",
+        "node_id": "host_41",
+        "services": [
+          "auth",
+          "dns"
+        ],
+        "vulnerabilities": [
+          {
+            "service": "auth",
+            "severity": "critical",
+            "vuln_id": "SYNTH-CVE-2026-1201"
+          },
+          {
+            "service": "dns",
+            "severity": "high",
+            "vuln_id": "SYNTH-CVE-2026-1501"
+          }
+        ],
+        "zone": "identity"
+      },
+      {
+        "asset_type": "crm_saas",
+        "criticality": "critical",
+        "node_id": "host_42",
+        "services": [
+          "queue",
+          "web"
+        ],
+        "vulnerabilities": [
+          {
+            "service": "queue",
+            "severity": "critical",
+            "vuln_id": "SYNTH-CVE-2026-1701"
+          },
+          {
+            "service": "web",
+            "severity": "low",
+            "vuln_id": "SYNTH-CVE-2026-1001"
+          },
+          {
+            "service": "web",
+            "severity": "medium",
+            "vuln_id": "SYNTH-CVE-2026-1002"
+          }
+        ],
+        "zone": "saas"
+      },
+      {
+        "asset_type": "server",
+        "criticality": "low",
+        "node_id": "host_43",
+        "services": [
+          "auth"
+        ],
+        "vulnerabilities": [
+          {
+            "service": "auth",
+            "severity": "high",
+            "vuln_id": "SYNTH-CVE-2026-1201"
+          }
+        ],
+        "zone": "public"
+      },
+      {
+        "asset_type": "server",
+        "criticality": "low",
+        "node_id": "host_44",
+        "services": [
+          "queue",
+          "web"
+        ],
+        "vulnerabilities": [
+          {
+            "service": "queue",
+            "severity": "high",
+            "vuln_id": "SYNTH-CVE-2026-1701"
+          },
+          {
+            "service": "web",
+            "severity": "low",
+            "vuln_id": "SYNTH-CVE-2026-1001"
+          },
+          {
+            "service": "web",
+            "severity": "medium",
+            "vuln_id": "SYNTH-CVE-2026-1002"
+          }
+        ],
+        "zone": "app"
+      },
+      {
+        "asset_type": "data_store",
+        "criticality": "high",
+        "node_id": "host_45",
+        "services": [
+          "api",
+          "cache"
+        ],
+        "vulnerabilities": [
+          {
+            "service": "api",
+            "severity": "critical",
+            "vuln_id": "SYNTH-CVE-2026-1101"
+          },
+          {
+            "service": "api",
+            "severity": "medium",
+            "vuln_id": "SYNTH-CVE-2026-1102"
+          },
+          {
+            "service": "cache",
+            "severity": "critical",
+            "vuln_id": "SYNTH-CVE-2026-1401"
+          }
+        ],
+        "zone": "data"
+      },
+      {
+        "asset_type": "server",
+        "criticality": "medium",
+        "node_id": "host_46",
+        "services": [
+          "auth",
+          "dns",
+          "queue"
+        ],
+        "vulnerabilities": [
+          {
+            "service": "auth",
+            "severity": "high",
+            "vuln_id": "SYNTH-CVE-2026-1201"
+          },
+          {
+            "service": "dns",
+            "severity": "low",
+            "vuln_id": "SYNTH-CVE-2026-1501"
+          },
+          {
+            "service": "queue",
+            "severity": "critical",
+            "vuln_id": "SYNTH-CVE-2026-1701"
+          }
+        ],
+        "zone": "admin"
+      },
+      {
+        "asset_type": "idp",
+        "criticality": "critical",
+        "node_id": "host_47",
+        "services": [
+          "auth"
+        ],
+        "vulnerabilities": [
+          {
+            "service": "auth",
+            "severity": "high",
+            "vuln_id": "SYNTH-CVE-2026-1201"
+          }
+        ],
+        "zone": "identity"
+      },
+      {
+        "asset_type": "crm_saas",
+        "criticality": "critical",
+        "node_id": "host_48",
+        "services": [
+          "api",
+          "queue",
+          "web"
+        ],
+        "vulnerabilities": [
+          {
+            "service": "api",
+            "severity": "high",
+            "vuln_id": "SYNTH-CVE-2026-1101"
+          },
+          {
+            "service": "queue",
+            "severity": "low",
+            "vuln_id": "SYNTH-CVE-2026-1701"
+          },
+          {
+            "service": "web",
+            "severity": "high",
+            "vuln_id": "SYNTH-CVE-2026-1002"
+          }
+        ],
+        "zone": "saas"
+      },
+      {
+        "asset_type": "server",
+        "criticality": "low",
+        "node_id": "host_49",
+        "services": [
+          "api",
+          "auth",
+          "ssh"
+        ],
+        "vulnerabilities": [
+          {
+            "service": "api",
+            "severity": "medium",
+            "vuln_id": "SYNTH-CVE-2026-1101"
+          },
+          {
+            "service": "api",
+            "severity": "critical",
+            "vuln_id": "SYNTH-CVE-2026-1102"
+          },
+          {
+            "service": "auth",
+            "severity": "high",
+            "vuln_id": "SYNTH-CVE-2026-1201"
+          },
+          {
+            "service": "ssh",
+            "severity": "critical",
+            "vuln_id": "SYNTH-CVE-2026-1601"
+          }
+        ],
+        "zone": "public"
+      }
+    ],
+    "scenario_id": "scenario_enterprise_crm_identity_chain_v1",
+    "seed": 2005
+  }
+}
