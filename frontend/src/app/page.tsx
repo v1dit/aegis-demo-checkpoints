@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Graph from "../components/Graph";
 import {
   connectEventsStream,
@@ -11,8 +11,8 @@ import {
   normalizeEvent,
   pickReplayIdForLane,
   pickPreferredReplayId,
-  type ReplayListItem,
   type ReplayEvent,
+  type ReplayListItem,
   type ReplayTopology,
   type ScenarioLane,
 } from "../lib/api";
@@ -27,6 +27,44 @@ type DataSourceStatus =
   | { mode: "live-rest"; label: string }
   | { mode: "mock"; label: string };
 
+type SlideId = "command" | "episodes" | "mission";
+
+type AlertClassification =
+  | "Initial Access"
+  | "Execution"
+  | "Lateral Movement"
+  | "Data Exfiltration"
+  | "Defense Evasion";
+
+type AlertDatum = {
+  label: AlertClassification;
+  count: number;
+  accent: string;
+};
+
+type ThreatBalance = {
+  attacks: number;
+  defenses: number;
+  open: number;
+  contained: number;
+  redPercent: number;
+  bluePercent: number;
+};
+
+type TrendBin = {
+  label: string;
+  red: number;
+  blue: number;
+};
+
+type EpisodeCard = {
+  id: string;
+  scenario: string;
+  createdAt: string;
+  runId: string;
+  status: "ACTIVE" | "READY" | "ARCHIVED";
+};
+
 const SCENARIO_LANES: Array<{
   id: ScenarioLane;
   label: string;
@@ -35,19 +73,47 @@ const SCENARIO_LANES: Array<{
   {
     id: "baseline",
     label: "No Blue Team",
-    summary: "Red-only baseline to show uncontrolled blast radius.",
+    summary: "Red-only baseline to reveal uncontained blast radius.",
   },
   {
     id: "current",
     label: "Current Run",
-    summary: "Current PPO defender behavior from latest run artifacts.",
+    summary: "Latest PPO defender behavior from replay stream.",
   },
   {
     id: "enterprise",
     label: "Enterprise Hard Mode",
-    summary: "Enterprise topology with identity + SaaS trust paths.",
+    summary: "Identity + SaaS trust paths with higher complexity.",
   },
 ];
+
+const SLIDES: Array<{ id: SlideId; label: string; subtitle: string }> = [
+  {
+    id: "command",
+    label: "Command Grid",
+    subtitle: "Live operations",
+  },
+  {
+    id: "episodes",
+    label: "Episode Vault",
+    subtitle: "Archive + timeline",
+  },
+  {
+    id: "mission",
+    label: "Mission Brief",
+    subtitle: "System status",
+  },
+];
+
+const ALERT_ORDER: AlertClassification[] = [
+  "Initial Access",
+  "Execution",
+  "Lateral Movement",
+  "Data Exfiltration",
+  "Defense Evasion",
+];
+
+const ALERT_ACCENTS = ["#fda4af", "#fb7185", "#f43f5e", "#22d3ee", "#7dd3fc"];
 
 function normalizedMockEvents(): ReplayEvent[] {
   return mockEvents
@@ -61,6 +127,58 @@ function baselineOnly(events: ReplayEvent[]): ReplayEvent[] {
   return redEvents.map((event, index) => ({ ...event, step: index + 1 }));
 }
 
+function classifyAction(action: string): AlertClassification {
+  const value = action.toLowerCase();
+
+  if (
+    value.includes("phish") ||
+    value.includes("credential") ||
+    value.includes("scan") ||
+    value.includes("login") ||
+    value.includes("exploit")
+  ) {
+    return "Initial Access";
+  }
+
+  if (value.includes("lateral") || value.includes("pivot") || value.includes("movement")) {
+    return "Lateral Movement";
+  }
+
+  if (value.includes("exfil") || value.includes("dump") || value.includes("steal")) {
+    return "Data Exfiltration";
+  }
+
+  if (
+    value.includes("evade") ||
+    value.includes("disable") ||
+    value.includes("obfus") ||
+    value.includes("persist")
+  ) {
+    return "Defense Evasion";
+  }
+
+  return "Execution";
+}
+
+function formatReplayDate(raw: string | undefined): string {
+  if (!raw) return "Unknown timestamp";
+  const parsed = new Date(raw);
+  if (Number.isNaN(parsed.getTime())) return raw;
+
+  return parsed.toLocaleString(undefined, {
+    month: "short",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
+function replayStatus(index: number): EpisodeCard["status"] {
+  if (index === 0) return "ACTIVE";
+  if (index < 4) return "READY";
+  return "ARCHIVED";
+}
+
 export default function Home() {
   const [log, setLog] = useState<ReplayEvent[]>([]);
   const [replayEvents, setReplayEvents] = useState<ReplayEvent[]>([]);
@@ -69,6 +187,7 @@ export default function Home() {
   const [selectedLane, setSelectedLane] = useState<ScenarioLane>("current");
   const [selectedReplayId, setSelectedReplayId] = useState<string | null>(null);
   const [replayCatalog, setReplayCatalog] = useState<ReplayListItem[]>([]);
+  const [activeSlide, setActiveSlide] = useState<SlideId>("command");
   const [dataSource, setDataSource] = useState<DataSourceStatus>({
     mode: "connecting",
     label: "CONNECTING",
@@ -141,7 +260,8 @@ export default function Home() {
           try {
             const replayList = await fetchReplayList();
             setReplayCatalog(replayList);
-            replayId = pickReplayIdForLane(replayList, "current") ?? pickPreferredReplayId(replayList);
+            replayId =
+              pickReplayIdForLane(replayList, "current") ?? pickPreferredReplayId(replayList);
           } catch {
             setReplayCatalog([]);
             replayId = null;
@@ -159,7 +279,8 @@ export default function Home() {
         try {
           const replayList = await fetchReplayList();
           setReplayCatalog(replayList);
-          replayId = pickReplayIdForLane(replayList, selectedLane) ?? pickPreferredReplayId(replayList);
+          replayId =
+            pickReplayIdForLane(replayList, selectedLane) ?? pickPreferredReplayId(replayList);
         } catch {
           setReplayCatalog([]);
           replayId = null;
@@ -208,22 +329,20 @@ export default function Home() {
           onError,
           onClose,
         });
+      } else if (liveSessionId) {
+        streamConnection = connectLiveStream(liveSessionId, {
+          onOpen,
+          onEvent,
+          onError,
+          onClose,
+        });
       } else {
-        if (liveSessionId) {
-          streamConnection = connectLiveStream(liveSessionId, {
-            onOpen,
-            onEvent,
-            onError,
-            onClose,
-          });
-        } else {
-          streamConnection = connectEventsStream({
-            onOpen,
-            onEvent,
-            onError,
-            onClose,
-          });
-        }
+        streamConnection = connectEventsStream({
+          onOpen,
+          onEvent,
+          onError,
+          onClose,
+        });
       }
 
       timeoutId = window.setTimeout(() => {
@@ -253,66 +372,636 @@ export default function Home() {
     return () => window.clearTimeout(timer);
   }, [index, replayEvents]);
 
+  const fallbackEvents = useMemo(() => normalizedMockEvents(), []);
+  const telemetry = log.length > 0 ? log : replayEvents;
+  const events = telemetry.length > 0 ? telemetry : fallbackEvents;
+
+  const alertData = useMemo<AlertDatum[]>(() => {
+    const counts: Record<AlertClassification, number> = {
+      "Initial Access": 0,
+      Execution: 0,
+      "Lateral Movement": 0,
+      "Data Exfiltration": 0,
+      "Defense Evasion": 0,
+    };
+
+    events.forEach((event) => {
+      if (event.actor === "RED") {
+        counts[classifyAction(event.action)] += 1;
+      }
+    });
+
+    return ALERT_ORDER.map((label, idx) => ({
+      label,
+      count: counts[label],
+      accent: ALERT_ACCENTS[idx],
+    }));
+  }, [events]);
+
+  const threatBalance = useMemo<ThreatBalance>(() => {
+    const attacks = events.filter((event) => event.actor === "RED").length;
+    const defenses = events.filter((event) => event.actor === "BLUE").length;
+    const open = Math.max(attacks - defenses, 0);
+    const contained = Math.min(attacks, defenses);
+
+    const total = attacks + defenses;
+    const redPercent = total === 0 ? 0 : Math.round((attacks / total) * 100);
+    const bluePercent = total === 0 ? 0 : Math.round((defenses / total) * 100);
+
+    return {
+      attacks,
+      defenses,
+      open,
+      contained,
+      redPercent,
+      bluePercent,
+    };
+  }, [events]);
+
+  const trendBins = useMemo<TrendBin[]>(() => {
+    const labels = ["-55m", "-50m", "-45m", "-40m", "-35m", "-30m", "-25m", "-20m", "-15m", "-10m", "-5m", "Now"];
+    const bins = labels.map((label) => ({ label, red: 0, blue: 0 }));
+
+    events.forEach((event, idx) => {
+      const bucket = idx % bins.length;
+      if (event.actor === "RED") bins[bucket].red += 1;
+      if (event.actor === "BLUE") bins[bucket].blue += 1;
+    });
+
+    return bins;
+  }, [events]);
+
+  const hotTargets = useMemo(() => {
+    const score: Record<string, number> = {};
+    events.forEach((event) => {
+      score[event.target] = (score[event.target] ?? 0) + (event.actor === "RED" ? 2 : 1);
+    });
+
+    return Object.entries(score)
+      .map(([target, value]) => ({ target, value }))
+      .sort((a, b) => b.value - a.value)
+      .slice(0, 6);
+  }, [events]);
+
+  const episodes = useMemo<EpisodeCard[]>(() => {
+    const catalogItems = replayCatalog.map((item, idx) => ({
+      id: item.id,
+      scenario: item.scenarioId ?? "scenario_unknown",
+      createdAt: formatReplayDate(item.createdAt),
+      runId: item.runId ?? "n/a",
+      status: replayStatus(idx),
+    }));
+
+    if (catalogItems.length > 0) return catalogItems;
+
+    return [
+      {
+        id: selectedReplayId ?? "local-fallback",
+        scenario:
+          selectedLane === "enterprise"
+            ? "scenario_enterprise_hard"
+            : selectedLane === "baseline"
+              ? "scenario_baseline"
+              : "scenario_current_run",
+        createdAt: "Current session",
+        runId: "local",
+        status: "ACTIVE",
+      },
+    ];
+  }, [replayCatalog, selectedReplayId, selectedLane]);
+
+  const logFeed = useMemo(() => events.slice(-100).reverse(), [events]);
+
+  const statusTone =
+    dataSource.mode === "mock"
+      ? "border-amber-500/70 text-amber-200 bg-amber-500/10"
+      : dataSource.mode === "connecting"
+        ? "border-cyan-500/70 text-cyan-100 bg-cyan-500/10"
+        : "border-emerald-500/70 text-emerald-100 bg-emerald-500/10";
+
   return (
-    <main className="min-h-screen bg-black text-white">
-      <div className="mx-auto w-full max-w-7xl px-4 pt-4">
-        <div className="text-2xl font-bold text-white mb-2">
-          Aegis - Adaptive Cyber Defense
-        </div>
-        <div className="flex items-center gap-3 text-sm">
-          <div className="text-green-400">● System Active</div>
-          <div
-            className={`rounded border px-2 py-0.5 text-xs font-semibold tracking-wide ${
-              dataSource.mode === "mock"
-                ? "border-amber-500 text-amber-300"
-                : dataSource.mode === "connecting"
-                  ? "border-sky-500 text-sky-300"
-                  : "border-emerald-500 text-emerald-300"
-            }`}
-          >
-            {dataSource.label}
+    <main className="relative min-h-screen overflow-hidden px-4 pb-10 pt-6 text-[#f4f4f5] md:px-8">
+      <div className="aegis-mesh" aria-hidden />
+      <div className="aegis-grid" aria-hidden />
+
+      <div className="relative z-10 mx-auto w-full max-w-[1500px]">
+        <header className="aegis-card px-4 py-4 md:px-6">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <ShieldLogo />
+              <div>
+                <h1 className="font-display text-2xl tracking-[0.35em] text-[#fecaca]">AEGIS</h1>
+                <p className="text-xs uppercase tracking-[0.2em] text-[#fda4af]">
+                  Adaptive cyber defense command center
+                </p>
+              </div>
+            </div>
+
+            <nav className="flex flex-wrap items-center gap-2">
+              {SLIDES.map((slide) => {
+                const active = activeSlide === slide.id;
+                return (
+                  <button
+                    key={slide.id}
+                    type="button"
+                    onClick={() => setActiveSlide(slide.id)}
+                    className={`rounded-md border px-3 py-2 text-left transition ${
+                      active
+                        ? "border-red-300 bg-red-500/20 text-red-50 shadow-[0_0_18px_rgba(248,113,113,0.35)]"
+                        : "border-red-500/35 bg-black/35 text-red-200 hover:border-red-300/70"
+                    }`}
+                  >
+                    <div className="font-display text-xs uppercase tracking-[0.16em]">{slide.label}</div>
+                    <div className="text-[10px] uppercase tracking-[0.14em] text-red-200/80">{slide.subtitle}</div>
+                  </button>
+                );
+              })}
+            </nav>
+
+            <div className="flex flex-wrap items-center gap-2 text-xs uppercase tracking-[0.14em]">
+              <span className={`rounded-md border px-3 py-1 font-semibold ${statusTone}`}>{dataSource.label}</span>
+              <span className="rounded-md border border-red-500/40 bg-black/35 px-3 py-1 text-red-100">
+                Replay {selectedReplayId ?? "auto"}
+              </span>
+            </div>
           </div>
+
+          <div className="mt-4 grid gap-2 md:grid-cols-3">
+            {SCENARIO_LANES.map((lane) => {
+              const isActive = selectedLane === lane.id;
+              return (
+                <button
+                  type="button"
+                  key={lane.id}
+                  onClick={() => setSelectedLane(lane.id)}
+                  className={`rounded-lg border px-3 py-3 text-left transition ${
+                    isActive
+                      ? "border-cyan-300/70 bg-cyan-400/15 text-cyan-50"
+                      : "border-red-500/30 bg-black/25 text-red-100 hover:border-red-300/70"
+                  }`}
+                >
+                  <div className="font-display text-sm uppercase tracking-[0.14em]">{lane.label}</div>
+                  <div className="mt-1 text-xs text-red-100/80">{lane.summary}</div>
+                </button>
+              );
+            })}
+          </div>
+        </header>
+
+        <section className="mt-5">
+          {activeSlide === "command" ? (
+            <CommandSlide
+              alertData={alertData}
+              threatBalance={threatBalance}
+              logFeed={logFeed}
+              hotTargets={hotTargets}
+              graphTopology={graphTopology}
+              graphEvents={log}
+            />
+          ) : null}
+
+          {activeSlide === "episodes" ? (
+            <EpisodesSlide episodes={episodes} trendBins={trendBins} logFeed={logFeed} />
+          ) : null}
+
+          {activeSlide === "mission" ? (
+            <MissionSlide
+              threatBalance={threatBalance}
+              selectedLane={selectedLane}
+              dataSource={dataSource}
+              replayId={selectedReplayId}
+            />
+          ) : null}
+        </section>
+      </div>
+    </main>
+  );
+}
+
+function CommandSlide({
+  alertData,
+  threatBalance,
+  logFeed,
+  hotTargets,
+  graphTopology,
+  graphEvents,
+}: {
+  alertData: AlertDatum[];
+  threatBalance: ThreatBalance;
+  logFeed: ReplayEvent[];
+  hotTargets: Array<{ target: string; value: number }>;
+  graphTopology: ReplayTopology | null;
+  graphEvents: ReplayEvent[];
+}) {
+  const maxAlert = Math.max(...alertData.map((item) => item.count), 1);
+
+  return (
+    <div className="grid gap-5 xl:grid-cols-12">
+      <article className="aegis-card p-4 xl:col-span-4">
+        <div className="flex items-center justify-between">
+          <h2 className="font-display text-sm uppercase tracking-[0.2em] text-[#fecaca]">
+            Open Alerts by Classification
+          </h2>
+          <span className="rounded border border-red-400/50 px-2 py-1 text-[10px] uppercase tracking-[0.15em] text-red-200">
+            Live
+          </span>
         </div>
-        <div className="flex gap-4 text-xs mt-2">
-          <div className="text-red-400">RED = attacker</div>
-          <div className="text-blue-400">BLUE = defender</div>
-        </div>
-        <div className="mt-4 grid gap-2 md:grid-cols-3">
-          {SCENARIO_LANES.map((lane) => {
-            const isActive = selectedLane === lane.id;
+
+        <div className="mt-5 flex h-44 items-end gap-2">
+          {alertData.map((item) => {
+            const heightPct = Math.max((item.count / maxAlert) * 100, item.count > 0 ? 16 : 7);
             return (
-              <button
-                type="button"
-                key={lane.id}
-                onClick={() => setSelectedLane(lane.id)}
-                className={`rounded-md border px-3 py-2 text-left transition ${
-                  isActive
-                    ? "border-blue-400 bg-blue-500/20 text-blue-100"
-                    : "border-gray-700 bg-[#0b111a] text-gray-300 hover:border-gray-500"
-                }`}
-              >
-                <div className="text-sm font-semibold">{lane.label}</div>
-                <div className="mt-1 text-xs text-gray-300">{lane.summary}</div>
-              </button>
+              <div key={item.label} className="flex flex-1 flex-col items-center gap-2">
+                <div
+                  className="w-full rounded-t-md border border-black/30 bg-gradient-to-t from-black/60"
+                  style={{
+                    height: `${heightPct}%`,
+                    backgroundImage: `linear-gradient(to top, rgba(3,7,18,0.7), ${item.accent})`,
+                  }}
+                />
+                <span className="text-center text-[10px] uppercase tracking-[0.12em] text-red-100/80">
+                  {item.label}
+                </span>
+              </div>
             );
           })}
         </div>
-        <div className="mt-2 text-xs text-gray-400">
-          {selectedReplayId
-            ? `Replay source: ${selectedReplayId}`
-            : selectedLane === "baseline"
-              ? "Replay source: synthetic baseline stream"
-              : "Replay source: auto-select"}
-          {selectedLane === "enterprise" &&
-          selectedReplayId &&
-          !replayCatalog.some(
-            (item) => item.id === selectedReplayId && (item.scenarioId ?? "").startsWith("scenario_enterprise_"),
-          )
-            ? " (enterprise replay not found, using nearest available run)"
-            : ""}
+      </article>
+
+      <article className="xl:col-span-8">
+        <Graph
+          events={graphEvents}
+          topology={graphTopology}
+          className="h-[520px]"
+        />
+      </article>
+
+      <article className="aegis-card p-4 xl:col-span-4">
+        <div className="flex items-center justify-between">
+          <h2 className="font-display text-sm uppercase tracking-[0.2em] text-[#fecaca]">Threat Status</h2>
+          <span className="text-xs uppercase tracking-[0.12em] text-red-100/80">Blue vs Red</span>
         </div>
-      </div>
-      <Graph events={log} topology={graphTopology} className="min-h-[calc(100vh-88px)]" />
-    </main>
+
+        <div className="mt-4 rounded-lg border border-red-500/30 bg-black/35 p-3">
+          <div className="mb-2 flex items-center justify-between text-[11px] uppercase tracking-[0.14em] text-red-100/85">
+            <span>Attack Pressure</span>
+            <span>{threatBalance.redPercent}%</span>
+          </div>
+          <div className="h-4 overflow-hidden rounded-full border border-red-600/40 bg-[#14080d]">
+            <div
+              className="h-full bg-gradient-to-r from-red-800 via-red-500 to-red-300"
+              style={{ width: `${Math.max(threatBalance.redPercent, 2)}%` }}
+            />
+          </div>
+
+          <div className="mb-2 mt-4 flex items-center justify-between text-[11px] uppercase tracking-[0.14em] text-cyan-100/85">
+            <span>Containment Pressure</span>
+            <span>{threatBalance.bluePercent}%</span>
+          </div>
+          <div className="h-4 overflow-hidden rounded-full border border-cyan-600/40 bg-[#05111a]">
+            <div
+              className="h-full bg-gradient-to-r from-cyan-900 via-cyan-500 to-cyan-200"
+              style={{ width: `${Math.max(threatBalance.bluePercent, 2)}%` }}
+            />
+          </div>
+        </div>
+
+        <div className="mt-4 grid grid-cols-2 gap-2 text-xs">
+          <MiniMetric label="Open incidents" value={threatBalance.open} tone="text-red-200" />
+          <MiniMetric label="Contained" value={threatBalance.contained} tone="text-cyan-200" />
+          <MiniMetric label="RED actions" value={threatBalance.attacks} tone="text-red-300" />
+          <MiniMetric label="BLUE actions" value={threatBalance.defenses} tone="text-cyan-300" />
+        </div>
+
+        <div className="mt-4 rounded-lg border border-red-500/25 bg-black/30 p-3">
+          <div className="text-[11px] uppercase tracking-[0.16em] text-red-100/80">Hot targets</div>
+          <ul className="mt-2 space-y-1 text-xs">
+            {hotTargets.map((target) => (
+              <li key={target.target} className="flex items-center justify-between text-red-50/90">
+                <span>{target.target}</span>
+                <span className="font-semibold text-red-300">{target.value}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </article>
+
+      <article className="aegis-card p-4 xl:col-span-8">
+        <div className="mb-3 flex items-center justify-between">
+          <h2 className="font-display text-sm uppercase tracking-[0.2em] text-[#fecaca]">Live Tactical Log</h2>
+          <span className="text-[11px] uppercase tracking-[0.12em] text-red-100/80">
+            Auto-updating stream
+          </span>
+        </div>
+
+        <div className="h-[260px] overflow-auto rounded-lg border border-red-500/25 bg-black/40 p-2">
+          {logFeed.map((event) => (
+            <div
+              key={`${event.step}-${event.target}-${event.action}`}
+              className="mb-2 grid grid-cols-[68px_72px_1fr_180px] gap-2 rounded-md border border-white/8 bg-black/30 px-2 py-2 text-xs"
+            >
+              <span className="font-mono text-red-100/80">#{event.step.toString().padStart(3, "0")}</span>
+              <span
+                className={`rounded px-2 py-0.5 text-center font-semibold ${
+                  event.actor === "RED"
+                    ? "bg-red-500/20 text-red-100 border border-red-400/40"
+                    : "bg-cyan-500/20 text-cyan-100 border border-cyan-400/40"
+                }`}
+              >
+                {event.actor}
+              </span>
+              <span className="truncate text-red-50/95">{event.action}</span>
+              <span className="truncate text-red-200/80">{event.target}</span>
+            </div>
+          ))}
+        </div>
+      </article>
+    </div>
+  );
+}
+
+function EpisodesSlide({
+  episodes,
+  trendBins,
+  logFeed,
+}: {
+  episodes: EpisodeCard[];
+  trendBins: TrendBin[];
+  logFeed: ReplayEvent[];
+}) {
+  const maxBinValue = Math.max(
+    ...trendBins.map((bin) => Math.max(bin.red, bin.blue)),
+    1,
+  );
+
+  return (
+    <div className="grid gap-5 xl:grid-cols-12">
+      <article className="aegis-card p-4 xl:col-span-5">
+        <h2 className="font-display text-sm uppercase tracking-[0.2em] text-[#fecaca]">Episode History</h2>
+        <div className="mt-3 h-[320px] space-y-2 overflow-auto pr-1">
+          {episodes.map((episode) => (
+            <div
+              key={episode.id}
+              className="rounded-lg border border-red-500/25 bg-black/30 p-3 text-xs"
+            >
+              <div className="flex items-center justify-between gap-2">
+                <span className="font-display text-sm tracking-[0.12em] text-red-100">{episode.id}</span>
+                <span
+                  className={`rounded border px-2 py-0.5 text-[10px] uppercase tracking-[0.14em] ${
+                    episode.status === "ACTIVE"
+                      ? "border-cyan-300/60 bg-cyan-400/15 text-cyan-100"
+                      : episode.status === "READY"
+                        ? "border-red-300/60 bg-red-400/15 text-red-100"
+                        : "border-zinc-400/60 bg-zinc-700/20 text-zinc-200"
+                  }`}
+                >
+                  {episode.status}
+                </span>
+              </div>
+              <div className="mt-2 grid grid-cols-2 gap-x-3 gap-y-1 text-[11px] text-red-100/80">
+                <span>Scenario: {episode.scenario}</span>
+                <span>Run: {episode.runId}</span>
+                <span className="col-span-2">Created: {episode.createdAt}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </article>
+
+      <article className="aegis-card p-4 xl:col-span-7">
+        <h2 className="font-display text-sm uppercase tracking-[0.2em] text-[#fecaca]">
+          Historic Attack/Defense Trend
+        </h2>
+        <div className="mt-4 grid h-[320px] grid-cols-12 items-end gap-2 rounded-lg border border-red-500/20 bg-black/35 p-4">
+          {trendBins.map((bin) => {
+            const redHeight = Math.max((bin.red / maxBinValue) * 100, bin.red > 0 ? 10 : 4);
+            const blueHeight = Math.max((bin.blue / maxBinValue) * 100, bin.blue > 0 ? 10 : 4);
+
+            return (
+              <div key={bin.label} className="flex h-full flex-col items-center justify-end gap-2">
+                <div className="relative flex h-[78%] w-full items-end justify-center gap-1">
+                  <div
+                    className="w-2 rounded-t bg-gradient-to-t from-red-900 to-red-300"
+                    style={{ height: `${redHeight}%` }}
+                  />
+                  <div
+                    className="w-2 rounded-t bg-gradient-to-t from-cyan-900 to-cyan-300"
+                    style={{ height: `${blueHeight}%` }}
+                  />
+                </div>
+                <span className="text-[10px] uppercase tracking-[0.08em] text-red-100/70">{bin.label}</span>
+              </div>
+            );
+          })}
+        </div>
+      </article>
+
+      <article className="aegis-card p-4 xl:col-span-12">
+        <h2 className="font-display text-sm uppercase tracking-[0.2em] text-[#fecaca]">Complete Incident Chronicle</h2>
+        <div className="mt-3 h-[300px] overflow-auto rounded-lg border border-red-500/20 bg-black/35">
+          <table className="w-full text-left text-xs">
+            <thead className="sticky top-0 bg-[#0c0f19] text-red-200">
+              <tr>
+                <th className="px-3 py-2 font-semibold uppercase tracking-[0.12em]">Step</th>
+                <th className="px-3 py-2 font-semibold uppercase tracking-[0.12em]">Actor</th>
+                <th className="px-3 py-2 font-semibold uppercase tracking-[0.12em]">Action</th>
+                <th className="px-3 py-2 font-semibold uppercase tracking-[0.12em]">Target</th>
+              </tr>
+            </thead>
+            <tbody>
+              {logFeed.map((event) => (
+                <tr key={`${event.step}-${event.target}-${event.action}`} className="border-t border-white/8">
+                  <td className="px-3 py-2 font-mono text-red-100/80">{event.step}</td>
+                  <td className="px-3 py-2">
+                    <span
+                      className={`rounded px-2 py-0.5 ${
+                        event.actor === "RED"
+                          ? "bg-red-500/20 text-red-100"
+                          : "bg-cyan-500/20 text-cyan-100"
+                      }`}
+                    >
+                      {event.actor}
+                    </span>
+                  </td>
+                  <td className="px-3 py-2 text-red-50/95">{event.action}</td>
+                  <td className="px-3 py-2 text-red-200/80">{event.target}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </article>
+    </div>
+  );
+}
+
+function MissionSlide({
+  threatBalance,
+  selectedLane,
+  dataSource,
+  replayId,
+}: {
+  threatBalance: ThreatBalance;
+  selectedLane: ScenarioLane;
+  dataSource: DataSourceStatus;
+  replayId: string | null;
+}) {
+  const missionProgress = Math.min(100, Math.max(15, 35 + threatBalance.contained * 3));
+  const systemHealth = Math.max(22, 82 - threatBalance.open * 2);
+
+  return (
+    <div className="grid gap-5 xl:grid-cols-12">
+      <article className="aegis-card p-5 xl:col-span-7">
+        <h2 className="font-display text-lg uppercase tracking-[0.22em] text-[#fecaca]">Mission Narrative</h2>
+        <p className="mt-3 text-sm leading-relaxed text-red-50/90">
+          AEGIS is a reinforcement-learning cyber defense interface built to show how adaptive blue-team
+          policies react against evolving red-team tactics in real time. The command grid translates raw
+          attack telemetry into judge-friendly visuals, while retaining technical depth for security teams.
+        </p>
+
+        <div className="mt-5 space-y-3">
+          <MissionItem
+            title="Phase 1: Detect"
+            description="Classify adversary behavior across initial access, execution, movement, and exfiltration."
+          />
+          <MissionItem
+            title="Phase 2: Contain"
+            description="Deploy adaptive defender controls and isolate compromised assets before blast radius expands."
+          />
+          <MissionItem
+            title="Phase 3: Recover"
+            description="Stabilize operations, archive each episode, and produce mission-ready replay evidence."
+          />
+        </div>
+      </article>
+
+      <article className="aegis-card p-5 xl:col-span-5">
+        <h2 className="font-display text-sm uppercase tracking-[0.22em] text-[#fecaca]">System Status</h2>
+
+        <div className="mt-4 space-y-3 text-xs">
+          <StatusRow label="Source" value={dataSource.label} />
+          <StatusRow label="Scenario lane" value={selectedLane} />
+          <StatusRow label="Replay id" value={replayId ?? "auto-select"} />
+        </div>
+
+        <div className="mt-4 rounded-lg border border-red-500/25 bg-black/30 p-3">
+          <div className="mb-1 flex items-center justify-between text-[11px] uppercase tracking-[0.14em] text-red-100/80">
+            <span>Mission completion</span>
+            <span>{missionProgress}%</span>
+          </div>
+          <ProgressBar value={missionProgress} tone="red" />
+
+          <div className="mb-1 mt-4 flex items-center justify-between text-[11px] uppercase tracking-[0.14em] text-cyan-100/80">
+            <span>System health</span>
+            <span>{systemHealth}%</span>
+          </div>
+          <ProgressBar value={systemHealth} tone="cyan" />
+        </div>
+
+        <div className="mt-4 grid grid-cols-2 gap-2">
+          <MiniMetric label="Open incidents" value={threatBalance.open} tone="text-red-200" />
+          <MiniMetric label="Contained" value={threatBalance.contained} tone="text-cyan-200" />
+          <MiniMetric label="Red pressure" value={`${threatBalance.redPercent}%`} tone="text-red-300" />
+          <MiniMetric label="Blue pressure" value={`${threatBalance.bluePercent}%`} tone="text-cyan-300" />
+        </div>
+      </article>
+    </div>
+  );
+}
+
+function ShieldLogo() {
+  return (
+    <div className="relative h-11 w-11 overflow-hidden rounded-md border border-red-400/50 bg-black/40">
+      <svg viewBox="0 0 128 128" className="h-full w-full">
+        <defs>
+          <linearGradient id="shieldGradient" x1="0" x2="1" y1="0" y2="1">
+            <stop offset="0%" stopColor="#fca5a5" />
+            <stop offset="55%" stopColor="#ef4444" />
+            <stop offset="100%" stopColor="#22d3ee" />
+          </linearGradient>
+        </defs>
+        <path
+          d="M64 12 18 28v31c0 32 22 50 46 57 24-7 46-25 46-57V28L64 12Z"
+          fill="url(#shieldGradient)"
+          opacity="0.95"
+        />
+        <path
+          d="M64 27 33 38v21c0 22 14 35 31 41 17-6 31-19 31-41V38L64 27Z"
+          fill="#06080f"
+          opacity="0.78"
+        />
+        <path d="M64 35 46 43v16h18V35Z" fill="#f43f5e" opacity="0.9" />
+        <path d="M64 59H46c1 14 8 24 18 29V59Z" fill="#22d3ee" opacity="0.9" />
+        <path d="M64 35v24h18V43l-18-8Z" fill="#fb7185" opacity="0.9" />
+      </svg>
+    </div>
+  );
+}
+
+function MiniMetric({
+  label,
+  value,
+  tone,
+}: {
+  label: string;
+  value: number | string;
+  tone: string;
+}) {
+  return (
+    <div className="rounded-md border border-red-500/25 bg-black/25 px-2 py-2">
+      <div className="text-[10px] uppercase tracking-[0.14em] text-red-100/70">{label}</div>
+      <div className={`font-display mt-1 text-base ${tone}`}>{value}</div>
+    </div>
+  );
+}
+
+function StatusRow({
+  label,
+  value,
+}: {
+  label: string;
+  value: string;
+}) {
+  return (
+    <div className="flex items-center justify-between border-b border-white/10 pb-1">
+      <span className="uppercase tracking-[0.14em] text-red-100/75">{label}</span>
+      <span className="text-right text-red-50">{value}</span>
+    </div>
+  );
+}
+
+function ProgressBar({
+  value,
+  tone,
+}: {
+  value: number;
+  tone: "red" | "cyan";
+}) {
+  return (
+    <div className={`h-3 overflow-hidden rounded-full border ${tone === "red" ? "border-red-600/40 bg-red-950/40" : "border-cyan-600/40 bg-cyan-950/35"}`}>
+      <div
+        className={`h-full ${
+          tone === "red"
+            ? "bg-gradient-to-r from-red-900 via-red-500 to-red-300"
+            : "bg-gradient-to-r from-cyan-900 via-cyan-500 to-cyan-200"
+        }`}
+        style={{ width: `${Math.max(4, value)}%` }}
+      />
+    </div>
+  );
+}
+
+function MissionItem({
+  title,
+  description,
+}: {
+  title: string;
+  description: string;
+}) {
+  return (
+    <div className="rounded-lg border border-red-500/25 bg-black/25 p-3">
+      <div className="font-display text-sm uppercase tracking-[0.14em] text-red-100">{title}</div>
+      <div className="mt-1 text-xs leading-relaxed text-red-50/85">{description}</div>
+    </div>
   );
 }
