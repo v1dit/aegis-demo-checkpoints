@@ -1,0 +1,17 @@
+{
+  "edge_changes": [
+    {
+      "edge_id": "host_03->host_07",
+      "status": "active"
+    }
+  ],
+  "node_changes": [
+    {
+      "compromise_state": "compromised",
+      "defense_state": "none",
+      "node_id": "host_07"
+    }
+  ],
+  "step": 17,
+  "ts_ms": 1712412345680
+}

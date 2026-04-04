@@ -1,0 +1,13 @@
+{
+  "action_type": "exploit_vulnerability",
+  "actor": "RED",
+  "confidence": 0.91,
+  "event_id": "evt_000001",
+  "mitre_tactic": "Initial Access",
+  "outcome": "success",
+  "source_host": "host_03",
+  "step": 17,
+  "target_host": "host_07",
+  "target_service": "api",
+  "ts_ms": 1712412345678
+}

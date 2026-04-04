@@ -1,0 +1,22 @@
+{
+  "action": "isolate_host",
+  "confidence": 0.82,
+  "expected_effect": "contain lateral spread",
+  "reason_features": [
+    {
+      "name": "traffic_spike_ratio",
+      "value": 3.1
+    },
+    {
+      "name": "lateral_movement_pattern_match",
+      "value": 0.77
+    },
+    {
+      "name": "critical_asset_risk",
+      "value": 0.88
+    }
+  ],
+  "step": 18,
+  "target_host": "host_07",
+  "ts_ms": 1712412345695
+}

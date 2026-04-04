@@ -1,0 +1,10 @@
+{
+  "detected": true,
+  "detector": "BLUE",
+  "event_id": "det_000034",
+  "severity": "high",
+  "signal": "traffic_spike",
+  "step": 18,
+  "target_host": "host_07",
+  "ts_ms": 1712412345692
+}

@@ -1,2 +1,10 @@
 documentation/
 .DS_Store
+
+secrets.txt
+.venv/
+__pycache__/
+.pytest_cache/
+*.pyc
+*.pyo
+*.egg-info/

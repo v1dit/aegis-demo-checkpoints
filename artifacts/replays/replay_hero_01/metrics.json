@@ -1,0 +1,6014 @@
+{
+  "explainability": [
+    {
+      "action": "monitor_host",
+      "confidence": 0.77,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 1.46
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.32
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.47
+        }
+      ],
+      "step": 1,
+      "target_host": "host_09",
+      "ts_ms": 1712412356163
+    },
+    {
+      "action": "monitor_host",
+      "confidence": 0.73,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 1.66
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.39
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.5
+        }
+      ],
+      "step": 2,
+      "target_host": "host_11",
+      "ts_ms": 1712412356283
+    },
+    {
+      "action": "monitor_host",
+      "confidence": 0.79,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 1.69
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.48
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.64
+        }
+      ],
+      "step": 3,
+      "target_host": "host_09",
+      "ts_ms": 1712412356403
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.6,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 1.92
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.54
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.77
+        }
+      ],
+      "step": 4,
+      "target_host": "host_08",
+      "ts_ms": 1712412356523
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.67,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 1.89
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.39
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.78
+        }
+      ],
+      "step": 5,
+      "target_host": "host_08",
+      "ts_ms": 1712412356643
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.88,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 2.19
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.45
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.67
+        }
+      ],
+      "step": 6,
+      "target_host": "host_08",
+      "ts_ms": 1712412356763
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.74,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 2.13
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.6
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.86
+        }
+      ],
+      "step": 7,
+      "target_host": "host_08",
+      "ts_ms": 1712412356883
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.85,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 2.34
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.45
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.64
+        }
+      ],
+      "step": 8,
+      "target_host": "host_08",
+      "ts_ms": 1712412357003
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.94,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 2.51
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.78
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.91
+        }
+      ],
+      "step": 9,
+      "target_host": "host_03",
+      "ts_ms": 1712412357123
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.59,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 1.91
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.65
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.76
+        }
+      ],
+      "step": 10,
+      "target_host": "host_03",
+      "ts_ms": 1712412357243
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.65,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 2.98
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.73
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.79
+        }
+      ],
+      "step": 11,
+      "target_host": "host_03",
+      "ts_ms": 1712412357363
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.62,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 2.43
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.88
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.7
+        }
+      ],
+      "step": 12,
+      "target_host": "host_03",
+      "ts_ms": 1712412357483
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.87,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 2.34
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.95
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.98
+        }
+      ],
+      "step": 13,
+      "target_host": "host_03",
+      "ts_ms": 1712412357603
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.68,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 3.27
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.86
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 14,
+      "target_host": "host_03",
+      "ts_ms": 1712412357723
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.62,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 3.32
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.92
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.95
+        }
+      ],
+      "step": 15,
+      "target_host": "host_03",
+      "ts_ms": 1712412357843
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.83,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 3.45
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.85
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.91
+        }
+      ],
+      "step": 16,
+      "target_host": "host_03",
+      "ts_ms": 1712412357963
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.94,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 2.82
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.96
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 17,
+      "target_host": "host_03",
+      "ts_ms": 1712412358083
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.73,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 3.13
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 18,
+      "target_host": "host_03",
+      "ts_ms": 1712412358203
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.87,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 2.92
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.87
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 19,
+      "target_host": "host_03",
+      "ts_ms": 1712412358323
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.94,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 2.86
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.94
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 20,
+      "target_host": "host_03",
+      "ts_ms": 1712412358443
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.76,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 3.89
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 21,
+      "target_host": "host_03",
+      "ts_ms": 1712412358563
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.94,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 3.86
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 22,
+      "target_host": "host_03",
+      "ts_ms": 1712412358683
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.84,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 4.14
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 23,
+      "target_host": "host_03",
+      "ts_ms": 1712412358803
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.62,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 4.11
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 24,
+      "target_host": "host_03",
+      "ts_ms": 1712412358923
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.55,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 4.12
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 25,
+      "target_host": "host_03",
+      "ts_ms": 1712412359043
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.91,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 4.13
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 26,
+      "target_host": "host_03",
+      "ts_ms": 1712412359163
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.67,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 4.27
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 27,
+      "target_host": "host_03",
+      "ts_ms": 1712412359283
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.77,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 3.84
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 28,
+      "target_host": "host_03",
+      "ts_ms": 1712412359403
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.76,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 4.56
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 29,
+      "target_host": "host_03",
+      "ts_ms": 1712412359523
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.65,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 4.76
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 30,
+      "target_host": "host_03",
+      "ts_ms": 1712412359643
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.81,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 4.51
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 31,
+      "target_host": "host_03",
+      "ts_ms": 1712412359763
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.64,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 3.99
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 32,
+      "target_host": "host_03",
+      "ts_ms": 1712412359883
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.77,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 4.67
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 33,
+      "target_host": "host_03",
+      "ts_ms": 1712412360003
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.62,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 4.3
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 34,
+      "target_host": "host_03",
+      "ts_ms": 1712412360123
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.88,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 4.73
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 35,
+      "target_host": "host_03",
+      "ts_ms": 1712412360243
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.66,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 4.7
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 36,
+      "target_host": "host_03",
+      "ts_ms": 1712412360363
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.64,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 5.25
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 37,
+      "target_host": "host_03",
+      "ts_ms": 1712412360483
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.77,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 4.77
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 38,
+      "target_host": "host_03",
+      "ts_ms": 1712412360603
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.85,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 5.42
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 39,
+      "target_host": "host_03",
+      "ts_ms": 1712412360723
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.86,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 5.21
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 40,
+      "target_host": "host_03",
+      "ts_ms": 1712412360843
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.93,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 5.89
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 41,
+      "target_host": "host_03",
+      "ts_ms": 1712412360963
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.68,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 5.34
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 42,
+      "target_host": "host_03",
+      "ts_ms": 1712412361083
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.86,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 5.57
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 43,
+      "target_host": "host_03",
+      "ts_ms": 1712412361203
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.91,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 5.56
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 44,
+      "target_host": "host_03",
+      "ts_ms": 1712412361323
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.72,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.1
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 45,
+      "target_host": "host_03",
+      "ts_ms": 1712412361443
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.79,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 5.32
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 46,
+      "target_host": "host_03",
+      "ts_ms": 1712412361563
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.56,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 5.77
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 47,
+      "target_host": "host_03",
+      "ts_ms": 1712412361683
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.59,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 5.15
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 48,
+      "target_host": "host_03",
+      "ts_ms": 1712412361803
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.73,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 5.32
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 49,
+      "target_host": "host_03",
+      "ts_ms": 1712412361923
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.76,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 5.28
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 50,
+      "target_host": "host_03",
+      "ts_ms": 1712412362043
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.85,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 5.36
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 51,
+      "target_host": "host_03",
+      "ts_ms": 1712412362163
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.82,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 5.41
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 52,
+      "target_host": "host_03",
+      "ts_ms": 1712412362283
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.87,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.29
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 53,
+      "target_host": "host_03",
+      "ts_ms": 1712412362403
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.76,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 5.7
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 54,
+      "target_host": "host_03",
+      "ts_ms": 1712412362523
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.7,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.46
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 55,
+      "target_host": "host_03",
+      "ts_ms": 1712412362643
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.88,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.43
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 56,
+      "target_host": "host_03",
+      "ts_ms": 1712412362763
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.69,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.1
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 57,
+      "target_host": "host_03",
+      "ts_ms": 1712412362883
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.58,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.46
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 58,
+      "target_host": "host_03",
+      "ts_ms": 1712412363003
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.57,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 5.9
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 59,
+      "target_host": "host_03",
+      "ts_ms": 1712412363123
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.68,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.12
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 60,
+      "target_host": "host_03",
+      "ts_ms": 1712412363243
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.82,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.15
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 61,
+      "target_host": "host_03",
+      "ts_ms": 1712412363363
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.66,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 5.9
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 62,
+      "target_host": "host_03",
+      "ts_ms": 1712412363483
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.78,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.49
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 63,
+      "target_host": "host_03",
+      "ts_ms": 1712412363603
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.92,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 5.72
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 64,
+      "target_host": "host_03",
+      "ts_ms": 1712412363723
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.59,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.1
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 65,
+      "target_host": "host_03",
+      "ts_ms": 1712412363843
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.77,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.18
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 66,
+      "target_host": "host_03",
+      "ts_ms": 1712412363963
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.86,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 5.61
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 67,
+      "target_host": "host_03",
+      "ts_ms": 1712412364083
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.94,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.09
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 68,
+      "target_host": "host_03",
+      "ts_ms": 1712412364203
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.87,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 5.91
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 69,
+      "target_host": "host_03",
+      "ts_ms": 1712412364323
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.75,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.6
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 70,
+      "target_host": "host_03",
+      "ts_ms": 1712412364443
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.75,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.73
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 71,
+      "target_host": "host_03",
+      "ts_ms": 1712412364563
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.59,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.54
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 72,
+      "target_host": "host_03",
+      "ts_ms": 1712412364683
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.92,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.22
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 73,
+      "target_host": "host_03",
+      "ts_ms": 1712412364803
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.63,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.14
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 74,
+      "target_host": "host_03",
+      "ts_ms": 1712412364923
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.76,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.39
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 75,
+      "target_host": "host_03",
+      "ts_ms": 1712412365043
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.57,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.75
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 76,
+      "target_host": "host_03",
+      "ts_ms": 1712412365163
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.91,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.63
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 77,
+      "target_host": "host_03",
+      "ts_ms": 1712412365283
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.81,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.69
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 78,
+      "target_host": "host_03",
+      "ts_ms": 1712412365403
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.55,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.64
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 79,
+      "target_host": "host_03",
+      "ts_ms": 1712412365523
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.81,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.12
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 80,
+      "target_host": "host_03",
+      "ts_ms": 1712412365643
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.56,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.02
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 81,
+      "target_host": "host_03",
+      "ts_ms": 1712412365763
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.8,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.66
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 82,
+      "target_host": "host_03",
+      "ts_ms": 1712412365883
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.73,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.72
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 83,
+      "target_host": "host_03",
+      "ts_ms": 1712412366003
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.74,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.64
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 84,
+      "target_host": "host_03",
+      "ts_ms": 1712412366123
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.64,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.08
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 85,
+      "target_host": "host_03",
+      "ts_ms": 1712412366243
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.84,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.76
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 86,
+      "target_host": "host_03",
+      "ts_ms": 1712412366363
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.65,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.72
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 87,
+      "target_host": "host_03",
+      "ts_ms": 1712412366483
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.89,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.71
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 88,
+      "target_host": "host_03",
+      "ts_ms": 1712412366603
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.68,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.08
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 89,
+      "target_host": "host_02",
+      "ts_ms": 1712412366723
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.84,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.72
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 90,
+      "target_host": "host_02",
+      "ts_ms": 1712412366843
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.6,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.12
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 91,
+      "target_host": "host_02",
+      "ts_ms": 1712412366963
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.56,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.99
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 92,
+      "target_host": "host_02",
+      "ts_ms": 1712412367083
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.74,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.71
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 93,
+      "target_host": "host_02",
+      "ts_ms": 1712412367203
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.69,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.83
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 94,
+      "target_host": "host_02",
+      "ts_ms": 1712412367323
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.86,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.41
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 95,
+      "target_host": "host_02",
+      "ts_ms": 1712412367443
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.87,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.31
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 96,
+      "target_host": "host_02",
+      "ts_ms": 1712412367563
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.58,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.77
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 97,
+      "target_host": "host_02",
+      "ts_ms": 1712412367683
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.6,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.29
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 98,
+      "target_host": "host_02",
+      "ts_ms": 1712412367803
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.67,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.2
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 99,
+      "target_host": "host_02",
+      "ts_ms": 1712412367923
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.56,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.91
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 100,
+      "target_host": "host_02",
+      "ts_ms": 1712412368043
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.94,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.67
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 101,
+      "target_host": "host_02",
+      "ts_ms": 1712412368163
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.6,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.73
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 102,
+      "target_host": "host_02",
+      "ts_ms": 1712412368283
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.66,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.35
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 103,
+      "target_host": "host_02",
+      "ts_ms": 1712412368403
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.59,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.25
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 104,
+      "target_host": "host_02",
+      "ts_ms": 1712412368523
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.94,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.19
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 105,
+      "target_host": "host_02",
+      "ts_ms": 1712412368643
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.93,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.73
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 106,
+      "target_host": "host_02",
+      "ts_ms": 1712412368763
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.95,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.26
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 107,
+      "target_host": "host_02",
+      "ts_ms": 1712412368883
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.67,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.32
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 108,
+      "target_host": "host_02",
+      "ts_ms": 1712412369003
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.88,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.08
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 109,
+      "target_host": "host_02",
+      "ts_ms": 1712412369123
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.64,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.77
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 110,
+      "target_host": "host_02",
+      "ts_ms": 1712412369243
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.86,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.22
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 111,
+      "target_host": "host_02",
+      "ts_ms": 1712412369363
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.61,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.06
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 112,
+      "target_host": "host_02",
+      "ts_ms": 1712412369483
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.78,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.6
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 113,
+      "target_host": "host_02",
+      "ts_ms": 1712412369603
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.59,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.96
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 114,
+      "target_host": "host_02",
+      "ts_ms": 1712412369723
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.91,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.29
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 115,
+      "target_host": "host_02",
+      "ts_ms": 1712412369843
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.63,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.54
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 116,
+      "target_host": "host_02",
+      "ts_ms": 1712412369963
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.8,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.63
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 117,
+      "target_host": "host_02",
+      "ts_ms": 1712412370083
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.7,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.47
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 118,
+      "target_host": "host_02",
+      "ts_ms": 1712412370203
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.86,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.23
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 119,
+      "target_host": "host_02",
+      "ts_ms": 1712412370323
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.56,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.0
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 120,
+      "target_host": "host_02",
+      "ts_ms": 1712412370443
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.94,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.33
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 121,
+      "target_host": "host_02",
+      "ts_ms": 1712412370563
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.88,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.06
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 122,
+      "target_host": "host_02",
+      "ts_ms": 1712412370683
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.78,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.33
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 123,
+      "target_host": "host_02",
+      "ts_ms": 1712412370803
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.8,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.54
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 124,
+      "target_host": "host_02",
+      "ts_ms": 1712412370923
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.9,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.62
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 125,
+      "target_host": "host_02",
+      "ts_ms": 1712412371043
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.92,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.94
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 126,
+      "target_host": "host_02",
+      "ts_ms": 1712412371163
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.78,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.38
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 127,
+      "target_host": "host_02",
+      "ts_ms": 1712412371283
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.71,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.93
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 128,
+      "target_host": "host_02",
+      "ts_ms": 1712412371403
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.85,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.79
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 129,
+      "target_host": "host_02",
+      "ts_ms": 1712412371523
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.74,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.44
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 130,
+      "target_host": "host_02",
+      "ts_ms": 1712412371643
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.91,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.46
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 131,
+      "target_host": "host_02",
+      "ts_ms": 1712412371763
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.65,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.21
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 132,
+      "target_host": "host_02",
+      "ts_ms": 1712412371883
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.86,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.98
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 133,
+      "target_host": "host_02",
+      "ts_ms": 1712412372003
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.92,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.77
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 134,
+      "target_host": "host_02",
+      "ts_ms": 1712412372123
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.61,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.0
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 135,
+      "target_host": "host_02",
+      "ts_ms": 1712412372243
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.69,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.16
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 136,
+      "target_host": "host_02",
+      "ts_ms": 1712412372363
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.7,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.51
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 137,
+      "target_host": "host_02",
+      "ts_ms": 1712412372483
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.71,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.46
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 138,
+      "target_host": "host_02",
+      "ts_ms": 1712412372603
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.6,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.3
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 139,
+      "target_host": "host_02",
+      "ts_ms": 1712412372723
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.7,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.32
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 140,
+      "target_host": "host_02",
+      "ts_ms": 1712412372843
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.81,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.04
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 141,
+      "target_host": "host_02",
+      "ts_ms": 1712412372963
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.61,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.18
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 142,
+      "target_host": "host_02",
+      "ts_ms": 1712412373083
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.62,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.14
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 143,
+      "target_host": "host_02",
+      "ts_ms": 1712412373203
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.61,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.57
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 144,
+      "target_host": "host_02",
+      "ts_ms": 1712412373323
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.89,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.5
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 145,
+      "target_host": "host_02",
+      "ts_ms": 1712412373443
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.7,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.69
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 146,
+      "target_host": "host_02",
+      "ts_ms": 1712412373563
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.67,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.29
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 147,
+      "target_host": "host_02",
+      "ts_ms": 1712412373683
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.73,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.32
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 148,
+      "target_host": "host_02",
+      "ts_ms": 1712412373803
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.8,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.98
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 149,
+      "target_host": "host_02",
+      "ts_ms": 1712412373923
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.88,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.77
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 150,
+      "target_host": "host_02",
+      "ts_ms": 1712412374043
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.57,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.34
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 151,
+      "target_host": "host_02",
+      "ts_ms": 1712412374163
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.78,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.3
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 152,
+      "target_host": "host_02",
+      "ts_ms": 1712412374283
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.56,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.1
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 153,
+      "target_host": "host_02",
+      "ts_ms": 1712412374403
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.62,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.63
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 154,
+      "target_host": "host_02",
+      "ts_ms": 1712412374523
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.61,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.11
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 155,
+      "target_host": "host_02",
+      "ts_ms": 1712412374643
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.91,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.2
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 156,
+      "target_host": "host_02",
+      "ts_ms": 1712412374763
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.8,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.86
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 157,
+      "target_host": "host_02",
+      "ts_ms": 1712412374883
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.89,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.68
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 158,
+      "target_host": "host_02",
+      "ts_ms": 1712412375003
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.66,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.9
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 159,
+      "target_host": "host_02",
+      "ts_ms": 1712412375123
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.66,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.88
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 160,
+      "target_host": "host_02",
+      "ts_ms": 1712412375243
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.9,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.41
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 161,
+      "target_host": "host_02",
+      "ts_ms": 1712412375363
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.74,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.21
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 162,
+      "target_host": "host_02",
+      "ts_ms": 1712412375483
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.77,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.1
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 163,
+      "target_host": "host_02",
+      "ts_ms": 1712412375603
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.73,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.03
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 164,
+      "target_host": "host_02",
+      "ts_ms": 1712412375723
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.86,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.16
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 165,
+      "target_host": "host_02",
+      "ts_ms": 1712412375843
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.61,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.02
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 166,
+      "target_host": "host_02",
+      "ts_ms": 1712412375963
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.61,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.47
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 167,
+      "target_host": "host_02",
+      "ts_ms": 1712412376083
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.82,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.66
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 168,
+      "target_host": "host_02",
+      "ts_ms": 1712412376203
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.64,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.59
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 169,
+      "target_host": "host_02",
+      "ts_ms": 1712412376323
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.73,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.98
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 170,
+      "target_host": "host_02",
+      "ts_ms": 1712412376443
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.59,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.93
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 171,
+      "target_host": "host_02",
+      "ts_ms": 1712412376563
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.89,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.25
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 172,
+      "target_host": "host_02",
+      "ts_ms": 1712412376683
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.62,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.38
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 173,
+      "target_host": "host_02",
+      "ts_ms": 1712412376803
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.61,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.07
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 174,
+      "target_host": "host_02",
+      "ts_ms": 1712412376923
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.64,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.44
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 175,
+      "target_host": "host_02",
+      "ts_ms": 1712412377043
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.63,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.47
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 176,
+      "target_host": "host_02",
+      "ts_ms": 1712412377163
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.77,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.44
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 177,
+      "target_host": "host_02",
+      "ts_ms": 1712412377283
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.72,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.9
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 178,
+      "target_host": "host_02",
+      "ts_ms": 1712412377403
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.87,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.27
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 179,
+      "target_host": "host_02",
+      "ts_ms": 1712412377523
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.56,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.3
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 180,
+      "target_host": "host_02",
+      "ts_ms": 1712412377643
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.94,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.66
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 181,
+      "target_host": "host_02",
+      "ts_ms": 1712412377763
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.93,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.86
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 182,
+      "target_host": "host_02",
+      "ts_ms": 1712412377883
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.7,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.79
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 183,
+      "target_host": "host_02",
+      "ts_ms": 1712412378003
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.6,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.49
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 184,
+      "target_host": "host_02",
+      "ts_ms": 1712412378123
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.56,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.01
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 185,
+      "target_host": "host_02",
+      "ts_ms": 1712412378243
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.67,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.96
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 186,
+      "target_host": "host_02",
+      "ts_ms": 1712412378363
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.69,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.5
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 187,
+      "target_host": "host_02",
+      "ts_ms": 1712412378483
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.94,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.28
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 188,
+      "target_host": "host_02",
+      "ts_ms": 1712412378603
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.86,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.22
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 189,
+      "target_host": "host_02",
+      "ts_ms": 1712412378723
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.56,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.68
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 190,
+      "target_host": "host_02",
+      "ts_ms": 1712412378843
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.68,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.04
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 191,
+      "target_host": "host_02",
+      "ts_ms": 1712412378963
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.9,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.14
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 192,
+      "target_host": "host_02",
+      "ts_ms": 1712412379083
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.74,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.3
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 193,
+      "target_host": "host_02",
+      "ts_ms": 1712412379203
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.6,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.01
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 194,
+      "target_host": "host_02",
+      "ts_ms": 1712412379323
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.65,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.01
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 195,
+      "target_host": "host_02",
+      "ts_ms": 1712412379443
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.66,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.68
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 196,
+      "target_host": "host_02",
+      "ts_ms": 1712412379563
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.57,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.69
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 197,
+      "target_host": "host_02",
+      "ts_ms": 1712412379683
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.71,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.41
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 198,
+      "target_host": "host_02",
+      "ts_ms": 1712412379803
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.61,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 7.36
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 199,
+      "target_host": "host_02",
+      "ts_ms": 1712412379923
+    },
+    {
+      "action": "isolate_host",
+      "confidence": 0.94,
+      "expected_effect": "contain lateral spread",
+      "reason_features": [
+        {
+          "name": "traffic_spike_ratio",
+          "value": 6.78
+        },
+        {
+          "name": "lateral_movement_pattern_match",
+          "value": 0.99
+        },
+        {
+          "name": "critical_asset_risk",
+          "value": 0.99
+        }
+      ],
+      "step": 200,
+      "target_host": "host_02",
+      "ts_ms": 1712412380043
+    }
+  ],
+  "summary": {
+    "attack_success_rate": 0.31,
+    "damage": 25.4,
+    "exfiltration_count": 22,
+    "mean_detection_latency_ms": 795.0,
+    "rewards_sum": 541.45,
+    "sync_drift_ms": 13.0
+  },
+  "timeseries": [
+    {
+      "compromised_hosts": 0,
+      "damage_score": 0.0,
+      "detection_count": 1,
+      "rewards_sum": 2.0,
+      "step": 1,
+      "ts_ms": 1712412356165
+    },
+    {
+      "compromised_hosts": 0,
+      "damage_score": 0.0,
+      "detection_count": 1,
+      "rewards_sum": 2.0,
+      "step": 2,
+      "ts_ms": 1712412356285
+    },
+    {
+      "compromised_hosts": 0,
+      "damage_score": 0.0,
+      "detection_count": 2,
+      "rewards_sum": 4.0,
+      "step": 3,
+      "ts_ms": 1712412356405
+    },
+    {
+      "compromised_hosts": 1,
+      "damage_score": 1.15,
+      "detection_count": 3,
+      "rewards_sum": 4.85,
+      "step": 4,
+      "ts_ms": 1712412356525
+    },
+    {
+      "compromised_hosts": 1,
+      "damage_score": 0.7,
+      "detection_count": 4,
+      "rewards_sum": 9.7,
+      "step": 5,
+      "ts_ms": 1712412356645
+    },
+    {
+      "compromised_hosts": 1,
+      "damage_score": 0.25,
+      "detection_count": 4,
+      "rewards_sum": 12.55,
+      "step": 6,
+      "ts_ms": 1712412356765
+    },
+    {
+      "compromised_hosts": 1,
+      "damage_score": 0.0,
+      "detection_count": 4,
+      "rewards_sum": 15.4,
+      "step": 7,
+      "ts_ms": 1712412356885
+    },
+    {
+      "compromised_hosts": 1,
+      "damage_score": 0.0,
+      "detection_count": 4,
+      "rewards_sum": 18.25,
+      "step": 8,
+      "ts_ms": 1712412357005
+    },
+    {
+      "compromised_hosts": 2,
+      "damage_score": 1.15,
+      "detection_count": 5,
+      "rewards_sum": 19.1,
+      "step": 9,
+      "ts_ms": 1712412357125
+    },
+    {
+      "compromised_hosts": 2,
+      "damage_score": 0.7,
+      "detection_count": 5,
+      "rewards_sum": 21.95,
+      "step": 10,
+      "ts_ms": 1712412357245
+    },
+    {
+      "compromised_hosts": 3,
+      "damage_score": 1.85,
+      "detection_count": 5,
+      "rewards_sum": 20.8,
+      "step": 11,
+      "ts_ms": 1712412357365
+    },
+    {
+      "compromised_hosts": 3,
+      "damage_score": 1.4,
+      "detection_count": 5,
+      "rewards_sum": 23.65,
+      "step": 12,
+      "ts_ms": 1712412357485
+    },
+    {
+      "compromised_hosts": 3,
+      "damage_score": 0.95,
+      "detection_count": 6,
+      "rewards_sum": 28.5,
+      "step": 13,
+      "ts_ms": 1712412357605
+    },
+    {
+      "compromised_hosts": 3,
+      "damage_score": 0.5,
+      "detection_count": 7,
+      "rewards_sum": 33.35,
+      "step": 14,
+      "ts_ms": 1712412357725
+    },
+    {
+      "compromised_hosts": 4,
+      "damage_score": 1.65,
+      "detection_count": 7,
+      "rewards_sum": 32.2,
+      "step": 15,
+      "ts_ms": 1712412357845
+    },
+    {
+      "compromised_hosts": 4,
+      "damage_score": 1.2,
+      "detection_count": 7,
+      "rewards_sum": 35.05,
+      "step": 16,
+      "ts_ms": 1712412357965
+    },
+    {
+      "compromised_hosts": 4,
+      "damage_score": 0.75,
+      "detection_count": 8,
+      "rewards_sum": 39.9,
+      "step": 17,
+      "ts_ms": 1712412358085
+    },
+    {
+      "compromised_hosts": 4,
+      "damage_score": 0.3,
+      "detection_count": 9,
+      "rewards_sum": 44.75,
+      "step": 18,
+      "ts_ms": 1712412358205
+    },
+    {
+      "compromised_hosts": 4,
+      "damage_score": 0.0,
+      "detection_count": 9,
+      "rewards_sum": 47.6,
+      "step": 19,
+      "ts_ms": 1712412358325
+    },
+    {
+      "compromised_hosts": 4,
+      "damage_score": 0.0,
+      "detection_count": 10,
+      "rewards_sum": 52.45,
+      "step": 20,
+      "ts_ms": 1712412358445
+    },
+    {
+      "compromised_hosts": 5,
+      "damage_score": 1.15,
+      "detection_count": 10,
+      "rewards_sum": 51.3,
+      "step": 21,
+      "ts_ms": 1712412358565
+    },
+    {
+      "compromised_hosts": 5,
+      "damage_score": 0.7,
+      "detection_count": 11,
+      "rewards_sum": 56.15,
+      "step": 22,
+      "ts_ms": 1712412358685
+    },
+    {
+      "compromised_hosts": 6,
+      "damage_score": 1.85,
+      "detection_count": 12,
+      "rewards_sum": 57.0,
+      "step": 23,
+      "ts_ms": 1712412358805
+    },
+    {
+      "compromised_hosts": 6,
+      "damage_score": 1.4,
+      "detection_count": 13,
+      "rewards_sum": 61.85,
+      "step": 24,
+      "ts_ms": 1712412358925
+    },
+    {
+      "compromised_hosts": 6,
+      "damage_score": 0.95,
+      "detection_count": 14,
+      "rewards_sum": 66.7,
+      "step": 25,
+      "ts_ms": 1712412359045
+    },
+    {
+      "compromised_hosts": 6,
+      "damage_score": 0.5,
+      "detection_count": 15,
+      "rewards_sum": 71.55,
+      "step": 26,
+      "ts_ms": 1712412359165
+    },
+    {
+      "compromised_hosts": 6,
+      "damage_score": 0.05,
+      "detection_count": 16,
+      "rewards_sum": 76.4,
+      "step": 27,
+      "ts_ms": 1712412359285
+    },
+    {
+      "compromised_hosts": 6,
+      "damage_score": 0.0,
+      "detection_count": 16,
+      "rewards_sum": 79.25,
+      "step": 28,
+      "ts_ms": 1712412359405
+    },
+    {
+      "compromised_hosts": 7,
+      "damage_score": 1.15,
+      "detection_count": 16,
+      "rewards_sum": 78.1,
+      "step": 29,
+      "ts_ms": 1712412359525
+    },
+    {
+      "compromised_hosts": 7,
+      "damage_score": 2.9,
+      "detection_count": 17,
+      "rewards_sum": 76.95,
+      "step": 30,
+      "ts_ms": 1712412359645
+    },
+    {
+      "compromised_hosts": 7,
+      "damage_score": 2.45,
+      "detection_count": 17,
+      "rewards_sum": 79.8,
+      "step": 31,
+      "ts_ms": 1712412359765
+    },
+    {
+      "compromised_hosts": 7,
+      "damage_score": 2.0,
+      "detection_count": 18,
+      "rewards_sum": 84.65,
+      "step": 32,
+      "ts_ms": 1712412359885
+    },
+    {
+      "compromised_hosts": 8,
+      "damage_score": 3.15,
+      "detection_count": 19,
+      "rewards_sum": 85.5,
+      "step": 33,
+      "ts_ms": 1712412360005
+    },
+    {
+      "compromised_hosts": 8,
+      "damage_score": 4.3,
+      "detection_count": 19,
+      "rewards_sum": 84.35,
+      "step": 34,
+      "ts_ms": 1712412360125
+    },
+    {
+      "compromised_hosts": 9,
+      "damage_score": 5.45,
+      "detection_count": 20,
+      "rewards_sum": 85.2,
+      "step": 35,
+      "ts_ms": 1712412360245
+    },
+    {
+      "compromised_hosts": 9,
+      "damage_score": 7.2,
+      "detection_count": 20,
+      "rewards_sum": 82.05,
+      "step": 36,
+      "ts_ms": 1712412360365
+    },
+    {
+      "compromised_hosts": 9,
+      "damage_score": 6.75,
+      "detection_count": 21,
+      "rewards_sum": 86.9,
+      "step": 37,
+      "ts_ms": 1712412360485
+    },
+    {
+      "compromised_hosts": 9,
+      "damage_score": 6.3,
+      "detection_count": 21,
+      "rewards_sum": 89.75,
+      "step": 38,
+      "ts_ms": 1712412360605
+    },
+    {
+      "compromised_hosts": 9,
+      "damage_score": 5.85,
+      "detection_count": 22,
+      "rewards_sum": 94.6,
+      "step": 39,
+      "ts_ms": 1712412360725
+    },
+    {
+      "compromised_hosts": 9,
+      "damage_score": 5.4,
+      "detection_count": 23,
+      "rewards_sum": 99.45,
+      "step": 40,
+      "ts_ms": 1712412360845
+    },
+    {
+      "compromised_hosts": 10,
+      "damage_score": 6.55,
+      "detection_count": 23,
+      "rewards_sum": 98.3,
+      "step": 41,
+      "ts_ms": 1712412360965
+    },
+    {
+      "compromised_hosts": 10,
+      "damage_score": 6.1,
+      "detection_count": 23,
+      "rewards_sum": 101.15,
+      "step": 42,
+      "ts_ms": 1712412361085
+    },
+    {
+      "compromised_hosts": 10,
+      "damage_score": 5.65,
+      "detection_count": 23,
+      "rewards_sum": 104.0,
+      "step": 43,
+      "ts_ms": 1712412361205
+    },
+    {
+      "compromised_hosts": 10,
+      "damage_score": 5.2,
+      "detection_count": 24,
+      "rewards_sum": 108.85,
+      "step": 44,
+      "ts_ms": 1712412361325
+    },
+    {
+      "compromised_hosts": 10,
+      "damage_score": 6.35,
+      "detection_count": 25,
+      "rewards_sum": 109.7,
+      "step": 45,
+      "ts_ms": 1712412361445
+    },
+    {
+      "compromised_hosts": 10,
+      "damage_score": 5.9,
+      "detection_count": 26,
+      "rewards_sum": 114.55,
+      "step": 46,
+      "ts_ms": 1712412361565
+    },
+    {
+      "compromised_hosts": 10,
+      "damage_score": 5.45,
+      "detection_count": 26,
+      "rewards_sum": 117.4,
+      "step": 47,
+      "ts_ms": 1712412361685
+    },
+    {
+      "compromised_hosts": 10,
+      "damage_score": 5.0,
+      "detection_count": 27,
+      "rewards_sum": 122.25,
+      "step": 48,
+      "ts_ms": 1712412361805
+    },
+    {
+      "compromised_hosts": 10,
+      "damage_score": 4.55,
+      "detection_count": 28,
+      "rewards_sum": 127.1,
+      "step": 49,
+      "ts_ms": 1712412361925
+    },
+    {
+      "compromised_hosts": 10,
+      "damage_score": 4.1,
+      "detection_count": 29,
+      "rewards_sum": 131.95,
+      "step": 50,
+      "ts_ms": 1712412362045
+    },
+    {
+      "compromised_hosts": 10,
+      "damage_score": 3.65,
+      "detection_count": 30,
+      "rewards_sum": 136.8,
+      "step": 51,
+      "ts_ms": 1712412362165
+    },
+    {
+      "compromised_hosts": 10,
+      "damage_score": 3.2,
+      "detection_count": 31,
+      "rewards_sum": 141.65,
+      "step": 52,
+      "ts_ms": 1712412362285
+    },
+    {
+      "compromised_hosts": 11,
+      "damage_score": 4.35,
+      "detection_count": 32,
+      "rewards_sum": 142.5,
+      "step": 53,
+      "ts_ms": 1712412362405
+    },
+    {
+      "compromised_hosts": 11,
+      "damage_score": 6.1,
+      "detection_count": 32,
+      "rewards_sum": 139.35,
+      "step": 54,
+      "ts_ms": 1712412362525
+    },
+    {
+      "compromised_hosts": 11,
+      "damage_score": 5.65,
+      "detection_count": 33,
+      "rewards_sum": 144.2,
+      "step": 55,
+      "ts_ms": 1712412362645
+    },
+    {
+      "compromised_hosts": 11,
+      "damage_score": 5.2,
+      "detection_count": 33,
+      "rewards_sum": 147.05,
+      "step": 56,
+      "ts_ms": 1712412362765
+    },
+    {
+      "compromised_hosts": 11,
+      "damage_score": 4.75,
+      "detection_count": 34,
+      "rewards_sum": 151.9,
+      "step": 57,
+      "ts_ms": 1712412362885
+    },
+    {
+      "compromised_hosts": 11,
+      "damage_score": 4.3,
+      "detection_count": 35,
+      "rewards_sum": 156.75,
+      "step": 58,
+      "ts_ms": 1712412363005
+    },
+    {
+      "compromised_hosts": 11,
+      "damage_score": 3.85,
+      "detection_count": 35,
+      "rewards_sum": 159.6,
+      "step": 59,
+      "ts_ms": 1712412363125
+    },
+    {
+      "compromised_hosts": 11,
+      "damage_score": 5.6,
+      "detection_count": 35,
+      "rewards_sum": 156.45,
+      "step": 60,
+      "ts_ms": 1712412363245
+    },
+    {
+      "compromised_hosts": 11,
+      "damage_score": 5.15,
+      "detection_count": 36,
+      "rewards_sum": 161.3,
+      "step": 61,
+      "ts_ms": 1712412363365
+    },
+    {
+      "compromised_hosts": 11,
+      "damage_score": 4.7,
+      "detection_count": 36,
+      "rewards_sum": 164.15,
+      "step": 62,
+      "ts_ms": 1712412363485
+    },
+    {
+      "compromised_hosts": 11,
+      "damage_score": 4.25,
+      "detection_count": 37,
+      "rewards_sum": 169.0,
+      "step": 63,
+      "ts_ms": 1712412363605
+    },
+    {
+      "compromised_hosts": 11,
+      "damage_score": 3.8,
+      "detection_count": 37,
+      "rewards_sum": 171.85,
+      "step": 64,
+      "ts_ms": 1712412363725
+    },
+    {
+      "compromised_hosts": 11,
+      "damage_score": 4.95,
+      "detection_count": 38,
+      "rewards_sum": 172.7,
+      "step": 65,
+      "ts_ms": 1712412363845
+    },
+    {
+      "compromised_hosts": 11,
+      "damage_score": 6.7,
+      "detection_count": 39,
+      "rewards_sum": 171.55,
+      "step": 66,
+      "ts_ms": 1712412363965
+    },
+    {
+      "compromised_hosts": 11,
+      "damage_score": 6.25,
+      "detection_count": 40,
+      "rewards_sum": 176.4,
+      "step": 67,
+      "ts_ms": 1712412364085
+    },
+    {
+      "compromised_hosts": 11,
+      "damage_score": 5.8,
+      "detection_count": 41,
+      "rewards_sum": 181.25,
+      "step": 68,
+      "ts_ms": 1712412364205
+    },
+    {
+      "compromised_hosts": 12,
+      "damage_score": 6.95,
+      "detection_count": 41,
+      "rewards_sum": 180.1,
+      "step": 69,
+      "ts_ms": 1712412364325
+    },
+    {
+      "compromised_hosts": 12,
+      "damage_score": 6.5,
+      "detection_count": 42,
+      "rewards_sum": 184.95,
+      "step": 70,
+      "ts_ms": 1712412364445
+    },
+    {
+      "compromised_hosts": 12,
+      "damage_score": 7.65,
+      "detection_count": 42,
+      "rewards_sum": 183.8,
+      "step": 71,
+      "ts_ms": 1712412364565
+    },
+    {
+      "compromised_hosts": 12,
+      "damage_score": 9.4,
+      "detection_count": 43,
+      "rewards_sum": 182.65,
+      "step": 72,
+      "ts_ms": 1712412364685
+    },
+    {
+      "compromised_hosts": 12,
+      "damage_score": 8.95,
+      "detection_count": 44,
+      "rewards_sum": 187.5,
+      "step": 73,
+      "ts_ms": 1712412364805
+    },
+    {
+      "compromised_hosts": 12,
+      "damage_score": 8.5,
+      "detection_count": 45,
+      "rewards_sum": 192.35,
+      "step": 74,
+      "ts_ms": 1712412364925
+    },
+    {
+      "compromised_hosts": 12,
+      "damage_score": 9.65,
+      "detection_count": 46,
+      "rewards_sum": 193.2,
+      "step": 75,
+      "ts_ms": 1712412365045
+    },
+    {
+      "compromised_hosts": 12,
+      "damage_score": 9.2,
+      "detection_count": 46,
+      "rewards_sum": 196.05,
+      "step": 76,
+      "ts_ms": 1712412365165
+    },
+    {
+      "compromised_hosts": 12,
+      "damage_score": 8.75,
+      "detection_count": 47,
+      "rewards_sum": 200.9,
+      "step": 77,
+      "ts_ms": 1712412365285
+    },
+    {
+      "compromised_hosts": 12,
+      "damage_score": 8.3,
+      "detection_count": 47,
+      "rewards_sum": 203.75,
+      "step": 78,
+      "ts_ms": 1712412365405
+    },
+    {
+      "compromised_hosts": 12,
+      "damage_score": 7.85,
+      "detection_count": 47,
+      "rewards_sum": 206.6,
+      "step": 79,
+      "ts_ms": 1712412365525
+    },
+    {
+      "compromised_hosts": 12,
+      "damage_score": 7.4,
+      "detection_count": 48,
+      "rewards_sum": 211.45,
+      "step": 80,
+      "ts_ms": 1712412365645
+    },
+    {
+      "compromised_hosts": 12,
+      "damage_score": 8.55,
+      "detection_count": 49,
+      "rewards_sum": 212.3,
+      "step": 81,
+      "ts_ms": 1712412365765
+    },
+    {
+      "compromised_hosts": 12,
+      "damage_score": 9.7,
+      "detection_count": 50,
+      "rewards_sum": 213.15,
+      "step": 82,
+      "ts_ms": 1712412365885
+    },
+    {
+      "compromised_hosts": 12,
+      "damage_score": 10.85,
+      "detection_count": 50,
+      "rewards_sum": 212.0,
+      "step": 83,
+      "ts_ms": 1712412366005
+    },
+    {
+      "compromised_hosts": 12,
+      "damage_score": 12.6,
+      "detection_count": 51,
+      "rewards_sum": 210.85,
+      "step": 84,
+      "ts_ms": 1712412366125
+    },
+    {
+      "compromised_hosts": 12,
+      "damage_score": 12.15,
+      "detection_count": 52,
+      "rewards_sum": 215.7,
+      "step": 85,
+      "ts_ms": 1712412366245
+    },
+    {
+      "compromised_hosts": 12,
+      "damage_score": 11.7,
+      "detection_count": 53,
+      "rewards_sum": 220.55,
+      "step": 86,
+      "ts_ms": 1712412366365
+    },
+    {
+      "compromised_hosts": 12,
+      "damage_score": 11.25,
+      "detection_count": 54,
+      "rewards_sum": 225.4,
+      "step": 87,
+      "ts_ms": 1712412366485
+    },
+    {
+      "compromised_hosts": 12,
+      "damage_score": 10.8,
+      "detection_count": 55,
+      "rewards_sum": 230.25,
+      "step": 88,
+      "ts_ms": 1712412366605
+    },
+    {
+      "compromised_hosts": 13,
+      "damage_score": 11.95,
+      "detection_count": 55,
+      "rewards_sum": 229.1,
+      "step": 89,
+      "ts_ms": 1712412366725
+    },
+    {
+      "compromised_hosts": 13,
+      "damage_score": 13.7,
+      "detection_count": 56,
+      "rewards_sum": 227.95,
+      "step": 90,
+      "ts_ms": 1712412366845
+    },
+    {
+      "compromised_hosts": 13,
+      "damage_score": 13.25,
+      "detection_count": 56,
+      "rewards_sum": 230.8,
+      "step": 91,
+      "ts_ms": 1712412366965
+    },
+    {
+      "compromised_hosts": 13,
+      "damage_score": 12.8,
+      "detection_count": 57,
+      "rewards_sum": 235.65,
+      "step": 92,
+      "ts_ms": 1712412367085
+    },
+    {
+      "compromised_hosts": 13,
+      "damage_score": 13.95,
+      "detection_count": 57,
+      "rewards_sum": 234.5,
+      "step": 93,
+      "ts_ms": 1712412367205
+    },
+    {
+      "compromised_hosts": 13,
+      "damage_score": 13.5,
+      "detection_count": 58,
+      "rewards_sum": 239.35,
+      "step": 94,
+      "ts_ms": 1712412367325
+    },
+    {
+      "compromised_hosts": 13,
+      "damage_score": 13.05,
+      "detection_count": 59,
+      "rewards_sum": 244.2,
+      "step": 95,
+      "ts_ms": 1712412367445
+    },
+    {
+      "compromised_hosts": 13,
+      "damage_score": 14.8,
+      "detection_count": 59,
+      "rewards_sum": 241.05,
+      "step": 96,
+      "ts_ms": 1712412367565
+    },
+    {
+      "compromised_hosts": 13,
+      "damage_score": 14.35,
+      "detection_count": 60,
+      "rewards_sum": 245.9,
+      "step": 97,
+      "ts_ms": 1712412367685
+    },
+    {
+      "compromised_hosts": 13,
+      "damage_score": 13.9,
+      "detection_count": 61,
+      "rewards_sum": 250.75,
+      "step": 98,
+      "ts_ms": 1712412367805
+    },
+    {
+      "compromised_hosts": 13,
+      "damage_score": 15.05,
+      "detection_count": 62,
+      "rewards_sum": 251.6,
+      "step": 99,
+      "ts_ms": 1712412367925
+    },
+    {
+      "compromised_hosts": 13,
+      "damage_score": 14.6,
+      "detection_count": 62,
+      "rewards_sum": 254.45,
+      "step": 100,
+      "ts_ms": 1712412368045
+    },
+    {
+      "compromised_hosts": 13,
+      "damage_score": 14.15,
+      "detection_count": 62,
+      "rewards_sum": 257.3,
+      "step": 101,
+      "ts_ms": 1712412368165
+    },
+    {
+      "compromised_hosts": 13,
+      "damage_score": 15.9,
+      "detection_count": 63,
+      "rewards_sum": 256.15,
+      "step": 102,
+      "ts_ms": 1712412368285
+    },
+    {
+      "compromised_hosts": 13,
+      "damage_score": 15.45,
+      "detection_count": 64,
+      "rewards_sum": 261.0,
+      "step": 103,
+      "ts_ms": 1712412368405
+    },
+    {
+      "compromised_hosts": 13,
+      "damage_score": 15.0,
+      "detection_count": 65,
+      "rewards_sum": 265.85,
+      "step": 104,
+      "ts_ms": 1712412368525
+    },
+    {
+      "compromised_hosts": 13,
+      "damage_score": 14.55,
+      "detection_count": 66,
+      "rewards_sum": 270.7,
+      "step": 105,
+      "ts_ms": 1712412368645
+    },
+    {
+      "compromised_hosts": 13,
+      "damage_score": 15.7,
+      "detection_count": 67,
+      "rewards_sum": 271.55,
+      "step": 106,
+      "ts_ms": 1712412368765
+    },
+    {
+      "compromised_hosts": 13,
+      "damage_score": 16.85,
+      "detection_count": 68,
+      "rewards_sum": 272.4,
+      "step": 107,
+      "ts_ms": 1712412368885
+    },
+    {
+      "compromised_hosts": 13,
+      "damage_score": 16.4,
+      "detection_count": 69,
+      "rewards_sum": 277.25,
+      "step": 108,
+      "ts_ms": 1712412369005
+    },
+    {
+      "compromised_hosts": 13,
+      "damage_score": 15.95,
+      "detection_count": 70,
+      "rewards_sum": 282.1,
+      "step": 109,
+      "ts_ms": 1712412369125
+    },
+    {
+      "compromised_hosts": 13,
+      "damage_score": 15.5,
+      "detection_count": 70,
+      "rewards_sum": 284.95,
+      "step": 110,
+      "ts_ms": 1712412369245
+    },
+    {
+      "compromised_hosts": 13,
+      "damage_score": 16.65,
+      "detection_count": 70,
+      "rewards_sum": 283.8,
+      "step": 111,
+      "ts_ms": 1712412369365
+    },
+    {
+      "compromised_hosts": 13,
+      "damage_score": 16.2,
+      "detection_count": 71,
+      "rewards_sum": 288.65,
+      "step": 112,
+      "ts_ms": 1712412369485
+    },
+    {
+      "compromised_hosts": 13,
+      "damage_score": 15.75,
+      "detection_count": 71,
+      "rewards_sum": 291.5,
+      "step": 113,
+      "ts_ms": 1712412369605
+    },
+    {
+      "compromised_hosts": 13,
+      "damage_score": 17.5,
+      "detection_count": 71,
+      "rewards_sum": 288.35,
+      "step": 114,
+      "ts_ms": 1712412369725
+    },
+    {
+      "compromised_hosts": 13,
+      "damage_score": 17.05,
+      "detection_count": 72,
+      "rewards_sum": 293.2,
+      "step": 115,
+      "ts_ms": 1712412369845
+    },
+    {
+      "compromised_hosts": 13,
+      "damage_score": 16.6,
+      "detection_count": 73,
+      "rewards_sum": 298.05,
+      "step": 116,
+      "ts_ms": 1712412369965
+    },
+    {
+      "compromised_hosts": 13,
+      "damage_score": 16.15,
+      "detection_count": 74,
+      "rewards_sum": 302.9,
+      "step": 117,
+      "ts_ms": 1712412370085
+    },
+    {
+      "compromised_hosts": 13,
+      "damage_score": 15.7,
+      "detection_count": 75,
+      "rewards_sum": 307.75,
+      "step": 118,
+      "ts_ms": 1712412370205
+    },
+    {
+      "compromised_hosts": 13,
+      "damage_score": 15.25,
+      "detection_count": 76,
+      "rewards_sum": 312.6,
+      "step": 119,
+      "ts_ms": 1712412370325
+    },
+    {
+      "compromised_hosts": 13,
+      "damage_score": 17.0,
+      "detection_count": 76,
+      "rewards_sum": 309.45,
+      "step": 120,
+      "ts_ms": 1712412370445
+    },
+    {
+      "compromised_hosts": 13,
+      "damage_score": 16.55,
+      "detection_count": 77,
+      "rewards_sum": 314.3,
+      "step": 121,
+      "ts_ms": 1712412370565
+    },
+    {
+      "compromised_hosts": 13,
+      "damage_score": 16.1,
+      "detection_count": 78,
+      "rewards_sum": 319.15,
+      "step": 122,
+      "ts_ms": 1712412370685
+    },
+    {
+      "compromised_hosts": 13,
+      "damage_score": 15.65,
+      "detection_count": 79,
+      "rewards_sum": 324.0,
+      "step": 123,
+      "ts_ms": 1712412370805
+    },
+    {
+      "compromised_hosts": 13,
+      "damage_score": 15.2,
+      "detection_count": 80,
+      "rewards_sum": 328.85,
+      "step": 124,
+      "ts_ms": 1712412370925
+    },
+    {
+      "compromised_hosts": 13,
+      "damage_score": 16.35,
+      "detection_count": 80,
+      "rewards_sum": 327.7,
+      "step": 125,
+      "ts_ms": 1712412371045
+    },
+    {
+      "compromised_hosts": 13,
+      "damage_score": 18.1,
+      "detection_count": 81,
+      "rewards_sum": 326.55,
+      "step": 126,
+      "ts_ms": 1712412371165
+    },
+    {
+      "compromised_hosts": 13,
+      "damage_score": 17.65,
+      "detection_count": 81,
+      "rewards_sum": 329.4,
+      "step": 127,
+      "ts_ms": 1712412371285
+    },
+    {
+      "compromised_hosts": 13,
+      "damage_score": 17.2,
+      "detection_count": 81,
+      "rewards_sum": 332.25,
+      "step": 128,
+      "ts_ms": 1712412371405
+    },
+    {
+      "compromised_hosts": 13,
+      "damage_score": 18.35,
+      "detection_count": 82,
+      "rewards_sum": 333.1,
+      "step": 129,
+      "ts_ms": 1712412371525
+    },
+    {
+      "compromised_hosts": 13,
+      "damage_score": 17.9,
+      "detection_count": 82,
+      "rewards_sum": 335.95,
+      "step": 130,
+      "ts_ms": 1712412371645
+    },
+    {
+      "compromised_hosts": 13,
+      "damage_score": 17.45,
+      "detection_count": 83,
+      "rewards_sum": 340.8,
+      "step": 131,
+      "ts_ms": 1712412371765
+    },
+    {
+      "compromised_hosts": 13,
+      "damage_score": 19.2,
+      "detection_count": 84,
+      "rewards_sum": 339.65,
+      "step": 132,
+      "ts_ms": 1712412371885
+    },
+    {
+      "compromised_hosts": 13,
+      "damage_score": 18.75,
+      "detection_count": 85,
+      "rewards_sum": 344.5,
+      "step": 133,
+      "ts_ms": 1712412372005
+    },
+    {
+      "compromised_hosts": 13,
+      "damage_score": 18.3,
+      "detection_count": 86,
+      "rewards_sum": 349.35,
+      "step": 134,
+      "ts_ms": 1712412372125
+    },
+    {
+      "compromised_hosts": 13,
+      "damage_score": 17.85,
+      "detection_count": 86,
+      "rewards_sum": 352.2,
+      "step": 135,
+      "ts_ms": 1712412372245
+    },
+    {
+      "compromised_hosts": 13,
+      "damage_score": 17.4,
+      "detection_count": 86,
+      "rewards_sum": 355.05,
+      "step": 136,
+      "ts_ms": 1712412372365
+    },
+    {
+      "compromised_hosts": 13,
+      "damage_score": 16.95,
+      "detection_count": 87,
+      "rewards_sum": 359.9,
+      "step": 137,
+      "ts_ms": 1712412372485
+    },
+    {
+      "compromised_hosts": 13,
+      "damage_score": 16.5,
+      "detection_count": 88,
+      "rewards_sum": 364.75,
+      "step": 138,
+      "ts_ms": 1712412372605
+    },
+    {
+      "compromised_hosts": 13,
+      "damage_score": 16.05,
+      "detection_count": 88,
+      "rewards_sum": 367.6,
+      "step": 139,
+      "ts_ms": 1712412372725
+    },
+    {
+      "compromised_hosts": 13,
+      "damage_score": 15.6,
+      "detection_count": 89,
+      "rewards_sum": 372.45,
+      "step": 140,
+      "ts_ms": 1712412372845
+    },
+    {
+      "compromised_hosts": 14,
+      "damage_score": 16.75,
+      "detection_count": 90,
+      "rewards_sum": 373.3,
+      "step": 141,
+      "ts_ms": 1712412372965
+    },
+    {
+      "compromised_hosts": 14,
+      "damage_score": 16.3,
+      "detection_count": 91,
+      "rewards_sum": 378.15,
+      "step": 142,
+      "ts_ms": 1712412373085
+    },
+    {
+      "compromised_hosts": 14,
+      "damage_score": 15.85,
+      "detection_count": 91,
+      "rewards_sum": 381.0,
+      "step": 143,
+      "ts_ms": 1712412373205
+    },
+    {
+      "compromised_hosts": 14,
+      "damage_score": 17.6,
+      "detection_count": 92,
+      "rewards_sum": 379.85,
+      "step": 144,
+      "ts_ms": 1712412373325
+    },
+    {
+      "compromised_hosts": 14,
+      "damage_score": 17.15,
+      "detection_count": 93,
+      "rewards_sum": 384.7,
+      "step": 145,
+      "ts_ms": 1712412373445
+    },
+    {
+      "compromised_hosts": 14,
+      "damage_score": 16.7,
+      "detection_count": 93,
+      "rewards_sum": 387.55,
+      "step": 146,
+      "ts_ms": 1712412373565
+    },
+    {
+      "compromised_hosts": 14,
+      "damage_score": 17.85,
+      "detection_count": 94,
+      "rewards_sum": 388.4,
+      "step": 147,
+      "ts_ms": 1712412373685
+    },
+    {
+      "compromised_hosts": 14,
+      "damage_score": 17.4,
+      "detection_count": 94,
+      "rewards_sum": 391.25,
+      "step": 148,
+      "ts_ms": 1712412373805
+    },
+    {
+      "compromised_hosts": 14,
+      "damage_score": 18.55,
+      "detection_count": 95,
+      "rewards_sum": 392.1,
+      "step": 149,
+      "ts_ms": 1712412373925
+    },
+    {
+      "compromised_hosts": 14,
+      "damage_score": 20.3,
+      "detection_count": 96,
+      "rewards_sum": 390.95,
+      "step": 150,
+      "ts_ms": 1712412374045
+    },
+    {
+      "compromised_hosts": 14,
+      "damage_score": 19.85,
+      "detection_count": 97,
+      "rewards_sum": 395.8,
+      "step": 151,
+      "ts_ms": 1712412374165
+    },
+    {
+      "compromised_hosts": 14,
+      "damage_score": 19.4,
+      "detection_count": 97,
+      "rewards_sum": 398.65,
+      "step": 152,
+      "ts_ms": 1712412374285
+    },
+    {
+      "compromised_hosts": 14,
+      "damage_score": 18.95,
+      "detection_count": 98,
+      "rewards_sum": 403.5,
+      "step": 153,
+      "ts_ms": 1712412374405
+    },
+    {
+      "compromised_hosts": 14,
+      "damage_score": 18.5,
+      "detection_count": 99,
+      "rewards_sum": 408.35,
+      "step": 154,
+      "ts_ms": 1712412374525
+    },
+    {
+      "compromised_hosts": 14,
+      "damage_score": 18.05,
+      "detection_count": 100,
+      "rewards_sum": 413.2,
+      "step": 155,
+      "ts_ms": 1712412374645
+    },
+    {
+      "compromised_hosts": 14,
+      "damage_score": 19.8,
+      "detection_count": 101,
+      "rewards_sum": 412.05,
+      "step": 156,
+      "ts_ms": 1712412374765
+    },
+    {
+      "compromised_hosts": 14,
+      "damage_score": 19.35,
+      "detection_count": 102,
+      "rewards_sum": 416.9,
+      "step": 157,
+      "ts_ms": 1712412374885
+    },
+    {
+      "compromised_hosts": 14,
+      "damage_score": 18.9,
+      "detection_count": 103,
+      "rewards_sum": 421.75,
+      "step": 158,
+      "ts_ms": 1712412375005
+    },
+    {
+      "compromised_hosts": 14,
+      "damage_score": 20.05,
+      "detection_count": 103,
+      "rewards_sum": 420.6,
+      "step": 159,
+      "ts_ms": 1712412375125
+    },
+    {
+      "compromised_hosts": 14,
+      "damage_score": 21.2,
+      "detection_count": 104,
+      "rewards_sum": 421.45,
+      "step": 160,
+      "ts_ms": 1712412375245
+    },
+    {
+      "compromised_hosts": 14,
+      "damage_score": 20.75,
+      "detection_count": 104,
+      "rewards_sum": 424.3,
+      "step": 161,
+      "ts_ms": 1712412375365
+    },
+    {
+      "compromised_hosts": 14,
+      "damage_score": 22.5,
+      "detection_count": 104,
+      "rewards_sum": 421.15,
+      "step": 162,
+      "ts_ms": 1712412375485
+    },
+    {
+      "compromised_hosts": 14,
+      "damage_score": 22.05,
+      "detection_count": 105,
+      "rewards_sum": 426.0,
+      "step": 163,
+      "ts_ms": 1712412375605
+    },
+    {
+      "compromised_hosts": 14,
+      "damage_score": 21.6,
+      "detection_count": 106,
+      "rewards_sum": 430.85,
+      "step": 164,
+      "ts_ms": 1712412375725
+    },
+    {
+      "compromised_hosts": 14,
+      "damage_score": 21.15,
+      "detection_count": 107,
+      "rewards_sum": 435.7,
+      "step": 165,
+      "ts_ms": 1712412375845
+    },
+    {
+      "compromised_hosts": 14,
+      "damage_score": 20.7,
+      "detection_count": 108,
+      "rewards_sum": 440.55,
+      "step": 166,
+      "ts_ms": 1712412375965
+    },
+    {
+      "compromised_hosts": 14,
+      "damage_score": 20.25,
+      "detection_count": 109,
+      "rewards_sum": 445.4,
+      "step": 167,
+      "ts_ms": 1712412376085
+    },
+    {
+      "compromised_hosts": 14,
+      "damage_score": 19.8,
+      "detection_count": 110,
+      "rewards_sum": 450.25,
+      "step": 168,
+      "ts_ms": 1712412376205
+    },
+    {
+      "compromised_hosts": 14,
+      "damage_score": 19.35,
+      "detection_count": 111,
+      "rewards_sum": 455.1,
+      "step": 169,
+      "ts_ms": 1712412376325
+    },
+    {
+      "compromised_hosts": 14,
+      "damage_score": 18.9,
+      "detection_count": 111,
+      "rewards_sum": 457.95,
+      "step": 170,
+      "ts_ms": 1712412376445
+    },
+    {
+      "compromised_hosts": 14,
+      "damage_score": 18.45,
+      "detection_count": 111,
+      "rewards_sum": 460.8,
+      "step": 171,
+      "ts_ms": 1712412376565
+    },
+    {
+      "compromised_hosts": 14,
+      "damage_score": 19.6,
+      "detection_count": 112,
+      "rewards_sum": 461.65,
+      "step": 172,
+      "ts_ms": 1712412376685
+    },
+    {
+      "compromised_hosts": 14,
+      "damage_score": 19.15,
+      "detection_count": 113,
+      "rewards_sum": 466.5,
+      "step": 173,
+      "ts_ms": 1712412376805
+    },
+    {
+      "compromised_hosts": 14,
+      "damage_score": 20.9,
+      "detection_count": 113,
+      "rewards_sum": 463.35,
+      "step": 174,
+      "ts_ms": 1712412376925
+    },
+    {
+      "compromised_hosts": 14,
+      "damage_score": 20.45,
+      "detection_count": 114,
+      "rewards_sum": 468.2,
+      "step": 175,
+      "ts_ms": 1712412377045
+    },
+    {
+      "compromised_hosts": 14,
+      "damage_score": 20.0,
+      "detection_count": 115,
+      "rewards_sum": 473.05,
+      "step": 176,
+      "ts_ms": 1712412377165
+    },
+    {
+      "compromised_hosts": 14,
+      "damage_score": 19.55,
+      "detection_count": 116,
+      "rewards_sum": 477.9,
+      "step": 177,
+      "ts_ms": 1712412377285
+    },
+    {
+      "compromised_hosts": 14,
+      "damage_score": 20.7,
+      "detection_count": 117,
+      "rewards_sum": 478.75,
+      "step": 178,
+      "ts_ms": 1712412377405
+    },
+    {
+      "compromised_hosts": 14,
+      "damage_score": 21.85,
+      "detection_count": 118,
+      "rewards_sum": 479.6,
+      "step": 179,
+      "ts_ms": 1712412377525
+    },
+    {
+      "compromised_hosts": 14,
+      "damage_score": 23.6,
+      "detection_count": 119,
+      "rewards_sum": 478.45,
+      "step": 180,
+      "ts_ms": 1712412377645
+    },
+    {
+      "compromised_hosts": 14,
+      "damage_score": 23.15,
+      "detection_count": 119,
+      "rewards_sum": 481.3,
+      "step": 181,
+      "ts_ms": 1712412377765
+    },
+    {
+      "compromised_hosts": 14,
+      "damage_score": 22.7,
+      "detection_count": 120,
+      "rewards_sum": 486.15,
+      "step": 182,
+      "ts_ms": 1712412377885
+    },
+    {
+      "compromised_hosts": 14,
+      "damage_score": 23.85,
+      "detection_count": 121,
+      "rewards_sum": 487.0,
+      "step": 183,
+      "ts_ms": 1712412378005
+    },
+    {
+      "compromised_hosts": 14,
+      "damage_score": 23.4,
+      "detection_count": 122,
+      "rewards_sum": 491.85,
+      "step": 184,
+      "ts_ms": 1712412378125
+    },
+    {
+      "compromised_hosts": 14,
+      "damage_score": 22.95,
+      "detection_count": 122,
+      "rewards_sum": 494.7,
+      "step": 185,
+      "ts_ms": 1712412378245
+    },
+    {
+      "compromised_hosts": 14,
+      "damage_score": 24.7,
+      "detection_count": 123,
+      "rewards_sum": 493.55,
+      "step": 186,
+      "ts_ms": 1712412378365
+    },
+    {
+      "compromised_hosts": 14,
+      "damage_score": 24.25,
+      "detection_count": 124,
+      "rewards_sum": 498.4,
+      "step": 187,
+      "ts_ms": 1712412378485
+    },
+    {
+      "compromised_hosts": 14,
+      "damage_score": 23.8,
+      "detection_count": 125,
+      "rewards_sum": 503.25,
+      "step": 188,
+      "ts_ms": 1712412378605
+    },
+    {
+      "compromised_hosts": 14,
+      "damage_score": 23.35,
+      "detection_count": 126,
+      "rewards_sum": 508.1,
+      "step": 189,
+      "ts_ms": 1712412378725
+    },
+    {
+      "compromised_hosts": 14,
+      "damage_score": 24.5,
+      "detection_count": 127,
+      "rewards_sum": 508.95,
+      "step": 190,
+      "ts_ms": 1712412378845
+    },
+    {
+      "compromised_hosts": 14,
+      "damage_score": 24.05,
+      "detection_count": 128,
+      "rewards_sum": 513.8,
+      "step": 191,
+      "ts_ms": 1712412378965
+    },
+    {
+      "compromised_hosts": 14,
+      "damage_score": 25.8,
+      "detection_count": 129,
+      "rewards_sum": 512.65,
+      "step": 192,
+      "ts_ms": 1712412379085
+    },
+    {
+      "compromised_hosts": 14,
+      "damage_score": 25.35,
+      "detection_count": 130,
+      "rewards_sum": 517.5,
+      "step": 193,
+      "ts_ms": 1712412379205
+    },
+    {
+      "compromised_hosts": 14,
+      "damage_score": 24.9,
+      "detection_count": 131,
+      "rewards_sum": 522.35,
+      "step": 194,
+      "ts_ms": 1712412379325
+    },
+    {
+      "compromised_hosts": 14,
+      "damage_score": 24.45,
+      "detection_count": 132,
+      "rewards_sum": 527.2,
+      "step": 195,
+      "ts_ms": 1712412379445
+    },
+    {
+      "compromised_hosts": 14,
+      "damage_score": 25.6,
+      "detection_count": 133,
+      "rewards_sum": 528.05,
+      "step": 196,
+      "ts_ms": 1712412379565
+    },
+    {
+      "compromised_hosts": 14,
+      "damage_score": 26.75,
+      "detection_count": 134,
+      "rewards_sum": 528.9,
+      "step": 197,
+      "ts_ms": 1712412379685
+    },
+    {
+      "compromised_hosts": 14,
+      "damage_score": 26.3,
+      "detection_count": 135,
+      "rewards_sum": 533.75,
+      "step": 198,
+      "ts_ms": 1712412379805
+    },
+    {
+      "compromised_hosts": 14,
+      "damage_score": 25.85,
+      "detection_count": 136,
+      "rewards_sum": 538.6,
+      "step": 199,
+      "ts_ms": 1712412379925
+    },
+    {
+      "compromised_hosts": 14,
+      "damage_score": 25.4,
+      "detection_count": 136,
+      "rewards_sum": 541.45,
+      "step": 200,
+      "ts_ms": 1712412380045
+    }
+  ]
+}

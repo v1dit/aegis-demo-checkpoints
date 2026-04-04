@@ -1,0 +1,20 @@
+#!/usr/bin/expect -f
+set timeout -1
+
+set repo_root [file normalize [file join [file dirname [info script]] ../..]]
+set secrets_file [file join $repo_root secrets.txt]
+set host "kgarg@chapman.edu@dgx0.chapman.edu"
+
+set fh [open $secrets_file r]
+set content [read $fh]
+close $fh
+regexp {password:\s*(.+)} $content -> password
+
+spawn ssh -Y -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $host
+expect {
+    -re "(?i)password:" {
+        send "$password\r"
+        exp_continue
+    }
+    eof
+}

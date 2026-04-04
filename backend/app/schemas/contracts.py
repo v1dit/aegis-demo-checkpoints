@@ -1,0 +1,185 @@
+from __future__ import annotations
+
+from typing import Any, Literal
+
+from pydantic import BaseModel, Field
+
+Actor = Literal["RED", "BLUE", "ENV"]
+RedActionType = Literal[
+    "scan_host",
+    "enumerate_service",
+    "exploit_vulnerability",
+    "lateral_move",
+    "privilege_escalate",
+    "exfiltrate_data",
+]
+BlueActionType = Literal[
+    "monitor_host",
+    "patch_service",
+    "isolate_host",
+    "block_connection",
+    "rotate_credentials",
+    "deploy_deception",
+]
+ActionType = RedActionType | BlueActionType | Literal["step_marker"]
+MitreTactic = Literal[
+    "Reconnaissance",
+    "Initial Access",
+    "Execution",
+    "Lateral Movement",
+    "Credential Access",
+    "Exfiltration",
+    "Defense Evasion",
+]
+
+
+class TrainRunRequest(BaseModel):
+    run_name: str
+    seed: int
+    gpu_ids: list[int]
+    max_timesteps: int = Field(ge=1)
+    config_profile: str
+
+
+class TrainRunResponse(BaseModel):
+    run_id: str
+    status: Literal["started"]
+
+
+class TrainStatusResponse(BaseModel):
+    run_id: str
+    status: Literal["queued", "running", "completed", "failed"]
+    phase: str
+    timesteps: int
+    checkpoint_path: str | None = None
+    learning_metrics: dict[str, float] = Field(default_factory=dict)
+
+
+class EvalRunRequest(BaseModel):
+    checkpoint_id: str
+    suite_id: str
+    seeds: list[int]
+
+
+class EvalRunResponse(BaseModel):
+    eval_id: str
+    status: Literal["started"]
+
+
+class FeatureValue(BaseModel):
+    name: str
+    value: float
+
+
+class ActionEvent(BaseModel):
+    event_id: str
+    ts_ms: int
+    step: int
+    actor: Actor
+    action_type: ActionType
+    source_host: str
+    target_host: str
+    target_service: str | None = None
+    outcome: str
+    mitre_tactic: MitreTactic
+    confidence: float
+
+
+class NodeChange(BaseModel):
+    node_id: str
+    compromise_state: Literal["neutral", "compromised"]
+    defense_state: Literal["none", "hardened", "isolated", "monitored", "deception"]
+
+
+class EdgeChange(BaseModel):
+    edge_id: str
+    status: Literal["active", "blocked"]
+
+
+class StateDelta(BaseModel):
+    ts_ms: int
+    step: int
+    node_changes: list[NodeChange]
+    edge_changes: list[EdgeChange]
+
+
+class DetectionEvent(BaseModel):
+    event_id: str
+    ts_ms: int
+    step: int
+    detector: Literal["BLUE"]
+    target_host: str
+    signal: str
+    severity: Literal["low", "medium", "high"]
+    detected: bool
+
+
+class ExplainabilityRecord(BaseModel):
+    ts_ms: int
+    step: int
+    action: BlueActionType
+    target_host: str
+    confidence: float
+    reason_features: list[FeatureValue]
+    expected_effect: str
+
+
+class ReplayFiles(BaseModel):
+    events: str
+    topology: str
+    metrics: str
+
+
+class ReplayManifest(BaseModel):
+    replay_id: str
+    scenario_id: str
+    seed: int
+    checkpoint_id: str
+    duration_steps: int
+    files: ReplayFiles
+
+
+class EvalKpis(BaseModel):
+    damage_reduction_vs_no_defense: float
+    damage_reduction_vs_rule_based: float
+    detection_latency_improvement_vs_rule_based: float
+
+
+class PerScenarioEval(BaseModel):
+    scenario_id: str
+    seed: int
+    blue_damage: float
+    no_defense_damage: float
+    rule_based_damage: float
+    blue_detection_latency: float
+    rule_based_detection_latency: float
+
+
+class EvalReport(BaseModel):
+    eval_id: str
+    suite_id: str
+    kpis: EvalKpis
+    per_scenario: list[PerScenarioEval]
+
+
+class ReplayListItem(BaseModel):
+    replay_id: str
+    scenario_id: str
+    checkpoint_id: str
+    seed: int
+
+
+class ReplayListResponse(BaseModel):
+    replays: list[ReplayListItem]
+
+
+class ReplayBundleResponse(BaseModel):
+    replay_id: str
+    bundle_dir: str
+    manifest: ReplayManifest
+    files: dict[str, str]
+
+
+class StreamEvent(BaseModel):
+    event_type: Literal["action", "detection", "state_delta", "explainability", "metric", "marker"]
+    payload: dict[str, Any]

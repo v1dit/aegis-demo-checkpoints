@@ -1,0 +1,42 @@
+#!/usr/bin/expect -f
+set timeout 10
+
+set repo_root [file normalize [file join [file dirname [info script]] ../..]]
+set secrets_file [file join $repo_root secrets.txt]
+set host "kgarg@chapman.edu@dgx0.chapman.edu"
+
+if {$argc < 1} {
+    puts "usage: cluster_exec.expect <command>"
+    exit 1
+}
+
+set command [lindex $argv 0]
+set fh [open $secrets_file r]
+set content [read $fh]
+close $fh
+if {![regexp {password:\s*(.+)} $content -> password]} {
+    puts stderr "failed to parse password from secrets.txt"
+    exit 1
+}
+
+spawn ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $host "bash -s"
+expect {
+    -re "(?i)password:" {
+        send "$password\r"
+        exp_continue
+    }
+    -re "(?i)permission denied" {
+        exit 1
+    }
+    timeout {
+        # Session is ready for command input.
+    }
+}
+set timeout -1
+send -- "$command\r"
+send -- "exit \$?\r"
+expect eof
+
+set wait_status [wait]
+set exit_code [lindex $wait_status 3]
+exit $exit_code

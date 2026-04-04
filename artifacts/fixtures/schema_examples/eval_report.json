@@ -1,0 +1,10 @@
+{
+  "eval_id": "eval_20260404_001",
+  "kpis": {
+    "damage_reduction_vs_no_defense": 0.33,
+    "damage_reduction_vs_rule_based": 0.19,
+    "detection_latency_improvement_vs_rule_based": 0.24
+  },
+  "per_scenario": [],
+  "suite_id": "heldout_suite_v1"
+}
