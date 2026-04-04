@@ -1,0 +1,12 @@
+{
+  "checkpoint_id": "ckpt_blue_main_001",
+  "duration_steps": 200,
+  "files": {
+    "events": "events.jsonl",
+    "metrics": "metrics.json",
+    "topology": "topology_snapshots.json"
+  },
+  "replay_id": "replay_alt_03",
+  "scenario_id": "scenario_creds_chain",
+  "seed": 1002
+}

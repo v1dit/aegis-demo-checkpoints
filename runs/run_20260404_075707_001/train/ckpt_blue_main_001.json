@@ -1,0 +1,15 @@
+{
+  "checkpoint_id": "ckpt_blue_main_001",
+  "run_id": "run_20260404_075707_001",
+  "seed": 42,
+  "parent_run_id": null,
+  "parent_checkpoint": null,
+  "policy_bias": 0.8312,
+  "config_profile": "weekend_v1",
+  "gpu_ids": [
+    5,
+    6,
+    7
+  ],
+  "timesteps": 2000
+}

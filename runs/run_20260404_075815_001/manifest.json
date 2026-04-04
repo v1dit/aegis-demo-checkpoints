@@ -1,0 +1,64 @@
+{
+  "best_score": 1.7654,
+  "created_at": "2026-04-04T07:58:15.421300+00:00",
+  "eval": {
+    "eval_id": "eval_cli_1775289530",
+    "gates": {
+      "damage_reduction_vs_no_defense": true,
+      "damage_reduction_vs_rule_based": true,
+      "detection_latency_improvement_vs_rule_based": true
+    },
+    "improvement_delta_vs_parent": {
+      "damage_reduction_vs_no_defense": 0.0,
+      "damage_reduction_vs_rule_based": 0.0,
+      "detection_latency_improvement_vs_rule_based": 0.0
+    },
+    "kpis": {
+      "damage_reduction_vs_no_defense": 0.8604,
+      "damage_reduction_vs_rule_based": 0.4272,
+      "detection_latency_improvement_vs_rule_based": 0.4778
+    },
+    "report_path": "/Users/krishgarg/Documents/Projects/pantherHacks/runs/run_20260404_075815_001/eval/eval_cli_1775289530.json",
+    "status": "completed"
+  },
+  "fresh_start": false,
+  "parent_checkpoint": "ckpt_blue_main_001",
+  "parent_run_id": "run_20260404_075733_001",
+  "replays": {
+    "replay_ids": [
+      "replay_hero_01",
+      "replay_alt_02",
+      "replay_alt_03",
+      "replay_alt_04"
+    ],
+    "replay_root": "/Users/krishgarg/Documents/Projects/pantherHacks/runs/run_20260404_075815_001/replays",
+    "status": "completed"
+  },
+  "run_id": "run_20260404_075815_001",
+  "train": {
+    "checkpoint_id": "ckpt_blue_main_001",
+    "checkpoint_path": "/Users/krishgarg/Documents/Projects/pantherHacks/runs/run_20260404_075815_001/train/ckpt_blue_main_001.json",
+    "learning_metrics": {
+      "attack_success_rate": 0.3753,
+      "blue_pressure_score": 0.3696,
+      "detection_latency_ms": 109.83
+    },
+    "phase": "completed",
+    "request": {
+      "config_profile": "weekend_v1",
+      "fresh_start": false,
+      "gpu_ids": [
+        5,
+        6,
+        7
+      ],
+      "max_timesteps": 3000000,
+      "run_id": null,
+      "run_name": "blue_train_main",
+      "seed": 42
+    },
+    "status": "completed",
+    "timesteps": 3000000
+  },
+  "updated_at": "2026-04-04T07:58:50.892108+00:00"
+}

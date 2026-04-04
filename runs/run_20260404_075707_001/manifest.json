@@ -1,0 +1,55 @@
+{
+  "best_score": 1.7421,
+  "created_at": "2026-04-04T07:57:07.674168+00:00",
+  "eval": {
+    "eval_id": "eval_20260404_075708_001",
+    "gates": {
+      "damage_reduction_vs_no_defense": true,
+      "damage_reduction_vs_rule_based": true,
+      "detection_latency_improvement_vs_rule_based": true
+    },
+    "improvement_delta_vs_parent": null,
+    "kpis": {
+      "damage_reduction_vs_no_defense": 0.8546,
+      "damage_reduction_vs_rule_based": 0.4034,
+      "detection_latency_improvement_vs_rule_based": 0.4841
+    },
+    "report_path": "/Users/krishgarg/Documents/Projects/pantherHacks/runs/run_20260404_075707_001/eval/eval_20260404_075708_001.json",
+    "status": "completed"
+  },
+  "fresh_start": false,
+  "parent_checkpoint": null,
+  "parent_run_id": null,
+  "replays": {
+    "replay_ids": [],
+    "replay_root": "/Users/krishgarg/Documents/Projects/pantherHacks/runs/run_20260404_075707_001/replays",
+    "status": "not_started"
+  },
+  "run_id": "run_20260404_075707_001",
+  "train": {
+    "checkpoint_id": "ckpt_blue_main_001",
+    "checkpoint_path": "/Users/krishgarg/Documents/Projects/pantherHacks/runs/run_20260404_075707_001/train/ckpt_blue_main_001.json",
+    "learning_metrics": {
+      "attack_success_rate": 0.3774,
+      "blue_pressure_score": 0.3729,
+      "detection_latency_ms": 110.33
+    },
+    "phase": "completed",
+    "request": {
+      "config_profile": "weekend_v1",
+      "fresh_start": false,
+      "gpu_ids": [
+        5,
+        6,
+        7
+      ],
+      "max_timesteps": 2000,
+      "run_id": null,
+      "run_name": "blue_train_main",
+      "seed": 42
+    },
+    "status": "completed",
+    "timesteps": 2000
+  },
+  "updated_at": "2026-04-04T07:57:08.771901+00:00"
+}

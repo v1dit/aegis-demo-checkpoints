@@ -1,0 +1,49 @@
+{
+  "eval_id": "eval_20260404_075734_001",
+  "suite_id": "heldout_suite_v1",
+  "run_id": "run_20260404_075733_001",
+  "kpis": {
+    "damage_reduction_vs_no_defense": 0.8604,
+    "damage_reduction_vs_rule_based": 0.4272,
+    "detection_latency_improvement_vs_rule_based": 0.4778
+  },
+  "per_scenario": [
+    {
+      "scenario_id": "scenario_unseen_web_rce",
+      "seed": 1001,
+      "blue_damage": 12.0,
+      "no_defense_damage": 152.2,
+      "rule_based_damage": 24.3,
+      "blue_detection_latency": 2252.31,
+      "rule_based_detection_latency": 2520.0
+    },
+    {
+      "scenario_id": "scenario_unseen_web_rce",
+      "seed": 1002,
+      "blue_damage": 28.6,
+      "no_defense_damage": 188.0,
+      "rule_based_damage": 59.7,
+      "blue_detection_latency": 215.0,
+      "rule_based_detection_latency": 567.27
+    },
+    {
+      "scenario_id": "scenario_unseen_web_rce",
+      "seed": 1003,
+      "blue_damage": 23.8,
+      "no_defense_damage": 166.2,
+      "rule_based_damage": 39.8,
+      "blue_detection_latency": 795.0,
+      "rule_based_detection_latency": 1578.95
+    },
+    {
+      "scenario_id": "scenario_unseen_web_rce",
+      "seed": 1004,
+      "blue_damage": 33.15,
+      "no_defense_damage": 192.4,
+      "rule_based_damage": 46.5,
+      "blue_detection_latency": 136.0,
+      "rule_based_detection_latency": 1841.74
+    }
+  ],
+  "improvement_delta_vs_parent": null
+}
