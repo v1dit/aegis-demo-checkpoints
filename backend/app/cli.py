@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import random
 import time
 
 from backend.app.core.paths import CHECKPOINT_DIR, FIXTURES_DIR, ensure_artifact_dirs
@@ -32,10 +33,13 @@ def _latest_checkpoint_from_run(run_id: str | None) -> str | None:
     return checkpoints[-1].stem
 
 
-def _run_train(run_id: str | None, fresh_start: bool) -> str:
+def _run_train(run_id: str | None, fresh_start: bool, seed: int | None) -> str:
+    effective_seed = seed if seed is not None else random.randint(0, 100_000)
+    if seed is None:
+        print(f"seed={effective_seed} (auto-generated)")
     request = TrainRunRequest(
         run_name="blue_train_main",
-        seed=42,
+        seed=effective_seed,
         gpu_ids=[5, 6, 7],
         max_timesteps=3000000,
         config_profile="weekend_v1",
@@ -158,10 +162,11 @@ def main() -> None:
     parser.add_argument("command", choices=["train", "eval", "package-replays", "demo"])
     parser.add_argument("--run-id", dest="run_id", default=None)
     parser.add_argument("--fresh-start", action="store_true")
+    parser.add_argument("--seed", type=int, default=None)
     args = parser.parse_args()
 
     if args.command == "train":
-        _run_train(run_id=args.run_id, fresh_start=args.fresh_start)
+        _run_train(run_id=args.run_id, fresh_start=args.fresh_start, seed=args.seed)
     elif args.command == "eval":
         _run_eval(run_id=args.run_id)
     elif args.command == "package-replays":
