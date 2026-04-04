@@ -355,11 +355,19 @@ function normalizeEvents(
   rawEvents: unknown[],
   stitchState = createEpisodeStitchState(),
 ): ReplayEvent[] {
-  const normalized = rawEvents
-    .map((event, idx) => normalizeEvent(event, idx + 1))
-    .filter((event): event is ReplayEvent => event !== null);
+  const normalizedWithRaw = rawEvents
+    .map((rawEvent, idx) => {
+      const event = normalizeEvent(rawEvent, idx + 1);
+      if (!event) return null;
+      return { event, rawEvent };
+    })
+    .filter(
+      (entry): entry is { event: ReplayEvent; rawEvent: unknown } => entry !== null,
+    );
 
-  return normalized.map((event, idx) => stitchEventStep(event, rawEvents[idx], stitchState));
+  return normalizedWithRaw.map(({ event, rawEvent }) =>
+    stitchEventStep(event, rawEvent, stitchState),
+  );
 }
 
 function parseJsonLines(text: string): unknown[] {
@@ -379,7 +387,7 @@ function parseJsonLines(text: string): unknown[] {
 
 function parseReplayList(payload: unknown): ReplayListItem[] {
   const container = asRecord(payload);
-  const rawList = Array.isArray(payload)
+  const rawList: unknown[] = Array.isArray(payload)
     ? payload
     : Array.isArray(container?.replays)
       ? container.replays
@@ -389,31 +397,27 @@ function parseReplayList(payload: unknown): ReplayListItem[] {
           ? container.items
           : [];
 
-  return rawList
-    .map((item, idx) => {
-      const record = asRecord(item);
-      if (!record) return null;
+  const parsed: ReplayListItem[] = [];
+  rawList.forEach((item, idx) => {
+    const record = asRecord(item);
+    if (!record) return;
 
-      const id =
-        toNonEmptyString(record.id) ??
-        toNonEmptyString(record.replay_id) ??
-        toNonEmptyString(record.replayId) ??
-        toNonEmptyString(record.name) ??
-        `replay-${idx + 1}`;
+    const id =
+      toNonEmptyString(record.id) ??
+      toNonEmptyString(record.replay_id) ??
+      toNonEmptyString(record.replayId) ??
+      toNonEmptyString(record.name) ??
+      `replay-${idx + 1}`;
 
-      const runId =
-        toNonEmptyString(record.run_id) ??
-        toNonEmptyString(record.runId) ??
-        undefined;
+    const runId = toNonEmptyString(record.run_id) ?? toNonEmptyString(record.runId) ?? undefined;
 
-      const createdAt =
-        toNonEmptyString(record.created_at) ??
-        toNonEmptyString(record.createdAt) ??
-        undefined;
+    const createdAt =
+      toNonEmptyString(record.created_at) ?? toNonEmptyString(record.createdAt) ?? undefined;
 
-      return { id, runId, createdAt, raw: item };
-    })
-    .filter((item): item is ReplayListItem => item !== null);
+    parsed.push({ id, runId, createdAt, raw: item });
+  });
+
+  return parsed;
 }
 
 function extractInlineEvents(bundlePayload: unknown): unknown[] {

@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
+import type { Core } from 'cytoscape';
 
 type Actor = 'RED' | 'BLUE';
 
@@ -57,7 +58,7 @@ const MOCK_EDGES: Array<[string, string]> = [
 
 export default function Graph({ events = [], className }: GraphProps) {
   const cyContainerRef = useRef<HTMLDivElement | null>(null);
-  const cyRef = useRef<any>(null);
+  const cyRef = useRef<Core | null>(null);
   const processedEventsRef = useRef(0);
   const pendingTimeoutsRef = useRef<number[]>([]);
 
