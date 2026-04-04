@@ -7,9 +7,28 @@ export type ReplayEvent = {
   target: string;
 };
 
+export type ReplayTopology = {
+  nodes: Array<{
+    id: string;
+    zone?: string;
+    assetType?: string;
+  }>;
+  edges: Array<{
+    id: string;
+    source: string;
+    target: string;
+  }>;
+};
+
+export type ReplayPayload = {
+  events: ReplayEvent[];
+  topology: ReplayTopology | null;
+};
+
 export type ReplayListItem = {
   id: string;
   runId?: string;
+  scenarioId?: string;
   createdAt?: string;
   raw: unknown;
 };
@@ -410,11 +429,13 @@ function parseReplayList(payload: unknown): ReplayListItem[] {
       `replay-${idx + 1}`;
 
     const runId = toNonEmptyString(record.run_id) ?? toNonEmptyString(record.runId) ?? undefined;
+    const scenarioId =
+      toNonEmptyString(record.scenario_id) ?? toNonEmptyString(record.scenarioId) ?? undefined;
 
     const createdAt =
       toNonEmptyString(record.created_at) ?? toNonEmptyString(record.createdAt) ?? undefined;
 
-    parsed.push({ id, runId, createdAt, raw: item });
+    parsed.push({ id, runId, scenarioId, createdAt, raw: item });
   });
 
   return parsed;
@@ -433,6 +454,58 @@ function extractInlineEvents(bundlePayload: unknown): unknown[] {
   if (data && Array.isArray(data.events)) return data.events;
 
   return [];
+}
+
+function extractTopology(bundlePayload: unknown): ReplayTopology | null {
+  const bundle = asRecord(bundlePayload);
+  if (!bundle) return null;
+
+  const topologyContainer =
+    asRecord(bundle.topology) ??
+    asRecord(asRecord(bundle.data)?.topology) ??
+    asRecord(asRecord(bundle.replay)?.topology);
+
+  if (!topologyContainer) return null;
+
+  const initial = asRecord(topologyContainer.initial) ?? topologyContainer;
+  const nodesRaw = Array.isArray(initial.nodes) ? initial.nodes : [];
+  const edgesRaw = Array.isArray(initial.edges) ? initial.edges : [];
+
+  const nodes = nodesRaw
+    .map((node) => {
+      const record = asRecord(node);
+      if (!record) return null;
+      const id = toNonEmptyString(record.node_id) ?? toNonEmptyString(record.id);
+      if (!id) return null;
+      return {
+        id: normalizeTargetId(id),
+        zone: toNonEmptyString(record.zone) ?? undefined,
+        assetType: toNonEmptyString(record.asset_type) ?? undefined,
+      };
+    })
+    .filter((node) => node !== null) as ReplayTopology["nodes"];
+
+  const edges = edgesRaw
+    .map((edge) => {
+      const record = asRecord(edge);
+      if (!record) return null;
+      const source = toNonEmptyString(record.source);
+      const target = toNonEmptyString(record.target);
+      if (!source || !target) return null;
+      const edgeId =
+        toNonEmptyString(record.edge_id) ??
+        toNonEmptyString(record.id) ??
+        `${normalizeTargetId(source)}=>${normalizeTargetId(target)}`;
+      return {
+        id: edgeId,
+        source: normalizeTargetId(source),
+        target: normalizeTargetId(target),
+      };
+    })
+    .filter((edge) => edge !== null) as ReplayTopology["edges"];
+
+  if (nodes.length === 0) return null;
+  return { nodes, edges };
 }
 
 function extractEventPointer(bundlePayload: unknown): string | null {
@@ -556,25 +629,60 @@ export function pickPreferredReplayId(list: ReplayListItem[]): string | null {
   return sorted[0]?.id ?? null;
 }
 
+export type ScenarioLane = "baseline" | "current" | "enterprise";
+
+export function pickReplayIdForLane(
+  list: ReplayListItem[],
+  lane: ScenarioLane,
+): string | null {
+  if (list.length === 0) return null;
+  if (lane === "baseline") return null;
+
+  const isEnterprise = (item: ReplayListItem) =>
+    (item.scenarioId ?? "").startsWith("scenario_enterprise_");
+
+  if (lane === "enterprise") {
+    const enterpriseReplay = list.find(isEnterprise);
+    return enterpriseReplay?.id ?? pickPreferredReplayId(list);
+  }
+
+  const currentReplay = list.find((item) => !isEnterprise(item));
+  return currentReplay?.id ?? pickPreferredReplayId(list);
+}
+
 export async function fetchEvents(
   options: EventFetchOptions = {},
 ): Promise<ReplayEvent[]> {
+  const payload = await fetchReplayPayload(options);
+  return payload.events;
+}
+
+export async function fetchReplayPayload(
+  options: EventFetchOptions = {},
+): Promise<ReplayPayload> {
   const { replayId, signal } = options;
 
   if (replayId) {
     try {
       const bundlePayload = await fetchUnknownJson(resolveReplayBundleUrl(replayId), signal);
+      const topology = extractTopology(bundlePayload);
 
       const inlineEvents = extractInlineEvents(bundlePayload);
       if (inlineEvents.length > 0) {
-        return normalizeEvents(inlineEvents);
+        return {
+          events: normalizeEvents(inlineEvents),
+          topology,
+        };
       }
 
       const pointer = extractEventPointer(bundlePayload);
       if (pointer) {
         const pointerEvents = await fetchEventsFromPointer(pointer, signal);
         if (pointerEvents.length > 0) {
-          return pointerEvents;
+          return {
+            events: pointerEvents,
+            topology,
+          };
         }
       }
     } catch {
@@ -583,17 +691,24 @@ export async function fetchEvents(
 
     try {
       const localBundle = await fetchUnknownJson(resolveLocalReplayBundleUrl(replayId), signal);
+      const topology = extractTopology(localBundle);
 
       const inlineEvents = extractInlineEvents(localBundle);
       if (inlineEvents.length > 0) {
-        return normalizeEvents(inlineEvents);
+        return {
+          events: normalizeEvents(inlineEvents),
+          topology,
+        };
       }
 
       const pointer = extractEventPointer(localBundle);
       if (pointer) {
         const pointerEvents = await fetchEventsFromPointer(pointer, signal);
         if (pointerEvents.length > 0) {
-          return pointerEvents;
+          return {
+            events: pointerEvents,
+            topology,
+          };
         }
       }
     } catch {
@@ -602,7 +717,10 @@ export async function fetchEvents(
   }
 
   const payload = await fetchUnknownJson(resolveRestEventsUrl(), signal);
-  return normalizeEvents(extractRawEvents(payload));
+  return {
+    events: normalizeEvents(extractRawEvents(payload)),
+    topology: null,
+  };
 }
 
 function connectStream(url: string, handlers: StreamHandlers): StreamConnection {
