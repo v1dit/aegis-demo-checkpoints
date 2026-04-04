@@ -11,8 +11,12 @@ router = APIRouter(prefix="/eval", tags=["eval"])
 
 @router.post("/run", response_model=EvalRunResponse)
 def run_eval(request: EvalRunRequest) -> EvalRunResponse:
-    eval_id = start_eval_job(request=request, replay_dir=REPLAY_DIR, report_dir=EVAL_REPORT_DIR)
-    return EvalRunResponse(eval_id=eval_id, status="started")
+    eval_id, run_id = start_eval_job(
+        request=request,
+        replay_dir=REPLAY_DIR,
+        report_dir=EVAL_REPORT_DIR,
+    )
+    return EvalRunResponse(eval_id=eval_id, run_id=run_id, status="started")
 
 
 @router.get("/report/{eval_id}", response_model=EvalReport)
