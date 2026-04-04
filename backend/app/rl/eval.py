@@ -4,6 +4,7 @@ from pathlib import Path
 
 import orjson
 
+from backend.app.core.runs import read_checkpoint_payload
 from backend.app.env.simulator import simulate_episode
 from backend.app.replay.builder import build_replay_bundle
 from backend.app.schemas.contracts import EvalKpis, EvalReport, PerScenarioEval
@@ -21,6 +22,13 @@ def _scenario_id_for_suite(suite_id: str) -> str:
     return f"scenario_{suite_id}"
 
 
+def _checkpoint_bias(checkpoint_id: str, run_id: str | None) -> float:
+    payload = read_checkpoint_payload(checkpoint_id=checkpoint_id, run_id=run_id)
+    if not payload:
+        return 0.82
+    return float(payload.get("policy_bias", 0.82))
+
+
 def evaluate_checkpoint(
     *,
     eval_id: str,
@@ -28,9 +36,11 @@ def evaluate_checkpoint(
     suite_id: str,
     seeds: list[int],
     replay_root: Path,
+    run_id: str | None = None,
 ) -> EvalReport:
     scenario_id = _scenario_id_for_suite(suite_id)
     per_scenario: list[PerScenarioEval] = []
+    checkpoint_bias = _checkpoint_bias(checkpoint_id, run_id)
 
     total_blue_damage = 0.0
     total_none_damage = 0.0
@@ -56,9 +66,9 @@ def evaluate_checkpoint(
             scenario_id=scenario_id,
             checkpoint_id=checkpoint_id,
             defender_mode="ppo",
+            checkpoint_bias=checkpoint_bias,
         )
 
-        # Persist deterministic replay artifacts for the trained defender run.
         replay_id = f"replay_eval_{index:02d}"
         build_replay_bundle(sim_result=blue, replay_id=replay_id, replay_root=replay_root)
 
@@ -90,7 +100,6 @@ def evaluate_checkpoint(
     damage_vs_rule = 1.0 - _safe_ratio(avg_blue_damage, avg_rule_damage)
     latency_improvement = 1.0 - _safe_ratio(avg_blue_latency, avg_rule_latency)
 
-    # Keep numeric shape stable for dashboard display.
     kpis = EvalKpis(
         damage_reduction_vs_no_defense=round(max(-1.0, damage_vs_none), 4),
         damage_reduction_vs_rule_based=round(max(-1.0, damage_vs_rule), 4),
@@ -99,6 +108,7 @@ def evaluate_checkpoint(
 
     return EvalReport(
         eval_id=eval_id,
+        run_id=run_id,
         suite_id=suite_id,
         kpis=kpis,
         per_scenario=per_scenario,
