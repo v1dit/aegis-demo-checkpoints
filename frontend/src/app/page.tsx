@@ -78,15 +78,15 @@ function riskPercent(score: number): number {
 }
 
 function severityBadgeClass(severity: ActionEvent["severity"]): string {
-  if (severity === "critical") return "border-[#7f8da4] bg-[#A32D2D]/25 text-[#ffdada]";
-  if (severity === "high") return "border-[#7f8da4] bg-[#E24B4A]/20 text-[#ffd7d5]";
+  if (severity === "critical") return "border-[#7f8da4] bg-[#304158]/45 text-[#e2ebfb]";
+  if (severity === "high") return "border-[#7f8da4] bg-[#253247]/45 text-[#d9e5f7]";
   if (severity === "medium") return "border-[#EF9F27] bg-[#EF9F27]/18 text-[#ffebb8]";
   if (severity === "low") return "border-[#1D9E75] bg-[#1D9E75]/15 text-[#ccffe9]";
   return "border-[#888780] bg-[#888780]/15 text-[#edece8]";
 }
 
 function actorBadgeClass(actor: ActionEvent["actor"]): string {
-  if (actor === "RED") return "border-[#7f8da4] bg-[#E24B4A]/20 text-[#ffd9d7]";
+  if (actor === "RED") return "border-[#7f8da4] bg-[#253247]/50 text-[#d9e5f7]";
   if (actor === "BLUE") return "border-[#378ADD] bg-[#378ADD]/20 text-[#d6e9ff]";
   return "border-[#888780] bg-[#888780]/20 text-[#eceae5]";
 }
@@ -333,7 +333,7 @@ export default function Home() {
                   onClick={() => setTab(item.id)}
                   className={`rounded-md border px-3 py-2 text-left transition ${
                     tab === item.id
-                      ? "border-[var(--steel-accent)] bg-[var(--steel-soft)] text-[#dde7f8]"
+                      ? "border-[#6f809a] bg-[#1a2434] text-[#dde7f8]"
                       : "border-[var(--border)] bg-[#0f131a] text-[var(--text-secondary)]"
                   }`}
                 >
@@ -344,7 +344,7 @@ export default function Home() {
             </div>
 
             <div className="flex flex-wrap items-center gap-2 text-xs uppercase tracking-[0.12em]">
-              <span className="rounded-md border border-[var(--steel-accent)] bg-[var(--steel-soft)] px-3 py-1 text-[#dde7f8]">
+              <span className="rounded-md border border-[#6f809a] bg-[#1a2434] px-3 py-1 text-[#dde7f8]">
                 {statusLabel}
               </span>
               <span className="rounded-md border border-[var(--border)] bg-[#0f131a] px-3 py-1 text-[var(--text-secondary)]">
@@ -361,7 +361,7 @@ export default function Home() {
                 onClick={() => changeProfileMode(mode.id)}
                 className={`rounded-lg border px-3 py-3 text-left transition ${
                   selectedScenarioRun.profile_mode === mode.id
-                    ? "border-[var(--steel-accent)] bg-[var(--steel-soft)]"
+                    ? "border-[#6f809a] bg-[#1a2434]"
                     : "border-[var(--border)] bg-[#0f131a]"
                 }`}
               >
@@ -399,7 +399,7 @@ export default function Home() {
                 <ProgressMetric
                   label="Attack Pressure"
                   value={percent(runtimeState?.metrics?.attack_pressure ?? 0)}
-                  color="from-[#A32D2D] via-[#E24B4A] to-[#f3b3b1]"
+                  color="from-[#253247] via-[#3c4f6c] to-[#8ea2be]"
                 />
                 <ProgressMetric
                   label="Containment Pressure"
@@ -444,7 +444,7 @@ export default function Home() {
                       ? `Campaign stage ${campaignStage.stage_index + 1}/${CAMPAIGN_ALL_5.ordered_stages.length}: ${campaignStage.transition_label}`
                       : activeScenario?.expected_flow ?? "Live scenario topology playback"}
                   </p>
-                  <div className="mt-1 inline-flex rounded border border-[var(--steel-accent)] bg-[var(--steel-soft)] px-2 py-0.5 text-[10px] uppercase tracking-[0.12em] text-[#dbe6f7]">
+                  <div className="mt-1 inline-flex rounded border border-[#6f809a] bg-[#1a2434] px-2 py-0.5 text-[10px] uppercase tracking-[0.12em] text-[#dbe6f7]">
                     Scenario Profile: {activeModeLabel}
                   </div>
                 </div>
@@ -453,7 +453,7 @@ export default function Home() {
                   <button
                     type="button"
                     onClick={() => setIsPlaying((prev) => !prev)}
-                    className="rounded-md border border-[var(--steel-accent)] bg-[var(--steel-soft)] px-3 py-1 text-xs uppercase tracking-[0.12em] text-[#dde7f8]"
+                    className="rounded-md border border-[#6f809a] bg-[#1a2434] px-3 py-1 text-xs uppercase tracking-[0.12em] text-[#dde7f8]"
                   >
                     {isPlaying ? "Pause" : "Play"}
                   </button>
@@ -505,7 +505,7 @@ export default function Home() {
                       onClick={() => setSpeed(value)}
                       className={`rounded-md border px-2 py-1 text-[11px] uppercase tracking-[0.12em] ${
                         speed === value
-                          ? "border-[var(--steel-accent)] bg-[var(--steel-soft)] text-[#dde7f8]"
+                          ? "border-[#6f809a] bg-[#1a2434] text-[#dde7f8]"
                           : "border-[var(--border)] bg-[#0f131a] text-[var(--text-secondary)]"
                       }`}
                     >
@@ -532,7 +532,7 @@ export default function Home() {
                     <button
                       type="button"
                       onClick={() => setLogFilter(`node:${selectedNode.id}`)}
-                      className="rounded border border-[var(--steel-accent)] bg-[var(--steel-soft)] px-2 py-1 text-[10px] uppercase tracking-[0.12em] text-[#dde7f8]"
+                      className="rounded border border-[#6f809a] bg-[#1a2434] px-2 py-1 text-[10px] uppercase tracking-[0.12em] text-[#dde7f8]"
                     >
                       Filter Log to Node
                     </button>
@@ -598,7 +598,7 @@ export default function Home() {
                   <article
                     key={scenario.id}
                     className={`rounded-lg border p-3 ${
-                      selected ? "border-[var(--steel-accent)] bg-[var(--steel-soft)]" : "border-[var(--border)] bg-[#0f131a]"
+                      selected ? "border-[#6f809a] bg-[#1a2434]" : "border-[var(--border)] bg-[#0f131a]"
                     }`}
                   >
                     <div className="flex flex-wrap items-start justify-between gap-3">
@@ -610,13 +610,13 @@ export default function Home() {
                         <div className="mt-1 text-[11px] text-[#c4cedd]">Flow: {scenario.expected_flow}</div>
                       </div>
                       <div className="flex items-center gap-2">
-                        <span className="rounded border border-[var(--steel-accent)] bg-[var(--steel-soft)] px-2 py-1 text-[10px] uppercase tracking-[0.12em] text-[#dde7f8]">
+                        <span className="rounded border border-[#6f809a] bg-[#1a2434] px-2 py-1 text-[10px] uppercase tracking-[0.12em] text-[#dde7f8]">
                           Scenario
                         </span>
                         <button
                           type="button"
                           onClick={() => selectScenarioFromVault({ kind: "scenario", scenario_id: scenario.id })}
-                          className="rounded border border-[var(--steel-accent)] bg-[var(--steel-soft)] px-3 py-1 text-xs uppercase tracking-[0.12em] text-[#dde7f8]"
+                          className="rounded border border-[#6f809a] bg-[#1a2434] px-3 py-1 text-xs uppercase tracking-[0.12em] text-[#dde7f8]"
                         >
                           Open in Dashboard
                         </button>
@@ -629,7 +629,7 @@ export default function Home() {
               <article
                 className={`rounded-lg border p-3 ${
                   selectedScenarioRun.selection.kind === "campaign"
-                    ? "border-[var(--steel-accent)] bg-[var(--steel-soft)]"
+                    ? "border-[#6f809a] bg-[#1a2434]"
                     : "border-[var(--border)] bg-[#0f131a]"
                 }`}
               >
@@ -647,13 +647,13 @@ export default function Home() {
                     </ul>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="rounded border border-[var(--steel-accent)] bg-[var(--steel-soft)] px-2 py-1 text-[10px] uppercase tracking-[0.12em] text-[#dde7f8]">
+                    <span className="rounded border border-[#6f809a] bg-[#1a2434] px-2 py-1 text-[10px] uppercase tracking-[0.12em] text-[#dde7f8]">
                       Campaign
                     </span>
                     <button
                       type="button"
                       onClick={() => selectScenarioFromVault({ kind: "campaign", campaign_id: "campaign_all_5" })}
-                      className="rounded border border-[var(--steel-accent)] bg-[var(--steel-soft)] px-3 py-1 text-xs uppercase tracking-[0.12em] text-[#dde7f8]"
+                      className="rounded border border-[#6f809a] bg-[#1a2434] px-3 py-1 text-xs uppercase tracking-[0.12em] text-[#dde7f8]"
                     >
                       Open in Dashboard
                     </button>
@@ -670,7 +670,7 @@ export default function Home() {
             <p className="mt-2 text-sm text-[var(--text-secondary)]">
               Plain-language summary of what attack is active, how Aegis is defending, and why it matters.
             </p>
-            <div className="mt-2 inline-flex rounded border border-[var(--steel-accent)] bg-[var(--steel-soft)] px-2 py-0.5 text-[10px] uppercase tracking-[0.12em] text-[#dde7f8]">
+            <div className="mt-2 inline-flex rounded border border-[#6f809a] bg-[#1a2434] px-2 py-0.5 text-[10px] uppercase tracking-[0.12em] text-[#dde7f8]">
               Scenario Profile: {activeModeLabel}
             </div>
 
@@ -731,7 +731,7 @@ export default function Home() {
                 <span className="rounded border border-[var(--border)] px-2 py-0.5 text-[var(--text-secondary)]">none</span>
               ) : (
                 <>
-                  <span className="rounded border border-[var(--steel-accent)] bg-[var(--steel-soft)] px-2 py-0.5 text-[#dde7f8]">
+                  <span className="rounded border border-[#6f809a] bg-[#1a2434] px-2 py-0.5 text-[#dde7f8]">
                     {logFilter.replace("node:", "node ")}
                   </span>
                   <button
