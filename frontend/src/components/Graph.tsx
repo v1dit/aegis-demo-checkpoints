@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { Core, StylesheetJson } from 'cytoscape';
 import type { ReplayEvent, ReplayTopology } from '../lib/api';
+import { classifyAction, formatIncident, type FormattedIncident } from '../lib/incidents';
 
 type GraphProps = {
   events?: ReplayEvent[];
@@ -29,6 +30,9 @@ type NodeInsight = {
   defenses: number;
   lastAction: string;
   lastActor: 'RED' | 'BLUE' | 'NONE';
+  lastIncident: FormattedIncident | null;
+  latestAttack: FormattedIncident | null;
+  latestDefense: FormattedIncident | null;
 };
 
 type BaseNode = {
@@ -110,10 +114,19 @@ function buildInsight(node: BaseNode): NodeInsight {
     defenses: 0,
     lastAction: 'Awaiting telemetry',
     lastActor: 'NONE',
+    lastIncident: null,
+    latestAttack: null,
+    latestDefense: null,
   };
 }
 
 function suggestionForInsight(insight: NodeInsight): string {
+  const riskScore = insight.lastIncident?.riskScore ?? 0;
+
+  if (riskScore >= 80) {
+    return 'Trigger immediate isolation, rotate exposed credentials, and launch host forensics before reconnect.';
+  }
+
   if (insight.attacks > insight.defenses + 2) {
     return 'Escalate isolation and rotate credentials for this asset path.';
   }
@@ -121,17 +134,6 @@ function suggestionForInsight(insight: NodeInsight): string {
     return 'Defense lead detected. Continue containment and monitor lateral links.';
   }
   return 'Balanced activity. Keep packet capture enabled for anomaly drift.';
-}
-
-function classifyAction(action: string): string {
-  const normalized = action.toLowerCase();
-  if (normalized.includes('exfil') || normalized.includes('dump')) return 'Data Exfiltration';
-  if (normalized.includes('lateral') || normalized.includes('pivot')) return 'Lateral Movement';
-  if (normalized.includes('phish') || normalized.includes('credential')) return 'Credential Abuse';
-  if (normalized.includes('isolate') || normalized.includes('block') || normalized.includes('detect')) {
-    return 'Defensive Response';
-  }
-  return 'Access/Execution';
 }
 
 export default function Graph({ events = [], topology = null, className }: GraphProps) {
@@ -180,6 +182,7 @@ export default function Graph({ events = [], topology = null, className }: Graph
 
   const applyReplayEvent = (event: ReplayEvent) => {
     const nextStatus: NodeStatus = event.actor === 'RED' ? 'compromised' : 'contained';
+    const incident = formatIncident(event);
 
     const existing = insightsRef.current[event.target] ?? buildInsight({ id: event.target });
     const nextInsight: NodeInsight = {
@@ -188,6 +191,9 @@ export default function Graph({ events = [], topology = null, className }: Graph
       defenses: existing.defenses + (event.actor === 'BLUE' ? 1 : 0),
       lastAction: event.action,
       lastActor: event.actor,
+      lastIncident: incident,
+      latestAttack: event.actor === 'RED' ? incident : existing.latestAttack,
+      latestDefense: event.actor === 'BLUE' ? incident : existing.latestDefense,
       severity: clamp(
         existing.severity + (event.actor === 'RED' ? 8 : -6),
         8,
@@ -411,6 +417,9 @@ export default function Graph({ events = [], topology = null, className }: Graph
               defenses: 0,
               lastAction: 'Awaiting telemetry',
               lastActor: 'NONE',
+              lastIncident: null,
+              latestAttack: null,
+              latestDefense: null,
             },
           ]),
         ) as Record<string, NodeInsight>;
@@ -508,7 +517,28 @@ export default function Graph({ events = [], topology = null, className }: Graph
                   <InfoRow label="Attack actions" value={selectedNode.attacks} />
                   <InfoRow label="Defense actions" value={selectedNode.defenses} />
                   <InfoRow label="Latest signal" value={classifyAction(selectedNode.lastAction)} />
+
+                  <div className="rounded-md border border-red-500/35 bg-red-950/20 p-2 text-[11px] leading-relaxed text-red-100">
+                    <div className="mb-1 uppercase tracking-[0.12em] text-red-200/90">What Happened</div>
+                    {selectedNode.lastIncident?.narrative ?? 'No active incident narrative yet for this node.'}
+                  </div>
+
+                  <div className="rounded-md border border-orange-500/30 bg-orange-950/20 p-2 text-[11px] leading-relaxed text-orange-100">
+                    <div className="mb-1 uppercase tracking-[0.12em] text-orange-200/90">What&apos;s Wrong / Impact</div>
+                    {selectedNode.latestAttack
+                      ? `${selectedNode.latestAttack.riskLevel} risk at ${selectedNode.latestAttack.riskScore}% centered on ${normalizeLabel(selectedNode.id)}. The latest offensive move indicates elevated exposure for this asset path.`
+                      : 'No confirmed offensive pressure is active on this node right now.'}
+                  </div>
+
                   <div className="rounded-md border border-cyan-500/30 bg-cyan-950/20 p-2 text-[11px] leading-relaxed text-cyan-100">
+                    <div className="mb-1 uppercase tracking-[0.12em] text-cyan-200/90">What AEGIS Is Doing</div>
+                    {selectedNode.latestDefense
+                      ? selectedNode.latestDefense.narrative
+                      : 'AEGIS is currently monitoring this node and waiting for actionable defender signals.'}
+                  </div>
+
+                  <div className="rounded-md border border-emerald-500/30 bg-emerald-950/20 p-2 text-[11px] leading-relaxed text-emerald-100">
+                    <div className="mb-1 uppercase tracking-[0.12em] text-emerald-200/90">Recommended Next Action</div>
                     {suggestionForInsight(selectedNode)}
                   </div>
                 </div>

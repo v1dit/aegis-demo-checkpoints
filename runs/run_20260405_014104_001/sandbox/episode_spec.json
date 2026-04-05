@@ -1,0 +1,21 @@
+{
+  "name": "demo",
+  "seed": null,
+  "horizon": 120,
+  "nodes": [
+    {
+      "id": "host-01",
+      "severity": "high",
+      "role": null
+    }
+  ],
+  "vulnerabilities": [],
+  "red_objectives": [
+    {
+      "target_node_id": "host-01",
+      "objective": "exfiltrate",
+      "priority": 10
+    }
+  ],
+  "defender_mode": "aegis"
+}

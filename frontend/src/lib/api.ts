@@ -33,6 +33,82 @@ export type ReplayListItem = {
   raw: unknown;
 };
 
+export type SandboxRunLifecycle =
+  | "queued"
+  | "running"
+  | "completed"
+  | "failed"
+  | "cancelled";
+
+export type EpisodeNode = {
+  id: string;
+  role?: string;
+  os?: string;
+};
+
+export type EpisodeVulnerability = {
+  id: string;
+  node_id: string;
+  severity?: "low" | "medium" | "high";
+};
+
+export type RedObjective = {
+  id: string;
+  type: string;
+  target: string;
+};
+
+export type EpisodeSpec = {
+  name: string;
+  seed?: number;
+  horizon: number;
+  nodes: EpisodeNode[];
+  vulnerabilities: EpisodeVulnerability[];
+  red_objectives: RedObjective[];
+  defender_mode: "aegis";
+};
+
+export type SandboxRunCreateResponse = {
+  run_id: string;
+  status: SandboxRunLifecycle;
+  stream_url: string;
+};
+
+export type SandboxRunStatus = {
+  run_id: string;
+  status: SandboxRunLifecycle;
+  started_at?: string | null;
+  ended_at?: string | null;
+  kpis?: Record<string, number | string | null> | null;
+  error?: {
+    code?: string;
+    message?: string;
+    details?: unknown[];
+  } | null;
+};
+
+export type SandboxCatalogResponse = {
+  node_templates: Array<{ role: string; supported_os?: string[] }>;
+  vulnerability_templates: Array<{ id: string; severity?: string }>;
+  objective_templates: Array<{ type: string }>;
+};
+
+export type LiveStreamMessage =
+  | { type: "action"; payload: Record<string, unknown> }
+  | { type: "metric"; payload: Record<string, unknown> }
+  | { type: "marker"; payload: Record<string, unknown> }
+  | { type: string; payload: unknown };
+
+export type BackendHealthStatus = {
+  ok: boolean;
+  endpoint: "/health" | "/healthz" | null;
+  baseUrl: string;
+  url: string | null;
+  httpStatus: number | null;
+  payload: unknown;
+  error: string | null;
+};
+
 type StreamHandlers = {
   onEvent: (event: ReplayEvent) => void;
   onOpen?: () => void;
@@ -42,6 +118,16 @@ type StreamHandlers = {
 
 type StreamConnection = {
   close: () => void;
+};
+
+type LiveRunStreamHandlers = {
+  onAction?: (event: ReplayEvent, payload: Record<string, unknown>) => void;
+  onMetric?: (payload: Record<string, unknown>) => void;
+  onMarker?: (payload: Record<string, unknown>) => void;
+  onUnknownType?: (messageType: string, payload: unknown) => void;
+  onOpen?: () => void;
+  onError?: (error: Event | Error) => void;
+  onClose?: (event: CloseEvent) => void;
 };
 
 type EventFetchOptions = {
@@ -63,6 +149,11 @@ const DEFAULT_REPLAY_LIST_PATH = "/replay/list";
 const DEFAULT_REPLAY_BUNDLE_PATH_TEMPLATE = "/replay/{id}/bundle";
 const DEFAULT_WS_REPLAY_PATH_TEMPLATE = "/stream/replay/{id}";
 const DEFAULT_WS_LIVE_PATH_TEMPLATE = "/stream/live/{session_id}";
+const DEFAULT_WS_LIVE_RUN_PATH_TEMPLATE = "/stream/live/{run_id}";
+const DEFAULT_SANDBOX_RUNS_PATH = "/sandbox/runs";
+const DEFAULT_SANDBOX_RUN_STATUS_PATH_TEMPLATE = "/sandbox/runs/{run_id}";
+const DEFAULT_SANDBOX_RUN_CANCEL_PATH_TEMPLATE = "/sandbox/runs/{run_id}/cancel";
+const DEFAULT_SANDBOX_CATALOG_PATH = "/sandbox/catalog";
 const LOCAL_REPLAY_LIST_PATH = "/api/local/replay/list";
 const LOCAL_REPLAY_BUNDLE_PATH_TEMPLATE = "/api/local/replay/{id}/bundle";
 
@@ -107,6 +198,8 @@ function toActor(value: unknown): Actor | null {
 
   if (
     normalized === "RED" ||
+    normalized === "RED-TEAM" ||
+    normalized === "REDTEAM" ||
     normalized === "ATTACKER" ||
     normalized === "ADVERSARY" ||
     normalized === "OFFENSE" ||
@@ -117,6 +210,8 @@ function toActor(value: unknown): Actor | null {
 
   if (
     normalized === "BLUE" ||
+    normalized === "BLUE-TEAM" ||
+    normalized === "BLUETEAM" ||
     normalized === "DEFENDER" ||
     normalized === "DEFENCE" ||
     normalized === "DEFENSE" ||
@@ -218,6 +313,39 @@ function resolveLiveStreamUrl(sessionId: string): string {
     process.env.NEXT_PUBLIC_EVENTS_WS_LIVE_PATH_TEMPLATE ??
     DEFAULT_WS_LIVE_PATH_TEMPLATE;
   return resolveWsUrl(replacePathParam(template, "session_id", sessionId));
+}
+
+function resolveLiveRunStreamUrl(runId: string): string {
+  const template =
+    process.env.NEXT_PUBLIC_SANDBOX_EVENTS_WS_LIVE_PATH_TEMPLATE ??
+    process.env.NEXT_PUBLIC_EVENTS_WS_LIVE_RUN_PATH_TEMPLATE ??
+    DEFAULT_WS_LIVE_RUN_PATH_TEMPLATE;
+  return resolveWsUrl(replacePathParam(template, "run_id", runId));
+}
+
+function resolveSandboxRunsUrl(): string {
+  const configured = process.env.NEXT_PUBLIC_SANDBOX_RUNS_PATH ?? DEFAULT_SANDBOX_RUNS_PATH;
+  return resolveUrl(configured);
+}
+
+function resolveSandboxRunStatusUrl(runId: string): string {
+  const template =
+    process.env.NEXT_PUBLIC_SANDBOX_RUN_STATUS_PATH_TEMPLATE ??
+    DEFAULT_SANDBOX_RUN_STATUS_PATH_TEMPLATE;
+  return resolveUrl(replacePathParam(template, "run_id", runId));
+}
+
+function resolveSandboxRunCancelUrl(runId: string): string {
+  const template =
+    process.env.NEXT_PUBLIC_SANDBOX_RUN_CANCEL_PATH_TEMPLATE ??
+    DEFAULT_SANDBOX_RUN_CANCEL_PATH_TEMPLATE;
+  return resolveUrl(replacePathParam(template, "run_id", runId));
+}
+
+function resolveSandboxCatalogUrl(): string {
+  const configured =
+    process.env.NEXT_PUBLIC_SANDBOX_CATALOG_PATH ?? DEFAULT_SANDBOX_CATALOG_PATH;
+  return resolveUrl(configured);
 }
 
 function resolveDefaultEventsStreamUrl(): string {
@@ -561,6 +689,184 @@ async function fetchUnknownJson(url: string, signal?: AbortSignal): Promise<unkn
   return (await response.json()) as unknown;
 }
 
+function parseErrorMessage(payload: unknown): string | null {
+  const record = asRecord(payload);
+  if (!record) return null;
+
+  const direct = toNonEmptyString(record.message);
+  if (direct) return direct;
+
+  const errorRecord = asRecord(record.error);
+  if (!errorRecord) return null;
+
+  return (
+    toNonEmptyString(errorRecord.message) ??
+    toNonEmptyString(errorRecord.code) ??
+    null
+  );
+}
+
+async function readErrorMessage(response: Response, fallback: string): Promise<string> {
+  const contentType = response.headers.get("content-type")?.toLowerCase() ?? "";
+  if (contentType.includes("application/json")) {
+    try {
+      const payload = (await response.json()) as unknown;
+      const parsed = parseErrorMessage(payload);
+      if (parsed) return parsed;
+    } catch {
+      return fallback;
+    }
+  }
+  return fallback;
+}
+
+async function probeHealthEndpoint(
+  endpoint: "/health" | "/healthz",
+  signal?: AbortSignal,
+): Promise<BackendHealthStatus> {
+  const url = resolveUrl(endpoint);
+
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      headers: { Accept: "application/json,text/plain" },
+      cache: "no-store",
+      signal,
+    });
+
+    const textBody = await response.text();
+    let payload: unknown = textBody;
+    if (textBody.trim().startsWith("{") || textBody.trim().startsWith("[")) {
+      try {
+        payload = JSON.parse(textBody) as unknown;
+      } catch {
+        payload = textBody;
+      }
+    }
+
+    return {
+      ok: response.ok,
+      endpoint,
+      baseUrl: resolveApiBaseUrl(),
+      url,
+      httpStatus: response.status,
+      payload,
+      error: response.ok ? null : `Health probe failed (${response.status})`,
+    };
+  } catch (error) {
+    return {
+      ok: false,
+      endpoint,
+      baseUrl: resolveApiBaseUrl(),
+      url,
+      httpStatus: null,
+      payload: null,
+      error: error instanceof Error ? error.message : "Health probe request failed",
+    };
+  }
+}
+
+function parseSandboxRunCreate(payload: unknown): SandboxRunCreateResponse {
+  const record = asRecord(payload);
+  if (!record) {
+    throw new Error("Invalid sandbox create response");
+  }
+
+  const runId = toNonEmptyString(record.run_id);
+  const status = toNonEmptyString(record.status) as SandboxRunLifecycle | null;
+  const streamUrl = toNonEmptyString(record.stream_url);
+
+  if (!runId || !status || !streamUrl) {
+    throw new Error("Sandbox create response missing required fields");
+  }
+
+  return { run_id: runId, status, stream_url: streamUrl };
+}
+
+function parseSandboxRunStatus(payload: unknown): SandboxRunStatus {
+  const record = asRecord(payload);
+  if (!record) {
+    throw new Error("Invalid sandbox status response");
+  }
+
+  const runId = toNonEmptyString(record.run_id);
+  const status = toNonEmptyString(record.status) as SandboxRunLifecycle | null;
+  if (!runId || !status) {
+    throw new Error("Sandbox status response missing required fields");
+  }
+
+  const errorRecord = asRecord(record.error);
+  const kpisRecord = asRecord(record.kpis);
+
+  return {
+    run_id: runId,
+    status,
+    started_at: toNonEmptyString(record.started_at),
+    ended_at: toNonEmptyString(record.ended_at),
+    kpis: kpisRecord as SandboxRunStatus["kpis"],
+    error: errorRecord
+      ? {
+          code: toNonEmptyString(errorRecord.code) ?? undefined,
+          message: toNonEmptyString(errorRecord.message) ?? undefined,
+          details: Array.isArray(errorRecord.details) ? errorRecord.details : undefined,
+        }
+      : null,
+  };
+}
+
+function parseSandboxCatalog(payload: unknown): SandboxCatalogResponse {
+  const record = asRecord(payload);
+  if (!record) {
+    throw new Error("Invalid sandbox catalog response");
+  }
+
+  const nodeTemplatesRaw = Array.isArray(record.node_templates) ? record.node_templates : [];
+  const vulnerabilityTemplatesRaw = Array.isArray(record.vulnerability_templates)
+    ? record.vulnerability_templates
+    : [];
+  const objectiveTemplatesRaw = Array.isArray(record.objective_templates)
+    ? record.objective_templates
+    : [];
+
+  const nodeTemplates: SandboxCatalogResponse["node_templates"] = [];
+  for (const item of nodeTemplatesRaw) {
+    const template = asRecord(item);
+    const role = toNonEmptyString(template?.role);
+    if (!role) continue;
+    const supportedOs = Array.isArray(template?.supported_os)
+      ? template.supported_os.filter((entry): entry is string => typeof entry === "string")
+      : undefined;
+    nodeTemplates.push(
+      supportedOs ? { role, supported_os: supportedOs } : { role },
+    );
+  }
+
+  const vulnerabilityTemplates: SandboxCatalogResponse["vulnerability_templates"] = [];
+  for (const item of vulnerabilityTemplatesRaw) {
+    const template = asRecord(item);
+    const id = toNonEmptyString(template?.id);
+    if (!id) continue;
+    vulnerabilityTemplates.push({
+      id,
+      severity: toNonEmptyString(template?.severity) ?? undefined,
+    });
+  }
+
+  const objectiveTemplates: SandboxCatalogResponse["objective_templates"] = [];
+  for (const item of objectiveTemplatesRaw) {
+    const template = asRecord(item);
+    const type = toNonEmptyString(template?.type);
+    if (!type) continue;
+    objectiveTemplates.push({ type });
+  }
+
+  return {
+    node_templates: nodeTemplates,
+    vulnerability_templates: vulnerabilityTemplates,
+    objective_templates: objectiveTemplates,
+  };
+}
+
 async function fetchEventsFromPointer(
   pointer: string,
   signal?: AbortSignal,
@@ -606,6 +912,21 @@ export async function fetchReplayList(signal?: AbortSignal): Promise<ReplayListI
     const payload = await fetchUnknownJson(resolveLocalReplayListUrl(), signal);
     return parseReplayList(payload);
   }
+}
+
+export async function checkBackendHealth(
+  signal?: AbortSignal,
+): Promise<BackendHealthStatus> {
+  const health = await probeHealthEndpoint("/health", signal);
+  if (health.ok) return health;
+
+  const healthz = await probeHealthEndpoint("/healthz", signal);
+  if (healthz.ok) return healthz;
+
+  return {
+    ...healthz,
+    error: [health.error, healthz.error].filter(Boolean).join("; ") || "Backend health probe failed",
+  };
 }
 
 export function pickPreferredReplayId(list: ReplayListItem[]): string | null {
@@ -723,6 +1044,89 @@ export async function fetchReplayPayload(
   };
 }
 
+export async function fetchSandboxCatalog(signal?: AbortSignal): Promise<SandboxCatalogResponse> {
+  const payload = await fetchUnknownJson(resolveSandboxCatalogUrl(), signal);
+  return parseSandboxCatalog(payload);
+}
+
+export async function createSandboxRun(
+  episodeSpec: EpisodeSpec,
+  signal?: AbortSignal,
+): Promise<SandboxRunCreateResponse> {
+  const response = await fetch(resolveSandboxRunsUrl(), {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify(episodeSpec),
+    signal,
+  });
+
+  if (!response.ok) {
+    throw new Error(
+      await readErrorMessage(response, `Sandbox run creation failed (${response.status})`),
+    );
+  }
+
+  const payload = (await response.json()) as unknown;
+  return parseSandboxRunCreate(payload);
+}
+
+export async function fetchSandboxRunStatus(
+  runId: string,
+  signal?: AbortSignal,
+): Promise<SandboxRunStatus> {
+  const response = await fetch(resolveSandboxRunStatusUrl(runId), {
+    method: "GET",
+    headers: { Accept: "application/json" },
+    cache: "no-store",
+    signal,
+  });
+
+  if (!response.ok) {
+    throw new Error(await readErrorMessage(response, `Sandbox status failed (${response.status})`));
+  }
+
+  const payload = (await response.json()) as unknown;
+  return parseSandboxRunStatus(payload);
+}
+
+export async function cancelSandboxRun(
+  runId: string,
+  signal?: AbortSignal,
+): Promise<SandboxRunStatus> {
+  const response = await fetch(resolveSandboxRunCancelUrl(runId), {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: "{}",
+    signal,
+  });
+
+  if (!response.ok) {
+    throw new Error(
+      await readErrorMessage(response, `Sandbox cancel request failed (${response.status})`),
+    );
+  }
+
+  const payload = (await response.json()) as unknown;
+  return parseSandboxRunStatus(payload);
+}
+
+function toLiveRunMessage(payload: unknown): LiveStreamMessage | null {
+  const message = asRecord(payload);
+  if (!message) return null;
+
+  const type = toNonEmptyString(message.type);
+  if (!type) return null;
+
+  const rawPayload = message.payload;
+  return { type, payload: rawPayload } as LiveStreamMessage;
+}
+
 function connectStream(url: string, handlers: StreamHandlers): StreamConnection {
   if (typeof window === "undefined" || typeof WebSocket === "undefined") {
     handlers.onError?.(new Error("WebSocket is not available"));
@@ -786,6 +1190,79 @@ export function connectLiveStream(
   handlers: StreamHandlers,
 ): StreamConnection {
   return connectStream(resolveLiveStreamUrl(sessionId), handlers);
+}
+
+export function connectLiveRunStream(
+  runId: string,
+  handlers: LiveRunStreamHandlers,
+): StreamConnection {
+  if (typeof window === "undefined" || typeof WebSocket === "undefined") {
+    handlers.onError?.(new Error("WebSocket is not available"));
+    return { close: () => undefined };
+  }
+
+  const socket = new WebSocket(resolveLiveRunStreamUrl(runId));
+  let fallbackStep = 1;
+
+  socket.onopen = () => {
+    handlers.onOpen?.();
+  };
+
+  socket.onmessage = (message) => {
+    if (typeof message.data !== "string") return;
+
+    let parsedPayload: unknown;
+    try {
+      parsedPayload = JSON.parse(message.data);
+    } catch {
+      return;
+    }
+
+    const liveMessage = toLiveRunMessage(parsedPayload);
+    if (!liveMessage) return;
+
+    const payloadRecord = asRecord(liveMessage.payload);
+
+    if (liveMessage.type === "action" && payloadRecord) {
+      const event = normalizeEvent(payloadRecord, fallbackStep);
+      fallbackStep += 1;
+      if (event) {
+        handlers.onAction?.(event, payloadRecord);
+      }
+      return;
+    }
+
+    if (liveMessage.type === "metric" && payloadRecord) {
+      handlers.onMetric?.(payloadRecord);
+      return;
+    }
+
+    if (liveMessage.type === "marker" && payloadRecord) {
+      handlers.onMarker?.(payloadRecord);
+      return;
+    }
+
+    handlers.onUnknownType?.(liveMessage.type, liveMessage.payload);
+  };
+
+  socket.onerror = (event) => {
+    handlers.onError?.(event);
+  };
+
+  socket.onclose = (event) => {
+    handlers.onClose?.(event);
+  };
+
+  return {
+    close: () => {
+      if (
+        socket.readyState === WebSocket.OPEN ||
+        socket.readyState === WebSocket.CONNECTING
+      ) {
+        socket.close();
+      }
+    },
+  };
 }
 
 export function connectEventsStream(handlers: StreamHandlers): StreamConnection {

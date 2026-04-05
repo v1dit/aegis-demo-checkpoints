@@ -1,25 +1,52 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type Dispatch,
+  type ReactNode,
+  type SetStateAction,
+} from "react";
 import Graph from "../components/Graph";
 import {
+  cancelSandboxRun,
+  connectLiveRunStream,
   connectEventsStream,
   connectLiveStream,
   connectReplayStream,
+  createSandboxRun,
+  fetchSandboxCatalog,
+  fetchSandboxRunStatus,
   fetchReplayPayload,
   fetchReplayList,
   normalizeEvent,
   pickReplayIdForLane,
   pickPreferredReplayId,
+  type EpisodeSpec,
+  type SandboxCatalogResponse,
+  type SandboxRunLifecycle,
+  type SandboxRunStatus,
   type ReplayEvent,
   type ReplayListItem,
   type ReplayTopology,
   type ScenarioLane,
 } from "../lib/api";
+import {
+  classifyAction,
+  formatIncident,
+  type AlertClassification,
+  type FormattedIncident,
+  type RiskLevel,
+} from "../lib/incidents";
 import { events as mockEvents } from "../lib/mockEvents";
 
 const REPLAY_INTERVAL_MS = 800;
 const WS_CONNECT_TIMEOUT_MS = 2500;
+const SANDBOX_STATUS_POLL_MS = 3000;
+
+type DashboardLane = ScenarioLane | "sandbox";
 
 type DataSourceStatus =
   | { mode: "connecting"; label: string }
@@ -28,13 +55,6 @@ type DataSourceStatus =
   | { mode: "mock"; label: string };
 
 type SlideId = "command" | "episodes" | "mission";
-
-type AlertClassification =
-  | "Initial Access"
-  | "Execution"
-  | "Lateral Movement"
-  | "Data Exfiltration"
-  | "Defense Evasion";
 
 type AlertDatum = {
   label: AlertClassification;
@@ -65,20 +85,20 @@ type EpisodeCard = {
   status: "ACTIVE" | "READY" | "ARCHIVED";
 };
 
-type RiskLevel = "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
+type ReplaySpeed = 1 | 2 | 5 | 10;
 
-type FormattedIncident = {
-  step: number;
-  actor: ReplayEvent["actor"];
-  target: string;
-  action: string;
-  narrative: string;
-  riskLevel: RiskLevel;
-  riskScore: number;
-};
+type SandboxUiState =
+  | "idle"
+  | "validating"
+  | "submitting"
+  | "queued"
+  | "running"
+  | "completed"
+  | "failed"
+  | "cancelled";
 
 const SCENARIO_LANES: Array<{
-  id: ScenarioLane;
+  id: DashboardLane;
   label: string;
   summary: string;
 }> = [
@@ -96,6 +116,11 @@ const SCENARIO_LANES: Array<{
     id: "enterprise",
     label: "Enterprise Hard Mode",
     summary: "Identity + SaaS trust paths with higher complexity.",
+  },
+  {
+    id: "sandbox",
+    label: "Sandbox Live",
+    summary: "Build and run a custom live episode against the deployed model backend.",
   },
 ];
 
@@ -139,39 +164,6 @@ function baselineOnly(events: ReplayEvent[]): ReplayEvent[] {
   return redEvents.map((event, index) => ({ ...event, step: index + 1 }));
 }
 
-function classifyAction(action: string): AlertClassification {
-  const value = action.toLowerCase();
-
-  if (
-    value.includes("phish") ||
-    value.includes("credential") ||
-    value.includes("scan") ||
-    value.includes("login") ||
-    value.includes("exploit")
-  ) {
-    return "Initial Access";
-  }
-
-  if (value.includes("lateral") || value.includes("pivot") || value.includes("movement")) {
-    return "Lateral Movement";
-  }
-
-  if (value.includes("exfil") || value.includes("dump") || value.includes("steal")) {
-    return "Data Exfiltration";
-  }
-
-  if (
-    value.includes("evade") ||
-    value.includes("disable") ||
-    value.includes("obfus") ||
-    value.includes("persist")
-  ) {
-    return "Defense Evasion";
-  }
-
-  return "Execution";
-}
-
 function formatReplayDate(raw: string | undefined): string {
   if (!raw) return "Unknown timestamp";
   const parsed = new Date(raw);
@@ -191,101 +183,95 @@ function replayStatus(index: number): EpisodeCard["status"] {
   return "ARCHIVED";
 }
 
-function clamp(value: number, min: number, max: number): number {
-  return Math.max(min, Math.min(max, value));
+const SANDBOX_TERMINAL_STATUSES: SandboxRunLifecycle[] = [
+  "completed",
+  "failed",
+  "cancelled",
+];
+
+function isSandboxTerminal(status: SandboxRunLifecycle | null | undefined): boolean {
+  if (!status) return false;
+  return SANDBOX_TERMINAL_STATUSES.includes(status);
 }
 
-function humanizeAction(action: string): string {
-  return action
-    .replaceAll("_", " ")
-    .replaceAll("-", " ")
-    .trim()
-    .replace(/\s+/g, " ")
-    .toLowerCase();
+function asSandboxUiState(status: SandboxRunLifecycle): SandboxUiState {
+  return status;
 }
 
-function scoreRisk(event: ReplayEvent): number {
-  const action = event.action.toLowerCase();
-  const target = event.target.toLowerCase();
-  let score = event.actor === "RED" ? 50 : 30;
-
-  if (action.includes("scan") || action.includes("enumerate") || action.includes("recon")) score += 10;
-  if (action.includes("exploit") || action.includes("execute")) score += 16;
-  if (action.includes("credential") || action.includes("phish")) score += 20;
-  if (action.includes("lateral") || action.includes("pivot")) score += 18;
-  if (action.includes("traffic_spike") || action.includes("anomaly")) score += 12;
-  if (action.includes("exfil") || action.includes("dump") || action.includes("ransom")) score += 28;
-  if (action.includes("isolate") || action.includes("block") || action.includes("quarantine")) score -= 14;
-  if (action.includes("step_marker")) score -= 20;
-
-  if (target.includes("engine") || target.includes("identity") || target.includes("vault")) score += 16;
-  if (target.includes("db") || target.includes("core") || target.includes("gateway")) score += 12;
-  if (target.startsWith("host-0")) score += 6;
-
-  return clamp(score, 0, 100);
-}
-
-function riskLevelFromScore(score: number): RiskLevel {
-  if (score <= 29) return "LOW";
-  if (score <= 59) return "MEDIUM";
-  if (score <= 79) return "HIGH";
-  return "CRITICAL";
-}
-
-function buildNarrative(event: ReplayEvent, riskLevel: RiskLevel, riskScore: number): string {
-  const action = event.action.toLowerCase();
-  const actionLabel = humanizeAction(event.action);
-  const actorLabel = event.actor === "RED" ? "Red-team" : "Blue-team";
-  const targetLabel = event.target;
-
-  if (action.includes("traffic_spike")) {
-    return `${actorLabel} telemetry detected abnormal traffic on ${targetLabel}, indicating possible lateral movement pressure. This event is assessed as ${riskLevel} risk at ${riskScore}%.`;
-  }
-
-  if (action.includes("scan")) {
-    return `${actorLabel} reconnaissance scanned ${targetLabel} to map exposed services and entry paths. This event is assessed as ${riskLevel} risk at ${riskScore}%.`;
-  }
-
-  if (action.includes("enumerate")) {
-    return `${actorLabel} service enumeration profiled ${targetLabel} to identify exploitable interfaces. This event is assessed as ${riskLevel} risk at ${riskScore}%.`;
-  }
-
-  if (action.includes("isolate")) {
-    return `${actorLabel} containment isolated ${targetLabel} from connected systems to limit adversary spread. This event is assessed as ${riskLevel} risk at ${riskScore}%.`;
-  }
-
-  if (action.includes("monitor")) {
-    return `${actorLabel} monitoring intensified observation on ${targetLabel} after suspicious signals were detected. This event is assessed as ${riskLevel} risk at ${riskScore}%.`;
-  }
-
-  if (action.includes("step_marker")) {
-    return `The simulator recorded a campaign checkpoint at ${targetLabel} to preserve the current attack-defense state. This point-in-time signal is assessed as ${riskLevel} risk at ${riskScore}%.`;
-  }
-
-  return `${actorLabel} executed ${actionLabel} against ${targetLabel} as part of the active engagement sequence. This event is assessed as ${riskLevel} risk at ${riskScore}%.`;
-}
-
-function formatIncident(event: ReplayEvent): FormattedIncident {
-  const riskScore = scoreRisk(event);
-  const riskLevel = riskLevelFromScore(riskScore);
-
+function createDefaultEpisodeSpec(): EpisodeSpec {
   return {
-    step: event.step,
-    actor: event.actor,
-    target: event.target,
-    action: event.action,
-    narrative: buildNarrative(event, riskLevel, riskScore),
-    riskLevel,
-    riskScore,
+    name: "Live Sandbox Drill",
+    seed: 4242,
+    horizon: 120,
+    nodes: [
+      { id: "workstation-1", role: "endpoint", os: "windows" },
+      { id: "db-1", role: "database", os: "linux" },
+    ],
+    vulnerabilities: [{ id: "cve-2025-10001", node_id: "workstation-1", severity: "high" }],
+    red_objectives: [{ id: "obj-exfiltrate-db", type: "data_exfiltration", target: "db-1" }],
+    defender_mode: "aegis",
   };
 }
+
+function validateEpisodeSpec(spec: EpisodeSpec): string[] {
+  const errors: string[] = [];
+
+  if (!spec.name.trim()) errors.push("Episode name is required.");
+  if (!Number.isFinite(spec.horizon) || spec.horizon < 1 || spec.horizon > 10000) {
+    errors.push("Horizon must be between 1 and 10,000.");
+  }
+
+  if (!Array.isArray(spec.nodes) || spec.nodes.length < 1) {
+    errors.push("At least one node is required.");
+  }
+
+  if (!Array.isArray(spec.red_objectives) || spec.red_objectives.length < 1) {
+    errors.push("At least one red objective is required.");
+  }
+
+  const nodeIds = new Set<string>();
+  for (const node of spec.nodes) {
+    if (!node.id.trim()) {
+      errors.push("Each node needs an id.");
+      continue;
+    }
+    if (nodeIds.has(node.id)) {
+      errors.push(`Duplicate node id: ${node.id}`);
+    }
+    nodeIds.add(node.id);
+  }
+
+  for (const vuln of spec.vulnerabilities) {
+    if (!vuln.id.trim()) errors.push("Each vulnerability needs an id.");
+    if (!nodeIds.has(vuln.node_id)) {
+      errors.push(`Vulnerability node reference is invalid: ${vuln.node_id}`);
+    }
+  }
+
+  for (const objective of spec.red_objectives) {
+    if (!objective.id.trim()) errors.push("Each objective needs an id.");
+    if (!objective.type.trim()) errors.push("Each objective needs a type.");
+    if (!nodeIds.has(objective.target)) {
+      errors.push(`Objective target is invalid: ${objective.target}`);
+    }
+  }
+
+  if (spec.defender_mode !== "aegis") {
+    errors.push('Defender mode must be "aegis".');
+  }
+
+  return errors;
+}
+
 
 export default function Home() {
   const [log, setLog] = useState<ReplayEvent[]>([]);
   const [replayEvents, setReplayEvents] = useState<ReplayEvent[]>([]);
   const [graphTopology, setGraphTopology] = useState<ReplayTopology | null>(null);
   const [index, setIndex] = useState(0);
-  const [selectedLane, setSelectedLane] = useState<ScenarioLane>("current");
+  const [isReplayPlaying, setIsReplayPlaying] = useState(true);
+  const [replaySpeed, setReplaySpeed] = useState<ReplaySpeed>(1);
+  const [selectedLane, setSelectedLane] = useState<DashboardLane>("current");
   const [selectedReplayId, setSelectedReplayId] = useState<string | null>(null);
   const [replayCatalog, setReplayCatalog] = useState<ReplayListItem[]>([]);
   const [activeSlide, setActiveSlide] = useState<SlideId>("command");
@@ -293,6 +279,18 @@ export default function Home() {
     mode: "connecting",
     label: "CONNECTING",
   });
+  const [globalNotice, setGlobalNotice] = useState<string | null>(null);
+
+  const [sandboxForm, setSandboxForm] = useState<EpisodeSpec>(createDefaultEpisodeSpec);
+  const [sandboxCatalog, setSandboxCatalog] = useState<SandboxCatalogResponse | null>(null);
+  const [sandboxCatalogStatus, setSandboxCatalogStatus] = useState<"idle" | "loading" | "ready" | "error">("idle");
+  const [sandboxFieldErrors, setSandboxFieldErrors] = useState<string[]>([]);
+  const [sandboxUiState, setSandboxUiState] = useState<SandboxUiState>("idle");
+  const [sandboxRunId, setSandboxRunId] = useState<string | null>(null);
+  const [sandboxStreamUrl, setSandboxStreamUrl] = useState<string | null>(null);
+  const [sandboxStatus, setSandboxStatus] = useState<SandboxRunStatus | null>(null);
+  const [sandboxMetrics, setSandboxMetrics] = useState<Record<string, number | string | null>>({});
+  const [sandboxUnavailable, setSandboxUnavailable] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -355,6 +353,15 @@ export default function Home() {
     };
 
     const init = async () => {
+      if (selectedLane === "sandbox") {
+        setLog([]);
+        setReplayEvents([]);
+        setIndex(0);
+        setSelectedReplayId(null);
+        setDataSource({ mode: "connecting", label: "SANDBOX READY" });
+        return;
+      }
+
       if (selectedLane === "baseline") {
         let replayId: string | null = process.env.NEXT_PUBLIC_REPLAY_ID ?? null;
         if (!replayId) {
@@ -381,7 +388,8 @@ export default function Home() {
           const replayList = await fetchReplayList();
           setReplayCatalog(replayList);
           replayId =
-            pickReplayIdForLane(replayList, selectedLane) ?? pickPreferredReplayId(replayList);
+            pickReplayIdForLane(replayList, selectedLane as ScenarioLane) ??
+            pickPreferredReplayId(replayList);
         } catch {
           setReplayCatalog([]);
           replayId = null;
@@ -463,19 +471,236 @@ export default function Home() {
   }, [selectedLane]);
 
   useEffect(() => {
+    if (selectedLane !== "sandbox") return;
+    if (sandboxCatalogStatus === "ready" || sandboxCatalogStatus === "loading") return;
+
+    let cancelled = false;
+
+    void fetchSandboxCatalog()
+      .then((catalog) => {
+        if (cancelled) return;
+        setSandboxCatalog(catalog);
+        setSandboxCatalogStatus("ready");
+      })
+      .catch((error) => {
+        if (cancelled) return;
+        const message = error instanceof Error ? error.message : "Sandbox catalog is unavailable.";
+        setSandboxCatalogStatus("error");
+        setSandboxUnavailable(message);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [selectedLane, sandboxCatalogStatus]);
+
+  const retrySandboxBackend = async () => {
+    setSandboxUnavailable(null);
+    setSandboxCatalogStatus("loading");
+    try {
+      const catalog = await fetchSandboxCatalog();
+      setSandboxCatalog(catalog);
+      setSandboxCatalogStatus("ready");
+      setGlobalNotice(null);
+      return true;
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Sandbox backend unavailable.";
+      setSandboxCatalogStatus("error");
+      setSandboxUnavailable(message);
+      setGlobalNotice("Sandbox backend retry failed. Falling back to replay mode.");
+      setSelectedLane("current");
+      return false;
+    }
+  };
+
+  const submitSandboxRun = async () => {
+    setSandboxFieldErrors([]);
+    setSandboxUiState("validating");
+    const errors = validateEpisodeSpec(sandboxForm);
+    if (errors.length > 0) {
+      setSandboxFieldErrors(errors);
+      setSandboxUiState("idle");
+      return;
+    }
+
+    setSandboxUiState("submitting");
+    setSandboxUnavailable(null);
+
+    try {
+      const created = await createSandboxRun(sandboxForm);
+      setSandboxRunId(created.run_id);
+      setSandboxStreamUrl(created.stream_url);
+      setSandboxUiState(asSandboxUiState(created.status));
+      setSandboxStatus({
+        run_id: created.run_id,
+        status: created.status,
+      });
+      setSandboxMetrics({});
+      setLog([]);
+      setReplayEvents([]);
+      setIndex(0);
+      setDataSource({ mode: "connecting", label: "SANDBOX QUEUED" });
+      setGlobalNotice(null);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Failed to submit sandbox run.";
+      setSandboxUiState("failed");
+      setSandboxUnavailable(message);
+    }
+  };
+
+  const requestSandboxCancel = async () => {
+    if (!sandboxRunId) return;
+    try {
+      const response = await cancelSandboxRun(sandboxRunId);
+      setSandboxStatus(response);
+      setSandboxUiState(asSandboxUiState(response.status));
+      setDataSource({ mode: "live-rest", label: "SANDBOX CANCELLED" });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Cancel request failed.";
+      setSandboxUnavailable(message);
+    }
+  };
+
+  useEffect(() => {
+    if (selectedLane !== "sandbox") return;
+    if (!sandboxRunId) return;
+    if (!(sandboxUiState === "queued" || sandboxUiState === "running")) return;
+
+    let cancelled = false;
+    let reconnectTimerId: number | undefined;
+    const pollTimerId = window.setInterval(() => {
+      void syncStatus();
+    }, SANDBOX_STATUS_POLL_MS);
+    let reconnectAttempt = 0;
+    let connection: { close: () => void } | null = null;
+
+    const applyStatus = (status: SandboxRunStatus) => {
+      if (cancelled) return;
+      setSandboxStatus(status);
+      if (status.kpis) {
+        setSandboxMetrics((prev) => ({ ...prev, ...status.kpis }));
+      }
+      const nextUiState = asSandboxUiState(status.status);
+      setSandboxUiState(nextUiState);
+
+      if (status.status === "running") {
+        setDataSource({ mode: "live-ws", label: "SANDBOX LIVE" });
+      } else if (status.status === "queued") {
+        setDataSource({ mode: "connecting", label: "SANDBOX QUEUED" });
+      } else {
+        setDataSource({ mode: "live-rest", label: `SANDBOX ${status.status.toUpperCase()}` });
+      }
+    };
+
+    const syncStatus = async () => {
+      try {
+        const status = await fetchSandboxRunStatus(sandboxRunId);
+        applyStatus(status);
+      } catch (error) {
+        if (cancelled) return;
+        const message = error instanceof Error ? error.message : "Failed to refresh sandbox status.";
+        setSandboxUnavailable(message);
+      }
+    };
+
+    const scheduleReconnect = () => {
+      if (cancelled || isSandboxTerminal(sandboxUiState)) return;
+      const backoffMs = Math.min(6000, 800 * Math.pow(1.7, reconnectAttempt));
+      reconnectAttempt += 1;
+      reconnectTimerId = window.setTimeout(() => {
+        if (cancelled) return;
+        openConnection();
+      }, backoffMs);
+    };
+
+    const openConnection = () => {
+      connection?.close();
+      connection = connectLiveRunStream(sandboxRunId, {
+        onOpen: () => {
+          if (cancelled) return;
+          reconnectAttempt = 0;
+          setDataSource({ mode: "live-ws", label: "SANDBOX LIVE" });
+          setSandboxUnavailable(null);
+        },
+        onAction: (event) => {
+          if (cancelled) return;
+          setLog((prev) => [...prev, event]);
+        },
+        onMetric: (payload) => {
+          if (cancelled) return;
+          const kpis = payload.kpis;
+          if (kpis && typeof kpis === "object" && !Array.isArray(kpis)) {
+            setSandboxMetrics((prev) => ({ ...prev, ...(kpis as Record<string, number | string>) }));
+            return;
+          }
+          const metricRecord: Record<string, string | number | null> = {};
+          Object.entries(payload).forEach(([key, value]) => {
+            if (typeof value === "number" || typeof value === "string") {
+              metricRecord[key] = value;
+            }
+          });
+          if (Object.keys(metricRecord).length > 0) {
+            setSandboxMetrics((prev) => ({ ...prev, ...metricRecord }));
+          }
+        },
+        onMarker: (payload) => {
+          const markerStatus =
+            typeof payload.status === "string"
+              ? (payload.status as SandboxRunLifecycle)
+              : null;
+          if (markerStatus) {
+            setSandboxUiState(asSandboxUiState(markerStatus));
+          }
+          void syncStatus();
+        },
+        onUnknownType: (messageType) => {
+          console.warn(`Ignored unknown live stream type: ${messageType}`);
+        },
+        onError: () => {
+          scheduleReconnect();
+        },
+        onClose: () => {
+          scheduleReconnect();
+        },
+      });
+    };
+
+    openConnection();
+    void syncStatus();
+
+    return () => {
+      cancelled = true;
+      window.clearInterval(pollTimerId);
+      if (reconnectTimerId !== undefined) {
+        window.clearTimeout(reconnectTimerId);
+      }
+      connection?.close();
+    };
+  }, [selectedLane, sandboxRunId, sandboxUiState]);
+
+  useEffect(() => {
+    if (selectedLane === "sandbox") return;
+    if (!isReplayPlaying) return;
     if (index >= replayEvents.length) return;
+
+    const interval = Math.max(80, Math.floor(REPLAY_INTERVAL_MS / replaySpeed));
 
     const timer = window.setTimeout(() => {
       setLog((prev) => [...prev, replayEvents[index]]);
       setIndex((prev) => prev + 1);
-    }, REPLAY_INTERVAL_MS);
+    }, interval);
 
     return () => window.clearTimeout(timer);
-  }, [index, replayEvents]);
+  }, [index, replayEvents, selectedLane, isReplayPlaying, replaySpeed]);
 
   const fallbackEvents = useMemo(() => normalizedMockEvents(), []);
   const telemetry = log.length > 0 ? log : replayEvents;
-  const events = telemetry.length > 0 ? telemetry : fallbackEvents;
+  const events =
+    selectedLane === "sandbox"
+      ? telemetry
+      : telemetry.length > 0
+        ? telemetry
+        : fallbackEvents;
 
   const alertData = useMemo<AlertDatum[]>(() => {
     const counts: Record<AlertClassification, number> = {
@@ -582,6 +807,59 @@ export default function Home() {
         ? "border-cyan-500/70 text-cyan-100 bg-cyan-500/10"
         : "border-emerald-500/70 text-emerald-100 bg-emerald-500/10";
 
+  const replayControlsEnabled = selectedLane !== "sandbox" && replayEvents.length > 0;
+  const canReplayStep = replayControlsEnabled && index < replayEvents.length;
+
+  const replayPauseToggle = () => {
+    if (!replayControlsEnabled) return;
+    setIsReplayPlaying((prev) => !prev);
+  };
+
+  const replayStepForward = () => {
+    if (!canReplayStep) return;
+    setLog((prev) => [...prev, replayEvents[index]]);
+    setIndex((prev) => prev + 1);
+  };
+
+  const replayRestart = () => {
+    if (!replayControlsEnabled) return;
+    setLog([]);
+    setIndex(0);
+    setIsReplayPlaying(true);
+  };
+
+  const setNodeField = (row: number, field: "id" | "role" | "os", value: string) => {
+    setSandboxForm((prev) => {
+      const next = [...prev.nodes];
+      next[row] = { ...next[row], [field]: value };
+      return { ...prev, nodes: next };
+    });
+  };
+
+  const setVulnerabilityField = (
+    row: number,
+    field: "id" | "node_id" | "severity",
+    value: string,
+  ) => {
+    setSandboxForm((prev) => {
+      const next = [...prev.vulnerabilities];
+      next[row] = { ...next[row], [field]: value };
+      return { ...prev, vulnerabilities: next };
+    });
+  };
+
+  const setObjectiveField = (row: number, field: "id" | "type" | "target", value: string) => {
+    setSandboxForm((prev) => {
+      const next = [...prev.red_objectives];
+      next[row] = { ...next[row], [field]: value };
+      return { ...prev, red_objectives: next };
+    });
+  };
+
+  const sandboxCanCancel =
+    sandboxUiState === "queued" || sandboxUiState === "running";
+  const sandboxTimeline = selectedLane === "sandbox" ? formattedLogFeed : [];
+
   return (
     <main className="relative min-h-screen overflow-hidden px-4 pb-10 pt-6 text-[#f4f4f5] md:px-8">
       <div className="aegis-mesh" aria-hidden />
@@ -624,12 +902,20 @@ export default function Home() {
             <div className="flex flex-wrap items-center gap-2 text-xs uppercase tracking-[0.14em]">
               <span className={`rounded-md border px-3 py-1 font-semibold ${statusTone}`}>{dataSource.label}</span>
               <span className="rounded-md border border-red-500/40 bg-black/35 px-3 py-1 text-red-100">
-                Replay {selectedReplayId ?? "auto"}
+                {selectedLane === "sandbox"
+                  ? `Run ${sandboxRunId ?? "pending"}`
+                  : `Replay ${selectedReplayId ?? "auto"}`}
               </span>
             </div>
           </div>
 
-          <div className="mt-4 grid gap-2 md:grid-cols-3">
+          {globalNotice ? (
+            <div className="mt-3 rounded-md border border-amber-500/60 bg-amber-500/10 px-3 py-2 text-xs text-amber-100">
+              {globalNotice}
+            </div>
+          ) : null}
+
+          <div className="mt-4 grid gap-2 md:grid-cols-2 xl:grid-cols-4">
             {SCENARIO_LANES.map((lane) => {
               const isActive = selectedLane === lane.id;
               return (
@@ -653,18 +939,58 @@ export default function Home() {
 
         <section className="mt-5">
           {activeSlide === "command" ? (
-            <CommandSlide
-              alertData={alertData}
-              threatBalance={threatBalance}
-              logFeed={formattedLogFeed}
-              hotTargets={hotTargets}
-              graphTopology={graphTopology}
-              graphEvents={log}
-            />
+            <>
+              {selectedLane === "sandbox" ? (
+                <SandboxLanePanel
+                  form={sandboxForm}
+                  setForm={setSandboxForm}
+                  catalog={sandboxCatalog}
+                  catalogStatus={sandboxCatalogStatus}
+                  fieldErrors={sandboxFieldErrors}
+                  uiState={sandboxUiState}
+                  runId={sandboxRunId}
+                  streamUrl={sandboxStreamUrl}
+                  status={sandboxStatus}
+                  metrics={sandboxMetrics}
+                  unavailableMessage={sandboxUnavailable}
+                  onRetryBackend={retrySandboxBackend}
+                  onSubmitRun={submitSandboxRun}
+                  onCancelRun={requestSandboxCancel}
+                  canCancel={sandboxCanCancel}
+                  timeline={sandboxTimeline}
+                  setNodeField={setNodeField}
+                  setVulnerabilityField={setVulnerabilityField}
+                  setObjectiveField={setObjectiveField}
+                />
+              ) : null}
+
+              <CommandSlide
+                alertData={alertData}
+                threatBalance={threatBalance}
+                logFeed={formattedLogFeed}
+                hotTargets={hotTargets}
+                graphTopology={graphTopology}
+                graphEvents={log}
+              />
+            </>
           ) : null}
 
           {activeSlide === "episodes" ? (
-            <EpisodesSlide episodes={episodes} trendBins={trendBins} logFeed={formattedLogFeed} />
+            <EpisodesSlide
+              episodes={episodes}
+              trendBins={trendBins}
+              logFeed={formattedLogFeed}
+              replayControlsEnabled={replayControlsEnabled}
+              isReplayPlaying={isReplayPlaying}
+              replaySpeed={replaySpeed}
+              replayProgress={index}
+              replayTotal={replayEvents.length}
+              canStep={canReplayStep}
+              onTogglePlay={replayPauseToggle}
+              onStep={replayStepForward}
+              onRestart={replayRestart}
+              onSpeedChange={setReplaySpeed}
+            />
           ) : null}
 
           {activeSlide === "mission" ? (
@@ -678,6 +1004,447 @@ export default function Home() {
         </section>
       </div>
     </main>
+  );
+}
+
+function SandboxLanePanel({
+  form,
+  setForm,
+  catalog,
+  catalogStatus,
+  fieldErrors,
+  uiState,
+  runId,
+  streamUrl,
+  status,
+  metrics,
+  unavailableMessage,
+  onRetryBackend,
+  onSubmitRun,
+  onCancelRun,
+  canCancel,
+  timeline,
+  setNodeField,
+  setVulnerabilityField,
+  setObjectiveField,
+}: {
+  form: EpisodeSpec;
+  setForm: Dispatch<SetStateAction<EpisodeSpec>>;
+  catalog: SandboxCatalogResponse | null;
+  catalogStatus: "idle" | "loading" | "ready" | "error";
+  fieldErrors: string[];
+  uiState: SandboxUiState;
+  runId: string | null;
+  streamUrl: string | null;
+  status: SandboxRunStatus | null;
+  metrics: Record<string, number | string | null>;
+  unavailableMessage: string | null;
+  onRetryBackend: () => Promise<boolean>;
+  onSubmitRun: () => Promise<void>;
+  onCancelRun: () => Promise<void>;
+  canCancel: boolean;
+  timeline: FormattedIncident[];
+  setNodeField: (row: number, field: "id" | "role" | "os", value: string) => void;
+  setVulnerabilityField: (
+    row: number,
+    field: "id" | "node_id" | "severity",
+    value: string,
+  ) => void;
+  setObjectiveField: (row: number, field: "id" | "type" | "target", value: string) => void;
+}) {
+  const statusLabel = uiState.toUpperCase();
+  const terminal = status ? isSandboxTerminal(status.status) : false;
+  const metricEntries = Object.entries(metrics).slice(0, 8);
+  const objectiveTemplates = catalog?.objective_templates ?? [];
+  const vulnerabilityTemplates = catalog?.vulnerability_templates ?? [];
+  const nodeTemplates = catalog?.node_templates ?? [];
+
+  return (
+    <article className="aegis-card mb-5 p-4">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h2 className="font-display text-sm uppercase tracking-[0.2em] text-[#fecaca]">
+          Sandbox Live Control Plane
+        </h2>
+        <div className="flex items-center gap-2 text-xs">
+          <span className="rounded-md border border-cyan-400/60 bg-cyan-500/10 px-2 py-1 uppercase tracking-[0.12em] text-cyan-100">
+            {statusLabel}
+          </span>
+          <span className="rounded-md border border-red-500/50 bg-black/40 px-2 py-1 uppercase tracking-[0.12em] text-red-100">
+            {runId ? `run ${runId}` : "no active run"}
+          </span>
+        </div>
+      </div>
+
+      {catalogStatus === "loading" ? (
+        <div className="mt-3 rounded-md border border-cyan-500/40 bg-cyan-500/10 px-3 py-2 text-xs text-cyan-100">
+          Loading sandbox catalog...
+        </div>
+      ) : null}
+
+      {unavailableMessage ? (
+        <div className="mt-3 flex flex-wrap items-center justify-between gap-2 rounded-md border border-amber-500/60 bg-amber-500/10 px-3 py-2 text-xs text-amber-100">
+          <span>Sandbox backend unavailable: {unavailableMessage}</span>
+          <button
+            type="button"
+            onClick={() => {
+              void onRetryBackend();
+            }}
+            className="rounded border border-amber-300/60 bg-amber-400/20 px-2 py-1 uppercase tracking-[0.12em] text-amber-50"
+          >
+            Retry Backend
+          </button>
+        </div>
+      ) : null}
+
+      {fieldErrors.length > 0 ? (
+        <div className="mt-3 rounded-md border border-red-500/60 bg-red-500/10 px-3 py-2 text-xs text-red-100">
+          {fieldErrors.map((error) => (
+            <div key={error}>• {error}</div>
+          ))}
+        </div>
+      ) : null}
+
+      <div className="mt-4 grid gap-4 xl:grid-cols-12">
+        <div className="xl:col-span-7">
+          <div className="rounded-lg border border-red-500/25 bg-black/30 p-3">
+            <div className="grid gap-2 md:grid-cols-3">
+              <LabeledInput
+                label="Name"
+                value={form.name}
+                onChange={(value) => setForm((prev) => ({ ...prev, name: value }))}
+              />
+              <LabeledInput
+                label="Seed"
+                value={String(form.seed ?? "")}
+                onChange={(value) =>
+                  setForm((prev) => ({
+                    ...prev,
+                    seed: value.trim() ? Number.parseInt(value, 10) : undefined,
+                  }))
+                }
+              />
+              <LabeledInput
+                label="Horizon"
+                value={String(form.horizon)}
+                onChange={(value) =>
+                  setForm((prev) => ({
+                    ...prev,
+                    horizon: Number.parseInt(value, 10) || 0,
+                  }))
+                }
+              />
+            </div>
+
+            <BuilderSection
+              title="Nodes"
+              onAdd={() =>
+                setForm((prev) => ({
+                  ...prev,
+                  nodes: [...prev.nodes, { id: `host-${prev.nodes.length + 1}`, role: "endpoint", os: "linux" }],
+                }))
+              }
+            >
+              {form.nodes.map((node, idx) => (
+                <div key={`${node.id}-${idx}`} className="grid gap-2 md:grid-cols-4">
+                  <LabeledInput
+                    label="Node ID"
+                    value={node.id}
+                    onChange={(value) => setNodeField(idx, "id", value)}
+                  />
+                  <LabeledInput
+                    label="Role"
+                    value={node.role ?? ""}
+                    onChange={(value) => setNodeField(idx, "role", value)}
+                    listId={`node-role-${idx}`}
+                    listValues={nodeTemplates.map((template) => template.role)}
+                  />
+                  <LabeledInput
+                    label="OS"
+                    value={node.os ?? ""}
+                    onChange={(value) => setNodeField(idx, "os", value)}
+                    listId={`node-os-${idx}`}
+                    listValues={["windows", "linux", "macos"]}
+                  />
+                  <ActionCell
+                    onRemove={() =>
+                      setForm((prev) => ({
+                        ...prev,
+                        nodes: prev.nodes.filter((_, row) => row !== idx),
+                      }))
+                    }
+                    disabled={form.nodes.length <= 1}
+                  />
+                </div>
+              ))}
+            </BuilderSection>
+
+            <BuilderSection
+              title="Vulnerabilities"
+              onAdd={() =>
+                setForm((prev) => ({
+                  ...prev,
+                  vulnerabilities: [
+                    ...prev.vulnerabilities,
+                    {
+                      id: vulnerabilityTemplates[0]?.id ?? `cve-${Date.now()}`,
+                      node_id: prev.nodes[0]?.id ?? "",
+                      severity: "medium",
+                    },
+                  ],
+                }))
+              }
+            >
+              {form.vulnerabilities.map((vulnerability, idx) => (
+                <div key={`${vulnerability.id}-${idx}`} className="grid gap-2 md:grid-cols-4">
+                  <LabeledInput
+                    label="Vuln ID"
+                    value={vulnerability.id}
+                    onChange={(value) => setVulnerabilityField(idx, "id", value)}
+                    listId={`vuln-id-${idx}`}
+                    listValues={vulnerabilityTemplates.map((template) => template.id)}
+                  />
+                  <LabeledInput
+                    label="Node ID"
+                    value={vulnerability.node_id}
+                    onChange={(value) => setVulnerabilityField(idx, "node_id", value)}
+                    listId={`vuln-node-${idx}`}
+                    listValues={form.nodes.map((node) => node.id)}
+                  />
+                  <LabeledInput
+                    label="Severity"
+                    value={vulnerability.severity ?? "medium"}
+                    onChange={(value) => setVulnerabilityField(idx, "severity", value)}
+                    listId={`vuln-severity-${idx}`}
+                    listValues={["low", "medium", "high"]}
+                  />
+                  <ActionCell
+                    onRemove={() =>
+                      setForm((prev) => ({
+                        ...prev,
+                        vulnerabilities: prev.vulnerabilities.filter((_, row) => row !== idx),
+                      }))
+                    }
+                  />
+                </div>
+              ))}
+            </BuilderSection>
+
+            <BuilderSection
+              title="Red Objectives"
+              onAdd={() =>
+                setForm((prev) => ({
+                  ...prev,
+                  red_objectives: [
+                    ...prev.red_objectives,
+                    {
+                      id: `obj-${prev.red_objectives.length + 1}`,
+                      type: objectiveTemplates[0]?.type ?? "data_exfiltration",
+                      target: prev.nodes[0]?.id ?? "",
+                    },
+                  ],
+                }))
+              }
+            >
+              {form.red_objectives.map((objective, idx) => (
+                <div key={`${objective.id}-${idx}`} className="grid gap-2 md:grid-cols-4">
+                  <LabeledInput
+                    label="Objective ID"
+                    value={objective.id}
+                    onChange={(value) => setObjectiveField(idx, "id", value)}
+                  />
+                  <LabeledInput
+                    label="Type"
+                    value={objective.type}
+                    onChange={(value) => setObjectiveField(idx, "type", value)}
+                    listId={`obj-type-${idx}`}
+                    listValues={objectiveTemplates.map((template) => template.type)}
+                  />
+                  <LabeledInput
+                    label="Target"
+                    value={objective.target}
+                    onChange={(value) => setObjectiveField(idx, "target", value)}
+                    listId={`obj-target-${idx}`}
+                    listValues={form.nodes.map((node) => node.id)}
+                  />
+                  <ActionCell
+                    onRemove={() =>
+                      setForm((prev) => ({
+                        ...prev,
+                        red_objectives: prev.red_objectives.filter((_, row) => row !== idx),
+                      }))
+                    }
+                    disabled={form.red_objectives.length <= 1}
+                  />
+                </div>
+              ))}
+            </BuilderSection>
+
+            <div className="mt-3 rounded-md border border-red-500/20 bg-black/45 p-2">
+              <div className="mb-2 text-[11px] uppercase tracking-[0.12em] text-red-200/80">EpisodeSpec Preview</div>
+              <pre className="max-h-44 overflow-auto text-[10px] text-red-100/85">
+                {JSON.stringify(form, null, 2)}
+              </pre>
+            </div>
+          </div>
+        </div>
+
+        <div className="space-y-3 xl:col-span-5">
+          <div className="rounded-lg border border-red-500/25 bg-black/30 p-3">
+            <div className="mb-2 text-[11px] uppercase tracking-[0.14em] text-red-200/80">Run Controls</div>
+            <div className="flex flex-wrap gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  void onSubmitRun();
+                }}
+                disabled={uiState === "submitting" || uiState === "queued" || uiState === "running"}
+                className="rounded border border-emerald-300/60 bg-emerald-500/15 px-3 py-1 text-xs uppercase tracking-[0.12em] text-emerald-100 disabled:opacity-50"
+              >
+                Run Live
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  void onCancelRun();
+                }}
+                disabled={!canCancel}
+                className="rounded border border-red-300/60 bg-red-500/15 px-3 py-1 text-xs uppercase tracking-[0.12em] text-red-100 disabled:opacity-50"
+              >
+                Cancel Run
+              </button>
+            </div>
+            <div className="mt-2 text-[11px] text-red-100/80">
+              {streamUrl ? `Stream: ${streamUrl}` : "Stream URL appears after run creation."}
+            </div>
+          </div>
+
+          <div className="rounded-lg border border-red-500/25 bg-black/30 p-3">
+            <div className="mb-2 text-[11px] uppercase tracking-[0.14em] text-red-200/80">Live Metrics Panel</div>
+            {metricEntries.length > 0 ? (
+              <div className="grid grid-cols-2 gap-2">
+                {metricEntries.map(([key, value]) => (
+                  <MiniMetric key={key} label={key.replaceAll("_", " ")} value={String(value)} tone="text-cyan-200" />
+                ))}
+              </div>
+            ) : (
+              <p className="text-xs text-red-100/70">Metrics will appear when the run starts producing data.</p>
+            )}
+          </div>
+
+          <div className="rounded-lg border border-red-500/25 bg-black/30 p-3">
+            <div className="mb-2 text-[11px] uppercase tracking-[0.14em] text-red-200/80">Run Timeline</div>
+            <div className="max-h-52 space-y-2 overflow-auto pr-1">
+              {timeline.length > 0 ? (
+                timeline.slice(0, 12).map((event) => (
+                  <div key={`${event.step}-${event.action}-${event.target}`} className="rounded border border-white/10 bg-black/35 px-2 py-2 text-[11px] text-red-50/90">
+                    <div className="font-mono text-red-200/80">#{event.step}</div>
+                    <div>{event.narrative}</div>
+                  </div>
+                ))
+              ) : (
+                <p className="text-xs text-red-100/70">Waiting for first live events...</p>
+              )}
+            </div>
+          </div>
+
+          <div className="rounded-lg border border-red-500/25 bg-black/30 p-3">
+            <div className="mb-2 text-[11px] uppercase tracking-[0.14em] text-red-200/80">Run Terminal Summary</div>
+            {terminal && status ? (
+              <div className="space-y-1 text-xs text-red-50/90">
+                <div>Status: {status.status.toUpperCase()}</div>
+                <div>Started: {status.started_at ?? "n/a"}</div>
+                <div>Ended: {status.ended_at ?? "n/a"}</div>
+                <div>
+                  Error: {status.error?.message ?? (status.status === "failed" ? "Unknown failure" : "none")}
+                </div>
+              </div>
+            ) : (
+              <div className="text-xs text-red-100/70">Run is in progress. Terminal summary appears when finished.</div>
+            )}
+          </div>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+function BuilderSection({
+  title,
+  onAdd,
+  children,
+}: {
+  title: string;
+  onAdd: () => void;
+  children: ReactNode;
+}) {
+  return (
+    <div className="mt-3 rounded-md border border-red-500/20 bg-black/35 p-2">
+      <div className="mb-2 flex items-center justify-between">
+        <div className="text-[11px] uppercase tracking-[0.12em] text-red-200/80">{title}</div>
+        <button
+          type="button"
+          onClick={onAdd}
+          className="rounded border border-cyan-400/60 bg-cyan-500/10 px-2 py-0.5 text-[10px] uppercase tracking-[0.12em] text-cyan-100"
+        >
+          Add
+        </button>
+      </div>
+      <div className="space-y-2">{children}</div>
+    </div>
+  );
+}
+
+function LabeledInput({
+  label,
+  value,
+  onChange,
+  listId,
+  listValues,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  listId?: string;
+  listValues?: string[];
+}) {
+  return (
+    <label className="block text-[11px]">
+      <span className="mb-1 block uppercase tracking-[0.12em] text-red-200/80">{label}</span>
+      <input
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        list={listId}
+        className="w-full rounded border border-red-500/30 bg-black/55 px-2 py-1 text-xs text-red-50 focus:border-cyan-300/60 focus:outline-none"
+      />
+      {listId && listValues && listValues.length > 0 ? (
+        <datalist id={listId}>
+          {listValues.map((option) => (
+            <option key={option} value={option} />
+          ))}
+        </datalist>
+      ) : null}
+    </label>
+  );
+}
+
+function ActionCell({
+  onRemove,
+  disabled,
+}: {
+  onRemove: () => void;
+  disabled?: boolean;
+}) {
+  return (
+    <div className="flex items-end">
+      <button
+        type="button"
+        onClick={onRemove}
+        disabled={disabled}
+        className="w-full rounded border border-red-400/60 bg-red-500/10 px-2 py-1 text-[10px] uppercase tracking-[0.12em] text-red-100 disabled:opacity-40"
+      >
+        Remove
+      </button>
+    </div>
   );
 }
 
@@ -893,10 +1660,30 @@ function EpisodesSlide({
   episodes,
   trendBins,
   logFeed,
+  replayControlsEnabled,
+  isReplayPlaying,
+  replaySpeed,
+  replayProgress,
+  replayTotal,
+  canStep,
+  onTogglePlay,
+  onStep,
+  onRestart,
+  onSpeedChange,
 }: {
   episodes: EpisodeCard[];
   trendBins: TrendBin[];
   logFeed: FormattedIncident[];
+  replayControlsEnabled: boolean;
+  isReplayPlaying: boolean;
+  replaySpeed: ReplaySpeed;
+  replayProgress: number;
+  replayTotal: number;
+  canStep: boolean;
+  onTogglePlay: () => void;
+  onStep: () => void;
+  onRestart: () => void;
+  onSpeedChange: (speed: ReplaySpeed) => void;
 }) {
   const maxBinValue = Math.max(
     ...trendBins.map((bin) => Math.max(bin.red, bin.blue)),
@@ -905,6 +1692,63 @@ function EpisodesSlide({
 
   return (
     <div className="grid gap-5 xl:grid-cols-12">
+      <article className="aegis-card p-4 xl:col-span-12">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h2 className="font-display text-sm uppercase tracking-[0.2em] text-[#fecaca]">
+            Replay Transport Controls
+          </h2>
+          <div className="text-xs text-red-100/80">
+            Progress {Math.min(replayProgress, replayTotal)} / {replayTotal}
+          </div>
+        </div>
+        <div className="mt-3 flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            onClick={onTogglePlay}
+            disabled={!replayControlsEnabled}
+            className="rounded border border-cyan-400/60 bg-cyan-500/10 px-3 py-1 text-xs uppercase tracking-[0.12em] text-cyan-100 disabled:opacity-50"
+          >
+            {isReplayPlaying ? "Pause" : "Play"}
+          </button>
+          <button
+            type="button"
+            onClick={onStep}
+            disabled={!replayControlsEnabled || !canStep}
+            className="rounded border border-red-400/60 bg-red-500/10 px-3 py-1 text-xs uppercase tracking-[0.12em] text-red-100 disabled:opacity-50"
+          >
+            Step
+          </button>
+          <button
+            type="button"
+            onClick={onRestart}
+            disabled={!replayControlsEnabled}
+            className="rounded border border-red-400/60 bg-black/30 px-3 py-1 text-xs uppercase tracking-[0.12em] text-red-100 disabled:opacity-50"
+          >
+            Restart
+          </button>
+          {[1, 2, 5, 10].map((speed) => (
+            <button
+              type="button"
+              key={speed}
+              onClick={() => onSpeedChange(speed as ReplaySpeed)}
+              disabled={!replayControlsEnabled}
+              className={`rounded border px-3 py-1 text-xs uppercase tracking-[0.12em] disabled:opacity-50 ${
+                replaySpeed === speed
+                  ? "border-emerald-300/70 bg-emerald-500/20 text-emerald-100"
+                  : "border-red-500/35 bg-black/30 text-red-100"
+              }`}
+            >
+              {speed}x
+            </button>
+          ))}
+          {!replayControlsEnabled ? (
+            <span className="text-xs text-red-100/65">
+              Controls activate when replay payload mode is active.
+            </span>
+          ) : null}
+        </div>
+      </article>
+
       <article className="aegis-card p-4 xl:col-span-5">
         <h2 className="font-display text-sm uppercase tracking-[0.2em] text-[#fecaca]">Episode History</h2>
         <div className="mt-3 h-[320px] space-y-2 overflow-auto pr-1">
@@ -1015,7 +1859,7 @@ function MissionSlide({
   replayId,
 }: {
   threatBalance: ThreatBalance;
-  selectedLane: ScenarioLane;
+  selectedLane: DashboardLane;
   dataSource: DataSourceStatus;
   replayId: string | null;
 }) {

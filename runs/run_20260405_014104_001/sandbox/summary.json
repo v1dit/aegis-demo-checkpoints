@@ -1,0 +1,16 @@
+{
+  "run_id": "run_20260405_014104_001",
+  "status": "completed",
+  "seed": 3881,
+  "horizon": 120,
+  "scenario_id": "scenario_sandbox_custom",
+  "kpis": {
+    "damage": 0.0,
+    "mean_detection_latency_ms": 14400.0,
+    "attack_success_rate": 0.0417,
+    "rewards_sum": 19.65,
+    "exfiltration_count": 0.0,
+    "exfiltration_attempts": 20.0,
+    "critical_asset_compromise_rate": 0.0
+  }
+}

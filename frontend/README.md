@@ -2,6 +2,14 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
+Create `frontend/.env.local` with the backend base URL:
+
+```bash
+NEXT_PUBLIC_API_BASE_URL=http://127.0.0.1:8000
+```
+
+For DGX development, this value should stay `http://127.0.0.1:8000` while your SSH tunnel is active (`localhost:8000 -> dgx:8000`).
+
 First, run the development server:
 
 ```bash
