@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import os
 import random
 import time
 
@@ -21,6 +22,15 @@ from backend.app.rl.eval import acceptance_gate_status, evaluate_checkpoint, wri
 from backend.app.rl.train import get_train_status, latest_completed_checkpoint, start_training_job
 from backend.app.schemas.contracts import EvalRunRequest, TrainRunRequest
 from backend.app.schemas.fixtures import write_contract_fixtures
+
+
+def _parse_seed_list(value: str | None, fallback: list[int]) -> list[int]:
+    if value is None:
+        return fallback
+    stripped = value.strip()
+    if not stripped:
+        return fallback
+    return [int(chunk.strip()) for chunk in stripped.split(",") if chunk.strip()]
 
 
 def _latest_checkpoint_from_run(run_id: str | None) -> str | None:
@@ -67,8 +77,13 @@ def _run_train(run_id: str | None, fresh_start: bool, seed: int | None) -> str:
     return run_id
 
 
-def _run_eval(run_id: str | None) -> str:
+def _run_eval(run_id: str | None, suite_id: str | None, eval_seeds: str | None) -> str:
     resolved_run = run_id or resolve_canonical_run_id() or get_active_run_id()
+    resolved_suite_id = suite_id or os.getenv("PPO_EVAL_SUITE_ID", "heldout_suite_v1")
+    resolved_eval_seeds = _parse_seed_list(
+        eval_seeds or os.getenv("PPO_EVAL_SEEDS"),
+        fallback=[1001, 1002, 1003, 1004],
+    )
     checkpoint_id = (
         latest_completed_checkpoint()
         or _latest_checkpoint_from_run(resolved_run)
@@ -76,8 +91,8 @@ def _run_eval(run_id: str | None) -> str:
     )
     request = EvalRunRequest(
         checkpoint_id=checkpoint_id,
-        suite_id="heldout_suite_v1",
-        seeds=[1001, 1002, 1003, 1004],
+        suite_id=resolved_suite_id,
+        seeds=resolved_eval_seeds,
         run_id=resolved_run,
     )
     eval_id = f"eval_cli_{int(time.time())}"
@@ -148,7 +163,7 @@ def _package_replays(run_id: str | None = None) -> None:
 def _demo(run_id: str | None) -> None:
     resolved_run = run_id or resolve_canonical_run_id() or get_active_run_id()
     _package_replays(resolved_run)
-    _run_eval(resolved_run)
+    _run_eval(resolved_run, suite_id=None, eval_seeds=None)
     print(
         "Demo artifacts ready. Start API with: "
         "uv run uvicorn backend.app.main:app --host 0.0.0.0 --port 8000"
@@ -163,12 +178,18 @@ def main() -> None:
     parser.add_argument("--run-id", dest="run_id", default=None)
     parser.add_argument("--fresh-start", action="store_true")
     parser.add_argument("--seed", type=int, default=None)
+    parser.add_argument("--suite-id", default=None)
+    parser.add_argument(
+        "--eval-seeds",
+        default=None,
+        help="Comma-separated eval seeds, e.g. 1001,1002,1003,1004",
+    )
     args = parser.parse_args()
 
     if args.command == "train":
         _run_train(run_id=args.run_id, fresh_start=args.fresh_start, seed=args.seed)
     elif args.command == "eval":
-        _run_eval(run_id=args.run_id)
+        _run_eval(run_id=args.run_id, suite_id=args.suite_id, eval_seeds=args.eval_seeds)
     elif args.command == "package-replays":
         _package_replays(run_id=args.run_id)
     elif args.command == "demo":

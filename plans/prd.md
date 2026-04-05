@@ -197,7 +197,7 @@ pantherHacks/
   Makefile
   pyproject.toml
   .env.example
-  prd.md
+  plans/prd.md
 ```
 
 ## 9. API Contract (Locked)
