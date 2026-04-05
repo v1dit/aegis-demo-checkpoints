@@ -38,16 +38,19 @@ if [ "\$FREE_GB" -lt 250 ]; then
   exit 1
 fi
 
+HOST_UID="\$(id -u)"
+HOST_GID="\$(id -g)"
+
 docker build --label project=pantherhacks -f infra/docker/trainer.Dockerfile -t pantherhacks-trainer:latest .
 
 for GPU_SET in "5,6,7" "0,1,2" "all"; do
   echo "Trying GPU set: \$GPU_SET"
   if [ "\$GPU_SET" = "all" ]; then
-    docker run --rm --label project=pantherhacks --gpus all \
+    docker run --rm --label project=pantherhacks --gpus all --user "\$HOST_UID:\$HOST_GID" \
       -v "\$REMOTE_DIR/artifacts:/workspace/artifacts" \
       pantherhacks-trainer:latest && exit 0
   else
-    docker run --rm --label project=pantherhacks --gpus "device=\$GPU_SET" \
+    docker run --rm --label project=pantherhacks --gpus "device=\$GPU_SET" --user "\$HOST_UID:\$HOST_GID" \
       -e CUDA_VISIBLE_DEVICES="\$GPU_SET" \
       -v "\$REMOTE_DIR/artifacts:/workspace/artifacts" \
       pantherhacks-trainer:latest && exit 0

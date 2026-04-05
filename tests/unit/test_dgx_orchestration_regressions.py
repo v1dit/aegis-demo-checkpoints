@@ -32,6 +32,37 @@ def test_eval_container_has_same_gpu_fallback_strategy_as_train() -> None:
     assert 'docker run --rm --label project=pantherhacks --gpus "device=\\$GPU_SET"' in script
 
 
+def test_dgx_train_and_eval_containers_run_with_host_user_mapping() -> None:
+    train_script = _read("ops/scripts/dgx_train_container.sh")
+    eval_script = _read("ops/scripts/dgx_eval_container.sh")
+
+    assert 'HOST_UID="\\$(id -u)"' in train_script
+    assert 'HOST_GID="\\$(id -g)"' in train_script
+    assert '--user "\\$HOST_UID:\\$HOST_GID"' in train_script
+
+    assert 'HOST_UID="\\$(id -u)"' in eval_script
+    assert 'HOST_GID="\\$(id -g)"' in eval_script
+    assert '--user "\\$HOST_UID:\\$HOST_GID"' in eval_script
+
+
+def test_detached_dgx_runner_repairs_ownership_before_forced_cleanup() -> None:
+    script = _read("ops/scripts/dgx_enterprise_detached.sh")
+
+    assert "repair_runner_permissions()" in script
+    assert "repair_runner_permissions" in script
+    assert '--user "$HOST_UID:$HOST_GID"' in script
+    assert 'if [ "$FORCE_CLEAN_RUNNER" = "1" ] && [ -d "$REMOTE_DIR" ]; then' in script
+    assert 'repair_runner_permissions "$REMOTE_DIR"' in script
+    assert 'echo "failed:runner_cleanup_permission_denied"' in script
+
+    force_clean_offset = script.index(
+        'if [ "$FORCE_CLEAN_RUNNER" = "1" ] && [ -d "$REMOTE_DIR" ]; then'
+    )
+    repair_offset = script.index('repair_runner_permissions "$REMOTE_DIR"', force_clean_offset)
+    rm_offset = script.index('rm -rf "$REMOTE_DIR"', force_clean_offset)
+    assert repair_offset < rm_offset
+
+
 def test_train_image_is_labeled_for_cleanup_filter() -> None:
     train_script = _read("ops/scripts/dgx_train_container.sh")
     dockerfile = _read("infra/docker/trainer.Dockerfile")

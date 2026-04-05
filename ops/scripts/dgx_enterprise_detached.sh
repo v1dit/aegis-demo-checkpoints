@@ -60,6 +60,8 @@ ENTERPRISE_SCENARIO="__ENTERPRISE_SCENARIO__"
 ENTERPRISE_SUITE="__ENTERPRISE_SUITE__"
 EVAL_SEEDS="__EVAL_SEEDS__"
 MIN_FREE_GB="__MIN_FREE_GB__"
+HOST_UID="$(id -u)"
+HOST_GID="$(id -g)"
 
 root_free_gb() {
   df --output=avail -BG / | tail -n1 | tr -dc '0-9'
@@ -74,6 +76,20 @@ cleanup_project_docker() {
   docker image prune -f >/dev/null 2>&1 || true
 }
 
+repair_runner_permissions() {
+  local target_dir="$1"
+  local repair_image="pantherhacks-trainer:latest"
+  if ! docker image inspect "$repair_image" >/dev/null 2>&1; then
+    repair_image="busybox:1.36"
+  fi
+  echo "repairing_runner_permissions dir=$target_dir image=$repair_image"
+  if ! docker run --rm -v "$target_dir:/workspace" "$repair_image" sh -c \
+    "set -eu; [ -e /workspace/artifacts ] && chown -R $HOST_UID:$HOST_GID /workspace/artifacts || true; [ -e /workspace/runs ] && chown -R $HOST_UID:$HOST_GID /workspace/runs || true"; then
+    echo "permission_repair_failed dir=$target_dir image=$repair_image"
+    return 1
+  fi
+}
+
 ensure_root_free() {
   local free_gb
   free_gb="$(root_free_gb)"
@@ -84,7 +100,21 @@ ensure_root_free() {
 }
 
 if [ "$FORCE_CLEAN_RUNNER" = "1" ] && [ -d "$REMOTE_DIR" ]; then
-  rm -rf "$REMOTE_DIR"
+  if ! repair_runner_permissions "$REMOTE_DIR"; then
+    echo "failed:runner_cleanup_permission_denied"
+    echo "hint=unable_to_repair_ownership_before_cleanup"
+    exit 1
+  fi
+  if ! rm -rf "$REMOTE_DIR"; then
+    echo "failed:runner_cleanup_permission_denied"
+    echo "hint=rm_rf_failed_after_permission_repair"
+    exit 1
+  fi
+  if [ -d "$REMOTE_DIR" ]; then
+    echo "failed:runner_cleanup_permission_denied"
+    echo "hint=runner_dir_still_exists_after_cleanup"
+    exit 1
+  fi
 fi
 
 if [ ! -d "$REMOTE_DIR/.git" ]; then
@@ -139,6 +169,8 @@ PKG_LOG="$JOB_DIR/package.log"
 META_FILE="$JOB_DIR/meta.env"
 
 echo "running" > "$STATUS_FILE"
+HOST_UID="$(id -u)"
+HOST_GID="$(id -g)"
 
 root_free_gb() {
   df --output=avail -BG / | tail -n1 | tr -dc '0-9'
@@ -181,7 +213,7 @@ run_container() {
   local gpu_set
   for gpu_set in "5,6,7" "0,1,2" "all"; do
     echo "[${task_name}] trying GPU set: ${gpu_set}" | tee -a "$log_file"
-    if docker run --rm --label project=pantherhacks --gpus all \
+    if docker run --rm --label project=pantherhacks --gpus all --user "$HOST_UID:$HOST_GID" \
       -e CUDA_VISIBLE_DEVICES="$gpu_set" \
       -e PPO_SCENARIO_ID="$ENTERPRISE_SCENARIO" \
       -e PPO_EVAL_SUITE_ID="$ENTERPRISE_SUITE" \

@@ -17,11 +17,13 @@
 ## 3. Training/Eval
 - Run `ops/scripts/dgx_train_container.sh`.
 - Run `ops/scripts/dgx_eval_container.sh`.
+- Containers now run with host UID:GID mapping so files under `artifacts/` and `runs/` stay owned by the invoking DGX user.
 - For detached enterprise pipeline (recommended for long jobs):
   - Launch once: `ops/scripts/dgx_enterprise_detached.sh`
   - Launch fixed N iterations: `DGX_RUN_COUNT=8 ops/scripts/dgx_enterprise_detached.sh`
   - Launch adaptive (cap 24, plateau stop): `DGX_ADAPTIVE_MODE=1 DGX_MAX_RUNS=24 DGX_PLATEAU_REQUIRED=2 ops/scripts/dgx_enterprise_detached.sh`
-  - Optional controls: `DGX_RUNNER_DIR=$HOME/pantherHacks_runner DGX_TRAIN_SEED=42 DGX_MIN_FREE_GB=250 DGX_ENTERPRISE_SUITE_ID=enterprise_suite_v1`
+  - Optional controls: `DGX_RUNNER_DIR=$HOME/pantherHacks_runner DGX_TRAIN_SEED=42 DGX_MIN_FREE_GB=250 DGX_ENTERPRISE_SUITE_ID=enterprise_suite_v1 DGX_FORCE_CLEAN_RUNNER=1`
+  - `DGX_FORCE_CLEAN_RUNNER=1` now attempts ownership repair on runner `artifacts/` and `runs/` before `rm -rf`; if repair/cleanup fails it exits with `failed:runner_cleanup_permission_denied`.
   - Check status later: `ops/scripts/dgx_job_status.sh [job_id|latest]`
   - Tail logs later: `ops/scripts/dgx_job_tail.sh [job_id|latest] [nohup.log|train.log|eval.log|package.log]`
   - Job exits automatically when complete and performs Docker cleanup on exit.

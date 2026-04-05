@@ -77,7 +77,11 @@ def _run_train(run_id: str | None, fresh_start: bool, seed: int | None) -> str:
     return run_id
 
 
-def _run_eval(run_id: str | None, suite_id: str | None, eval_seeds: str | None) -> str:
+def _run_eval(
+    run_id: str | None,
+    suite_id: str | None = None,
+    eval_seeds: str | None = None,
+) -> str:
     resolved_run = run_id or resolve_canonical_run_id() or get_active_run_id()
     resolved_suite_id = suite_id or os.getenv("PPO_EVAL_SUITE_ID", "heldout_suite_v1")
     resolved_eval_seeds = _parse_seed_list(
