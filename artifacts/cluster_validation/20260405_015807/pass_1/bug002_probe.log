@@ -1,0 +1,39 @@
+spawn ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null kgarg@chapman.edu@dgx0.chapman.edu bash -s
+Warning: Permanently added 'dgx0.chapman.edu' (ED25519) to the list of known hosts.
+kgarg@chapman.edu@dgx0.chapman.edu's password: 
+set -euo pipefail
+REMOTE_DIR_RAW="$HOME/pantherHacks_runner_api_test"
+eval "REMOTE_DIR=$REMOTE_DIR_RAW"
+
+mkdir -p "$REMOTE_DIR"
+docker run --rm -v "$REMOTE_DIR:/workspace" busybox:1.36 sh -c   'mkdir -p /workspace/artifacts/replays/probe /workspace/runs/probe && touch /workspace/artifacts/replays/probe/root_owned.txt /workspace/runs/probe/root_owned.txt'
+echo "prepare_status=ok"
+exit $?
+prepare_status=ok
+spawn ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null kgarg@chapman.edu@dgx0.chapman.edu bash -s
+Warning: Permanently added 'dgx0.chapman.edu' (ED25519) to the list of known hosts.
+kgarg@chapman.edu@dgx0.chapman.edu's password: 
+set -euo pipefail
+REMOTE_DIR_RAW="$HOME/pantherHacks_runner_api_test"
+eval "REMOTE_DIR=$REMOTE_DIR_RAW"
+EXPECTED_OWNER="$(id -un):$(id -gn)"
+HOST_UID="$(id -u)"
+HOST_GID="$(id -g)"
+ART_MOUNT="${REMOTE_DIR}/artifacts:/workspace/artifacts"
+RUN_MOUNT="${REMOTE_DIR}/runs:/workspace/runs"
+
+docker run --rm --user "${HOST_UID}:${HOST_GID}" -v "${ART_MOUNT}" busybox:1.36 sh -c   'mkdir -p /workspace/artifacts/replays/probe && touch /workspace/artifacts/replays/probe/owner_probe.txt'
+docker run --rm --user "${HOST_UID}:${HOST_GID}" -v "${RUN_MOUNT}" busybox:1.36 sh -c   'mkdir -p /workspace/runs/probe && touch /workspace/runs/probe/owner_probe.txt'
+
+ART_OWNER="$(stat -c "%U:%G" "$REMOTE_DIR/artifacts/replays/probe/owner_probe.txt")"
+RUN_OWNER="$(stat -c "%U:%G" "$REMOTE_DIR/runs/probe/owner_probe.txt")"
+echo "expected_owner=$EXPECTED_OWNER"
+echo "art_owner=$ART_OWNER"
+echo "run_owner=$RUN_OWNER"
+if [ "$ART_OWNER" != "$EXPECTED_OWNER" ] || [ "$RUN_OWNER" != "$EXPECTED_OWNER" ]; then
+  echo "probe_failho "probe_status=ok"
+exit $?
+expected_owner=kgarg:kgarg
+art_owner=kgarg:kgarg
+run_owner=kgarg:kgarg
+probe_status=ok

@@ -21,10 +21,11 @@ import {
   fetchSandboxRunStatus,
   fetchReplayPayload,
   fetchReplayList,
+  mapSandboxFormToEpisodeSpec,
   normalizeEvent,
   pickReplayIdForLane,
   pickPreferredReplayId,
-  type EpisodeSpec,
+  type SandboxFormSpec,
   type SandboxCatalogResponse,
   type SandboxRunLifecycle,
   type SandboxRunStatus,
@@ -198,42 +199,51 @@ function asSandboxUiState(status: SandboxRunLifecycle): SandboxUiState {
   return status;
 }
 
-function createDefaultEpisodeSpec(): EpisodeSpec {
+function createDefaultEpisodeSpec(): SandboxFormSpec {
   return {
     name: "Live Sandbox Drill",
     seed: 4242,
     horizon: 120,
     nodes: [
-      { id: "workstation-1", role: "endpoint", os: "windows" },
-      { id: "db-1", role: "database", os: "linux" },
+      { id: "workstation-1", role: "endpoint", os: "windows", severity: "high" },
+      { id: "db-1", role: "database", os: "linux", severity: "medium" },
     ],
-    vulnerabilities: [{ id: "cve-2025-10001", node_id: "workstation-1", severity: "high" }],
-    red_objectives: [{ id: "obj-exfiltrate-db", type: "data_exfiltration", target: "db-1" }],
+    vulnerabilities: [{ id: "SYNTH-CVE-2026-1001", node_id: "workstation-1", severity: "high" }],
+    red_objectives: [{ id: "obj-exfiltrate-db", type: "exfiltrate", target: "db-1" }],
     defender_mode: "aegis",
   };
 }
 
-function validateEpisodeSpec(spec: EpisodeSpec): string[] {
+function validateEpisodeSpec(
+  spec: SandboxFormSpec,
+  catalog: SandboxCatalogResponse | null,
+): string[] {
   const errors: string[] = [];
 
   if (!spec.name.trim()) errors.push("Episode name is required.");
-  if (!Number.isFinite(spec.horizon) || spec.horizon < 1 || spec.horizon > 10000) {
-    errors.push("Horizon must be between 1 and 10,000.");
+  if (!Number.isFinite(spec.horizon) || spec.horizon < 10 || spec.horizon > 300) {
+    errors.push("Horizon must be between 10 and 300.");
   }
 
-  if (!Array.isArray(spec.nodes) || spec.nodes.length < 1) {
-    errors.push("At least one node is required.");
+  if (!Array.isArray(spec.nodes) || spec.nodes.length < 1 || spec.nodes.length > 30) {
+    errors.push("Node count must be between 1 and 30.");
   }
 
-  if (!Array.isArray(spec.red_objectives) || spec.red_objectives.length < 1) {
+  if (!Array.isArray(spec.red_objectives) || spec.red_objectives.length < 1 || spec.red_objectives.length > 20) {
     errors.push("At least one red objective is required.");
   }
 
+  const allowedObjectives = new Set(catalog?.objectives ?? []);
+  const allowedVulns = new Set(catalog?.vulnerabilities ?? []);
   const nodeIds = new Set<string>();
+  const vulnPerNode: Record<string, number> = {};
   for (const node of spec.nodes) {
     if (!node.id.trim()) {
       errors.push("Each node needs an id.");
       continue;
+    }
+    if (!node.severity || !["low", "medium", "high"].includes(node.severity)) {
+      errors.push(`Node ${node.id} needs a severity (low/medium/high).`);
     }
     if (nodeIds.has(node.id)) {
       errors.push(`Duplicate node id: ${node.id}`);
@@ -243,14 +253,24 @@ function validateEpisodeSpec(spec: EpisodeSpec): string[] {
 
   for (const vuln of spec.vulnerabilities) {
     if (!vuln.id.trim()) errors.push("Each vulnerability needs an id.");
+    if (allowedVulns.size > 0 && !allowedVulns.has(vuln.id)) {
+      errors.push(`Unknown vulnerability id: ${vuln.id}`);
+    }
     if (!nodeIds.has(vuln.node_id)) {
       errors.push(`Vulnerability node reference is invalid: ${vuln.node_id}`);
+    }
+    vulnPerNode[vuln.node_id] = (vulnPerNode[vuln.node_id] ?? 0) + 1;
+    if (vulnPerNode[vuln.node_id] > 3) {
+      errors.push(`Node ${vuln.node_id} exceeds max vulnerabilities per node (3).`);
     }
   }
 
   for (const objective of spec.red_objectives) {
     if (!objective.id.trim()) errors.push("Each objective needs an id.");
     if (!objective.type.trim()) errors.push("Each objective needs a type.");
+    if (allowedObjectives.size > 0 && !allowedObjectives.has(objective.type)) {
+      errors.push(`Unknown objective type: ${objective.type}`);
+    }
     if (!nodeIds.has(objective.target)) {
       errors.push(`Objective target is invalid: ${objective.target}`);
     }
@@ -281,7 +301,7 @@ export default function Home() {
   });
   const [globalNotice, setGlobalNotice] = useState<string | null>(null);
 
-  const [sandboxForm, setSandboxForm] = useState<EpisodeSpec>(createDefaultEpisodeSpec);
+  const [sandboxForm, setSandboxForm] = useState<SandboxFormSpec>(createDefaultEpisodeSpec);
   const [sandboxCatalog, setSandboxCatalog] = useState<SandboxCatalogResponse | null>(null);
   const [sandboxCatalogStatus, setSandboxCatalogStatus] = useState<"idle" | "loading" | "ready" | "error">("idle");
   const [sandboxFieldErrors, setSandboxFieldErrors] = useState<string[]>([]);
@@ -507,8 +527,7 @@ export default function Home() {
       const message = error instanceof Error ? error.message : "Sandbox backend unavailable.";
       setSandboxCatalogStatus("error");
       setSandboxUnavailable(message);
-      setGlobalNotice("Sandbox backend retry failed. Falling back to replay mode.");
-      setSelectedLane("current");
+      setGlobalNotice("Sandbox backend retry failed.");
       return false;
     }
   };
@@ -516,7 +535,7 @@ export default function Home() {
   const submitSandboxRun = async () => {
     setSandboxFieldErrors([]);
     setSandboxUiState("validating");
-    const errors = validateEpisodeSpec(sandboxForm);
+    const errors = validateEpisodeSpec(sandboxForm, sandboxCatalog);
     if (errors.length > 0) {
       setSandboxFieldErrors(errors);
       setSandboxUiState("idle");
@@ -527,7 +546,7 @@ export default function Home() {
     setSandboxUnavailable(null);
 
     try {
-      const created = await createSandboxRun(sandboxForm);
+      const created = await createSandboxRun(mapSandboxFormToEpisodeSpec(sandboxForm));
       setSandboxRunId(created.run_id);
       setSandboxStreamUrl(created.stream_url);
       setSandboxUiState(asSandboxUiState(created.status));
@@ -828,7 +847,11 @@ export default function Home() {
     setIsReplayPlaying(true);
   };
 
-  const setNodeField = (row: number, field: "id" | "role" | "os", value: string) => {
+  const setNodeField = (
+    row: number,
+    field: "id" | "role" | "os" | "severity",
+    value: string,
+  ) => {
     setSandboxForm((prev) => {
       const next = [...prev.nodes];
       next[row] = { ...next[row], [field]: value };
@@ -953,6 +976,8 @@ export default function Home() {
                   status={sandboxStatus}
                   metrics={sandboxMetrics}
                   unavailableMessage={sandboxUnavailable}
+                  liveRunEnabled={sandboxCatalog?.live_run_enabled ?? false}
+                  liveBlockReason={sandboxCatalog?.live_block_reason ?? null}
                   onRetryBackend={retrySandboxBackend}
                   onSubmitRun={submitSandboxRun}
                   onCancelRun={requestSandboxCancel}
@@ -1019,6 +1044,8 @@ function SandboxLanePanel({
   status,
   metrics,
   unavailableMessage,
+  liveRunEnabled,
+  liveBlockReason,
   onRetryBackend,
   onSubmitRun,
   onCancelRun,
@@ -1028,8 +1055,8 @@ function SandboxLanePanel({
   setVulnerabilityField,
   setObjectiveField,
 }: {
-  form: EpisodeSpec;
-  setForm: Dispatch<SetStateAction<EpisodeSpec>>;
+  form: SandboxFormSpec;
+  setForm: Dispatch<SetStateAction<SandboxFormSpec>>;
   catalog: SandboxCatalogResponse | null;
   catalogStatus: "idle" | "loading" | "ready" | "error";
   fieldErrors: string[];
@@ -1039,12 +1066,14 @@ function SandboxLanePanel({
   status: SandboxRunStatus | null;
   metrics: Record<string, number | string | null>;
   unavailableMessage: string | null;
+  liveRunEnabled: boolean;
+  liveBlockReason: string | null;
   onRetryBackend: () => Promise<boolean>;
   onSubmitRun: () => Promise<void>;
   onCancelRun: () => Promise<void>;
   canCancel: boolean;
   timeline: FormattedIncident[];
-  setNodeField: (row: number, field: "id" | "role" | "os", value: string) => void;
+  setNodeField: (row: number, field: "id" | "role" | "os" | "severity", value: string) => void;
   setVulnerabilityField: (
     row: number,
     field: "id" | "node_id" | "severity",
@@ -1055,9 +1084,9 @@ function SandboxLanePanel({
   const statusLabel = uiState.toUpperCase();
   const terminal = status ? isSandboxTerminal(status.status) : false;
   const metricEntries = Object.entries(metrics).slice(0, 8);
-  const objectiveTemplates = catalog?.objective_templates ?? [];
-  const vulnerabilityTemplates = catalog?.vulnerability_templates ?? [];
-  const nodeTemplates = catalog?.node_templates ?? [];
+  const objectiveTemplates = catalog?.objectives ?? [];
+  const vulnerabilityTemplates = catalog?.vulnerabilities ?? [];
+  const nodeRoleTemplates = ["endpoint", "database", "api", "gateway", "identity"];
 
   return (
     <article className="aegis-card mb-5 p-4">
@@ -1093,6 +1122,12 @@ function SandboxLanePanel({
           >
             Retry Backend
           </button>
+        </div>
+      ) : null}
+
+      {!liveRunEnabled ? (
+        <div className="mt-3 rounded-md border border-amber-500/60 bg-amber-500/10 px-3 py-2 text-xs text-amber-100">
+          Live run blocked: {liveBlockReason ?? "Backend is not live-cluster ready."}
         </div>
       ) : null}
 
@@ -1140,12 +1175,20 @@ function SandboxLanePanel({
               onAdd={() =>
                 setForm((prev) => ({
                   ...prev,
-                  nodes: [...prev.nodes, { id: `host-${prev.nodes.length + 1}`, role: "endpoint", os: "linux" }],
+                  nodes: [
+                    ...prev.nodes,
+                    {
+                      id: `host-${prev.nodes.length + 1}`,
+                      role: "endpoint",
+                      os: "linux",
+                      severity: "medium",
+                    },
+                  ],
                 }))
               }
             >
               {form.nodes.map((node, idx) => (
-                <div key={`${node.id}-${idx}`} className="grid gap-2 md:grid-cols-4">
+                <div key={`${node.id}-${idx}`} className="grid gap-2 md:grid-cols-5">
                   <LabeledInput
                     label="Node ID"
                     value={node.id}
@@ -1156,7 +1199,14 @@ function SandboxLanePanel({
                     value={node.role ?? ""}
                     onChange={(value) => setNodeField(idx, "role", value)}
                     listId={`node-role-${idx}`}
-                    listValues={nodeTemplates.map((template) => template.role)}
+                    listValues={nodeRoleTemplates}
+                  />
+                  <LabeledInput
+                    label="Severity"
+                    value={node.severity ?? "medium"}
+                    onChange={(value) => setNodeField(idx, "severity", value)}
+                    listId={`node-severity-${idx}`}
+                    listValues={["low", "medium", "high"]}
                   />
                   <LabeledInput
                     label="OS"
@@ -1186,7 +1236,7 @@ function SandboxLanePanel({
                   vulnerabilities: [
                     ...prev.vulnerabilities,
                     {
-                      id: vulnerabilityTemplates[0]?.id ?? `cve-${Date.now()}`,
+                      id: vulnerabilityTemplates[0] ?? `SYNTH-CVE-${Date.now()}`,
                       node_id: prev.nodes[0]?.id ?? "",
                       severity: "medium",
                     },
@@ -1201,7 +1251,7 @@ function SandboxLanePanel({
                     value={vulnerability.id}
                     onChange={(value) => setVulnerabilityField(idx, "id", value)}
                     listId={`vuln-id-${idx}`}
-                    listValues={vulnerabilityTemplates.map((template) => template.id)}
+                    listValues={vulnerabilityTemplates}
                   />
                   <LabeledInput
                     label="Node ID"
@@ -1238,7 +1288,7 @@ function SandboxLanePanel({
                     ...prev.red_objectives,
                     {
                       id: `obj-${prev.red_objectives.length + 1}`,
-                      type: objectiveTemplates[0]?.type ?? "data_exfiltration",
+                      type: objectiveTemplates[0] ?? "exfiltrate",
                       target: prev.nodes[0]?.id ?? "",
                     },
                   ],
@@ -1257,7 +1307,7 @@ function SandboxLanePanel({
                     value={objective.type}
                     onChange={(value) => setObjectiveField(idx, "type", value)}
                     listId={`obj-type-${idx}`}
-                    listValues={objectiveTemplates.map((template) => template.type)}
+                    listValues={objectiveTemplates}
                   />
                   <LabeledInput
                     label="Target"
@@ -1282,7 +1332,7 @@ function SandboxLanePanel({
             <div className="mt-3 rounded-md border border-red-500/20 bg-black/45 p-2">
               <div className="mb-2 text-[11px] uppercase tracking-[0.12em] text-red-200/80">EpisodeSpec Preview</div>
               <pre className="max-h-44 overflow-auto text-[10px] text-red-100/85">
-                {JSON.stringify(form, null, 2)}
+                {JSON.stringify(mapSandboxFormToEpisodeSpec(form), null, 2)}
               </pre>
             </div>
           </div>
@@ -1297,7 +1347,12 @@ function SandboxLanePanel({
                 onClick={() => {
                   void onSubmitRun();
                 }}
-                disabled={uiState === "submitting" || uiState === "queued" || uiState === "running"}
+                disabled={
+                  !liveRunEnabled ||
+                  uiState === "submitting" ||
+                  uiState === "queued" ||
+                  uiState === "running"
+                }
                 className="rounded border border-emerald-300/60 bg-emerald-500/15 px-3 py-1 text-xs uppercase tracking-[0.12em] text-emerald-100 disabled:opacity-50"
               >
                 Run Live

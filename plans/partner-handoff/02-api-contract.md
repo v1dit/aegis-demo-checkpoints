@@ -22,7 +22,10 @@ Response:
 ```json
 {
   "vulnerabilities": ["SYNTH-CVE-2026-1001"],
-  "objectives": ["exfiltrate", "lateral_move", "privilege_escalate", "persist"]
+  "objectives": ["exfiltrate", "lateral_move", "privilege_escalate", "persist"],
+  "execution_mode": "cluster",
+  "live_run_enabled": true,
+  "live_block_reason": null
 }
 ```
 
@@ -81,6 +84,6 @@ Response:
 ## Error Codes
 - `400`: invalid payload/validation failure
 - `404`: unknown `run_id`
-- `409`: state conflict
+- `409`: live run unavailable (for example backend not in `cluster` execution mode or checkpoint missing)
 - `429`: rate limit or concurrency cap reached
 - `500`: unexpected server failure

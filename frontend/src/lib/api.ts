@@ -40,22 +40,24 @@ export type SandboxRunLifecycle =
   | "failed"
   | "cancelled";
 
+export type Severity = "low" | "medium" | "high";
+
 export type EpisodeNode = {
   id: string;
+  severity: Severity;
   role?: string;
-  os?: string;
 };
 
 export type EpisodeVulnerability = {
-  id: string;
   node_id: string;
-  severity?: "low" | "medium" | "high";
+  vuln_id: string;
+  exploitability?: number;
 };
 
 export type RedObjective = {
-  id: string;
-  type: string;
-  target: string;
+  target_node_id: string;
+  objective: string;
+  priority?: number;
 };
 
 export type EpisodeSpec = {
@@ -66,6 +68,41 @@ export type EpisodeSpec = {
   vulnerabilities: EpisodeVulnerability[];
   red_objectives: RedObjective[];
   defender_mode: "aegis";
+};
+
+export type SandboxFormNode = {
+  id: string;
+  role?: string;
+  os?: string;
+  severity?: Severity;
+};
+
+export type SandboxFormVulnerability = {
+  id: string;
+  node_id: string;
+  severity?: Severity;
+  exploitability?: number;
+};
+
+export type SandboxFormObjective = {
+  id: string;
+  type: string;
+  target: string;
+  priority?: number;
+};
+
+export type SandboxFormSpec = {
+  name: string;
+  seed?: number;
+  horizon: number;
+  nodes: SandboxFormNode[];
+  vulnerabilities: SandboxFormVulnerability[];
+  red_objectives: SandboxFormObjective[];
+  defender_mode: "aegis";
+};
+
+export type SandboxRunCreateRequest = {
+  episode_spec: EpisodeSpec;
 };
 
 export type SandboxRunCreateResponse = {
@@ -88,9 +125,11 @@ export type SandboxRunStatus = {
 };
 
 export type SandboxCatalogResponse = {
-  node_templates: Array<{ role: string; supported_os?: string[] }>;
-  vulnerability_templates: Array<{ id: string; severity?: string }>;
-  objective_templates: Array<{ type: string }>;
+  vulnerabilities: string[];
+  objectives: string[];
+  execution_mode: "cluster" | "local";
+  live_run_enabled: boolean;
+  live_block_reason: string | null;
 };
 
 export type LiveStreamMessage =
@@ -190,6 +229,65 @@ function toStep(value: unknown, fallbackStep: number): number {
   }
 
   return fallbackStep;
+}
+
+function toFiniteNumber(value: unknown): number | null {
+  if (typeof value === "number" && Number.isFinite(value)) return value;
+  if (typeof value === "string") {
+    const parsed = Number.parseFloat(value);
+    if (Number.isFinite(parsed)) return parsed;
+  }
+  return null;
+}
+
+function normalizeSeverity(value: unknown): Severity {
+  const normalized = toNonEmptyString(value)?.toLowerCase();
+  if (normalized === "low" || normalized === "medium" || normalized === "high") {
+    return normalized;
+  }
+  return "medium";
+}
+
+export function mapSandboxFormToEpisodeSpec(form: SandboxFormSpec): EpisodeSpec {
+  return {
+    name: form.name.trim(),
+    seed: form.seed,
+    horizon: form.horizon,
+    nodes: form.nodes.map((node) => ({
+      id: node.id.trim(),
+      role: toNonEmptyString(node.role) ?? undefined,
+      severity: normalizeSeverity(node.severity),
+    })),
+    vulnerabilities: form.vulnerabilities.map((vulnerability) => {
+      const mapped: EpisodeVulnerability = {
+        node_id: vulnerability.node_id.trim(),
+        vuln_id: vulnerability.id.trim(),
+      };
+      const exploitability = toFiniteNumber(vulnerability.exploitability);
+      if (exploitability !== null && exploitability >= 0 && exploitability <= 1) {
+        mapped.exploitability = exploitability;
+      }
+      return mapped;
+    }),
+    red_objectives: form.red_objectives.map((objective) => {
+      const mapped: RedObjective = {
+        target_node_id: objective.target.trim(),
+        objective: objective.type.trim(),
+      };
+      const priority = toFiniteNumber(objective.priority);
+      if (priority !== null) {
+        mapped.priority = Math.trunc(priority);
+      }
+      return mapped;
+    }),
+    defender_mode: "aegis",
+  };
+}
+
+export function toSandboxRunCreateRequest(episodeSpec: EpisodeSpec): SandboxRunCreateRequest {
+  return {
+    episode_spec: episodeSpec,
+  };
 }
 
 function toActor(value: unknown): Actor | null {
@@ -689,21 +787,50 @@ async function fetchUnknownJson(url: string, signal?: AbortSignal): Promise<unkn
   return (await response.json()) as unknown;
 }
 
-function parseErrorMessage(payload: unknown): string | null {
+function parseDetailItem(detail: unknown): string | null {
+  const detailRecord = asRecord(detail);
+  if (!detailRecord) {
+    return toNonEmptyString(detail);
+  }
+
+  const msg =
+    toNonEmptyString(detailRecord.msg) ??
+    toNonEmptyString(detailRecord.message) ??
+    null;
+  const loc =
+    Array.isArray(detailRecord.loc)
+      ? detailRecord.loc
+          .map((part) => (typeof part === "string" || typeof part === "number" ? String(part) : ""))
+          .filter((part) => part.length > 0)
+          .join(".")
+      : null;
+
+  if (loc && msg) return `${loc}: ${msg}`;
+  return msg ?? toNonEmptyString(detailRecord.type);
+}
+
+export function extractApiErrorMessage(payload: unknown): string | null {
   const record = asRecord(payload);
   if (!record) return null;
 
   const direct = toNonEmptyString(record.message);
   if (direct) return direct;
 
-  const errorRecord = asRecord(record.error);
-  if (!errorRecord) return null;
+  const detail = record.detail;
+  if (Array.isArray(detail)) {
+    const entries = detail
+      .map((item) => parseDetailItem(item))
+      .filter((item): item is string => Boolean(item));
+    if (entries.length > 0) return entries.join("; ");
+  } else {
+    const singleDetail = parseDetailItem(detail);
+    if (singleDetail) return singleDetail;
+  }
 
-  return (
-    toNonEmptyString(errorRecord.message) ??
-    toNonEmptyString(errorRecord.code) ??
-    null
-  );
+  const errorRecord = asRecord(record.error);
+  if (!errorRecord) return toNonEmptyString(record.error);
+
+  return toNonEmptyString(errorRecord.message) ?? toNonEmptyString(errorRecord.code) ?? null;
 }
 
 async function readErrorMessage(response: Response, fallback: string): Promise<string> {
@@ -711,7 +838,7 @@ async function readErrorMessage(response: Response, fallback: string): Promise<s
   if (contentType.includes("application/json")) {
     try {
       const payload = (await response.json()) as unknown;
-      const parsed = parseErrorMessage(payload);
+      const parsed = extractApiErrorMessage(payload);
       if (parsed) return parsed;
     } catch {
       return fallback;
@@ -796,6 +923,7 @@ function parseSandboxRunStatus(payload: unknown): SandboxRunStatus {
   }
 
   const errorRecord = asRecord(record.error);
+  const errorString = toNonEmptyString(record.error);
   const kpisRecord = asRecord(record.kpis);
 
   return {
@@ -804,13 +932,18 @@ function parseSandboxRunStatus(payload: unknown): SandboxRunStatus {
     started_at: toNonEmptyString(record.started_at),
     ended_at: toNonEmptyString(record.ended_at),
     kpis: kpisRecord as SandboxRunStatus["kpis"],
-    error: errorRecord
-      ? {
-          code: toNonEmptyString(errorRecord.code) ?? undefined,
-          message: toNonEmptyString(errorRecord.message) ?? undefined,
-          details: Array.isArray(errorRecord.details) ? errorRecord.details : undefined,
-        }
-      : null,
+    error:
+      errorRecord
+        ? {
+            code: toNonEmptyString(errorRecord.code) ?? undefined,
+            message: toNonEmptyString(errorRecord.message) ?? undefined,
+            details: Array.isArray(errorRecord.details) ? errorRecord.details : undefined,
+          }
+        : errorString
+          ? {
+              message: errorString,
+            }
+          : null,
   };
 }
 
@@ -820,50 +953,39 @@ function parseSandboxCatalog(payload: unknown): SandboxCatalogResponse {
     throw new Error("Invalid sandbox catalog response");
   }
 
-  const nodeTemplatesRaw = Array.isArray(record.node_templates) ? record.node_templates : [];
-  const vulnerabilityTemplatesRaw = Array.isArray(record.vulnerability_templates)
-    ? record.vulnerability_templates
-    : [];
-  const objectiveTemplatesRaw = Array.isArray(record.objective_templates)
-    ? record.objective_templates
-    : [];
+  const vulnerabilities = Array.isArray(record.vulnerabilities)
+    ? record.vulnerabilities
+        .map((item) => toNonEmptyString(item))
+        .filter((item): item is string => Boolean(item))
+    : Array.isArray(record.vulnerability_templates)
+      ? record.vulnerability_templates
+          .map((item) => toNonEmptyString(asRecord(item)?.id))
+          .filter((item): item is string => Boolean(item))
+      : [];
 
-  const nodeTemplates: SandboxCatalogResponse["node_templates"] = [];
-  for (const item of nodeTemplatesRaw) {
-    const template = asRecord(item);
-    const role = toNonEmptyString(template?.role);
-    if (!role) continue;
-    const supportedOs = Array.isArray(template?.supported_os)
-      ? template.supported_os.filter((entry): entry is string => typeof entry === "string")
-      : undefined;
-    nodeTemplates.push(
-      supportedOs ? { role, supported_os: supportedOs } : { role },
-    );
-  }
+  const objectives = Array.isArray(record.objectives)
+    ? record.objectives
+        .map((item) => toNonEmptyString(item))
+        .filter((item): item is string => Boolean(item))
+    : Array.isArray(record.objective_templates)
+      ? record.objective_templates
+          .map((item) => toNonEmptyString(asRecord(item)?.type))
+          .filter((item): item is string => Boolean(item))
+      : [];
 
-  const vulnerabilityTemplates: SandboxCatalogResponse["vulnerability_templates"] = [];
-  for (const item of vulnerabilityTemplatesRaw) {
-    const template = asRecord(item);
-    const id = toNonEmptyString(template?.id);
-    if (!id) continue;
-    vulnerabilityTemplates.push({
-      id,
-      severity: toNonEmptyString(template?.severity) ?? undefined,
-    });
-  }
-
-  const objectiveTemplates: SandboxCatalogResponse["objective_templates"] = [];
-  for (const item of objectiveTemplatesRaw) {
-    const template = asRecord(item);
-    const type = toNonEmptyString(template?.type);
-    if (!type) continue;
-    objectiveTemplates.push({ type });
-  }
+  const executionMode = toNonEmptyString(record.execution_mode);
+  const liveRunEnabled =
+    typeof record.live_run_enabled === "boolean"
+      ? record.live_run_enabled
+      : executionMode === "cluster";
+  const liveBlockReason = toNonEmptyString(record.live_block_reason);
 
   return {
-    node_templates: nodeTemplates,
-    vulnerability_templates: vulnerabilityTemplates,
-    objective_templates: objectiveTemplates,
+    vulnerabilities,
+    objectives,
+    execution_mode: executionMode === "cluster" ? "cluster" : "local",
+    live_run_enabled: liveRunEnabled,
+    live_block_reason: liveBlockReason,
   };
 }
 
@@ -1059,7 +1181,7 @@ export async function createSandboxRun(
       "Content-Type": "application/json",
       Accept: "application/json",
     },
-    body: JSON.stringify(episodeSpec),
+    body: JSON.stringify(toSandboxRunCreateRequest(episodeSpec)),
     signal,
   });
 

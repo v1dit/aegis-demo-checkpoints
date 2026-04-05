@@ -1,0 +1,53 @@
+{
+  "base_http_url": "http://127.0.0.1:8000",
+  "base_ws_url": "ws://127.0.0.1:8000",
+  "completed_at_utc": "2026-04-05T01:58:00.035825+00:00",
+  "created_run_ids": [
+    "run_20260405_015755_001",
+    "run_20260405_015759_002"
+  ],
+  "doc_checks": {
+    "doc01_product_flow": {
+      "cancelled_terminal_seen": true,
+      "polling_authoritative_terminal": true,
+      "queued_state_seen": true,
+      "reconnect_path_exercised": true,
+      "running_seen_in_poll_history": false,
+      "submitting_state_seen": true,
+      "terminal_completed_seen": true
+    },
+    "doc02_api_contract": {
+      "cancel_endpoint_terminal_valid": true,
+      "catalog_shape_valid": true,
+      "create_response_fields_valid": true,
+      "negative_400_horizon": true,
+      "negative_400_unknown_vuln": true,
+      "negative_404_unknown_run": true,
+      "negative_429_pressure": true,
+      "status_endpoint_terminal_valid": true
+    },
+    "doc03_live_stream_contract": {
+      "envelope_fields_valid": true,
+      "event_classes_seen": {
+        "action": true,
+        "marker": true,
+        "metric": true
+      },
+      "exactly_one_terminal_marker": true,
+      "reconnect_plus_poll_reconciliation": true
+    },
+    "doc04_frontend_integration_checklist": {
+      "synthetic_client_flow_executed": true,
+      "terminal_from_polling_supported": true,
+      "terminal_summary_ready_cancelled": true,
+      "terminal_summary_ready_completed": true,
+      "terminal_summary_ready_failed_synthetic": true,
+      "ws_drop_fallback_exercised": true
+    },
+    "preflight": {
+      "catalog_endpoint_reachable": true,
+      "health_endpoint_ok": false
+    }
+  },
+  "started_at_utc": "2026-04-05T01:57:55.420468+00:00"
+}

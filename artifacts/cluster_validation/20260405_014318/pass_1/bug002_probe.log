@@ -1,0 +1,12 @@
+spawn ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null kgarg@chapman.edu@dgx0.chapman.edu bash -s
+Warning: Permanently added 'dgx0.chapman.edu' (ED25519) to the list of known hosts.
+kgarg@chapman.edu@dgx0.chapman.edu's password: 
+set -euo pipefail
+REMOTE_DIR_RAW="$HOME/pantherHacks_runner_api_test"
+eval "REMOTE_DIR=$REMOTE_DIR_RAW"
+
+mkdir -p "$REMOTE_DIR"
+docker run --rm -v "$REMOTE_DIR:/workspace" busybox:1.36 sh -c   'mkdir -p /workspace/artifacts/replays/probe /workspace/runs/probe && touch /workspace/artifacts/replays/probe/root_owned.txt /workspace/runs/probe/root_owned.txt'
+echo "prepare_status=ok"
+exit $?
+prepare_status=ok

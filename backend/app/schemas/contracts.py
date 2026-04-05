@@ -268,6 +268,9 @@ class SandboxCancelResponse(BaseModel):
 class SandboxCatalogResponse(BaseModel):
     vulnerabilities: list[str]
     objectives: list[str]
+    execution_mode: Literal["cluster", "local"]
+    live_run_enabled: bool
+    live_block_reason: str | None = None
 
 
 class StreamEvent(BaseModel):

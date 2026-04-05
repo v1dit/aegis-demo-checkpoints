@@ -25,6 +25,14 @@ def _configure_stream_test(tmp_path, monkeypatch) -> None:
     monkeypatch.setattr("backend.app.core.runs.ACTIVE_RUN_FILE", active_run_file)
     monkeypatch.setattr("backend.app.api.stream.REPLAY_DIR", replay_dir)
     monkeypatch.setattr("backend.app.sandbox.jobs.settings.sandbox_step_delay_seconds", 0.005)
+    monkeypatch.setattr("backend.app.sandbox.jobs.settings.sandbox_execution_mode", "cluster")
+    monkeypatch.setattr(
+        "backend.app.sandbox.jobs.settings.sandbox_checkpoint_id", "checkpoint_blue_demo_best"
+    )
+    checkpoint_dir.mkdir(parents=True, exist_ok=True)
+    (checkpoint_dir / "checkpoint_blue_demo_best.json").write_text(
+        '{"policy_bias": 0.2}', encoding="utf-8"
+    )
 
 
 def test_sandbox_live_stream_by_run_id(tmp_path, monkeypatch) -> None:
@@ -67,4 +75,3 @@ def test_sandbox_live_stream_by_run_id(tmp_path, monkeypatch) -> None:
 
     assert saw_action
     assert saw_marker
-

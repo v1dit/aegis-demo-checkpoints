@@ -12,7 +12,7 @@ import orjson
 
 from backend.app.core.config import settings
 from backend.app.core.ids import prefixed_id
-from backend.app.core.runs import run_stage_dirs
+from backend.app.core.runs import read_checkpoint_payload, run_stage_dirs
 from backend.app.core.state import shared_state
 from backend.app.env.catalog import SERVICE_CATALOG, VULN_CATALOG
 from backend.app.sandbox.launcher import DgxScriptLauncher, LocalThreadLauncher, SandboxLauncher
@@ -34,6 +34,10 @@ class SandboxValidationError(ValueError):
 
 
 class SandboxRateLimitError(RuntimeError):
+    pass
+
+
+class SandboxLiveUnavailableError(RuntimeError):
     pass
 
 
@@ -251,17 +255,70 @@ def _resolve_launcher() -> SandboxLauncher:
     return LocalThreadLauncher()
 
 
+def _resolve_execution_mode() -> str:
+    mode = settings.sandbox_execution_mode.lower()
+    return "cluster" if mode == "cluster" else "local"
+
+
+def _checkpoint_available(checkpoint_id: str) -> bool:
+    return read_checkpoint_payload(checkpoint_id=checkpoint_id) is not None
+
+
+def get_sandbox_readiness() -> dict[str, Any]:
+    execution_mode = _resolve_execution_mode()
+    checkpoint_id = str(settings.sandbox_checkpoint_id).strip()
+    if not checkpoint_id:
+        return {
+            "execution_mode": execution_mode,
+            "live_run_enabled": False,
+            "live_block_reason": "live run unavailable: sandbox_checkpoint_id is not configured",
+        }
+
+    if execution_mode != "cluster":
+        return {
+            "execution_mode": execution_mode,
+            "live_run_enabled": False,
+            "live_block_reason": "live run unavailable: sandbox_execution_mode must be 'cluster'",
+        }
+
+    if not _checkpoint_available(checkpoint_id):
+        return {
+            "execution_mode": execution_mode,
+            "live_run_enabled": False,
+            "live_block_reason": (
+                f"live run unavailable: checkpoint '{checkpoint_id}' was not found"
+            ),
+        }
+
+    return {
+        "execution_mode": execution_mode,
+        "live_run_enabled": True,
+        "live_block_reason": None,
+    }
+
+
 def get_sandbox_catalog() -> dict[str, Any]:
-    return {"vulnerabilities": _vuln_catalog, "objectives": SANDBOX_OBJECTIVES}
+    readiness = get_sandbox_readiness()
+    return {
+        "vulnerabilities": _vuln_catalog,
+        "objectives": SANDBOX_OBJECTIVES,
+        "execution_mode": readiness["execution_mode"],
+        "live_run_enabled": readiness["live_run_enabled"],
+        "live_block_reason": readiness["live_block_reason"],
+    }
 
 
 def start_sandbox_run(*, episode_spec: EpisodeSpec, client_key: str | None) -> str:
     _validate_episode_spec(episode_spec)
+    readiness = get_sandbox_readiness()
+    if not readiness["live_run_enabled"]:
+        raise SandboxLiveUnavailableError(str(readiness["live_block_reason"]))
     normalized_client_key = _normalize_client_key(client_key)
     _enforce_rate_limit(normalized_client_key)
     _enforce_concurrency_limit(normalized_client_key)
 
     run_id = _next_run_id()
+    checkpoint_id = str(settings.sandbox_checkpoint_id).strip()
     stage_dirs = run_stage_dirs(run_id)
     sandbox_dir = stage_dirs["root"] / "sandbox"
     sandbox_dir.mkdir(parents=True, exist_ok=True)
@@ -286,6 +343,7 @@ def start_sandbox_run(*, episode_spec: EpisodeSpec, client_key: str | None) -> s
             "episode_spec": episode_spec.model_dump(mode="json"),
             "artifact_paths": artifact_paths,
             "live_events": [],
+            "checkpoint_id": checkpoint_id,
         }
 
     Path(artifact_paths["episode_spec"]).write_bytes(
@@ -366,7 +424,7 @@ def _run_sandbox_job(run_id: str) -> None:
     topology = _build_topology(episode_spec, seed)
     prioritized_targets = _objective_priority(episode_spec)
     launcher = _resolve_launcher()
-    checkpoint_id = "checkpoint_blue_demo_best"
+    checkpoint_id = str(run.get("checkpoint_id") or settings.sandbox_checkpoint_id).strip()
 
     events_path = Path(artifact_paths["events"])
     events_path.parent.mkdir(parents=True, exist_ok=True)

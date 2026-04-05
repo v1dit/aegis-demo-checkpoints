@@ -1,0 +1,27 @@
+[
+  {
+    "attempt": 1,
+    "body": {
+      "run_id": "run_20260405_020525_003",
+      "status": "queued",
+      "stream_url": "/stream/live/run_20260405_020525_003"
+    },
+    "status_code": 200
+  },
+  {
+    "attempt": 2,
+    "body": {
+      "run_id": "run_20260405_020525_004",
+      "status": "queued",
+      "stream_url": "/stream/live/run_20260405_020525_004"
+    },
+    "status_code": 200
+  },
+  {
+    "attempt": 3,
+    "body": {
+      "detail": "concurrency_limit_reached"
+    },
+    "status_code": 429
+  }
+]

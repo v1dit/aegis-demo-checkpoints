@@ -1,0 +1,47 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+__________________ test_partner_handoff_live_cluster_contract __________________
+
+    def test_partner_handoff_live_cluster_contract() -> None:
+        evidence_summary: dict[str, Any] = {
+            "base_http_url": BASE_HTTP_URL,
+            "base_ws_url": BASE_WS_URL,
+            "started_at_utc": datetime.now(timezone.utc).isoformat(),
+            "doc_checks": {},
+        }
+        EVIDENCE_DIR.mkdir(parents=True, exist_ok=True)
+    
+        submitting_state_seen = False
+        created_run_ids: list[str] = []
+    
+        with httpx.Client(base_url=BASE_HTTP_URL, timeout=HTTP_TIMEOUT_S) as client:
+>           _wait_for_backend_ready(client)
+
+tests/cluster/test_sandbox_contract_live.py:262: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+client = <httpx.Client object at 0x107206a90>
+
+    def _wait_for_backend_ready(client: httpx.Client, *, timeout_s: float = 90.0) -> None:
+        deadline = time.time() + timeout_s
+        while time.time() < deadline:
+            try:
+                response = _request_with_retries(
+                    client,
+                    "GET",
+                    "/sandbox/catalog",
+                    attempts=1,
+                    sleep_s=0.2,
+                )
+            except AssertionError:
+                time.sleep(1.0)
+                continue
+            if response.status_code == 200:
+                return
+            time.sleep(1.0)
+>       raise AssertionError("backend did not become ready for /sandbox/catalog within timeout")
+E       AssertionError: backend did not become ready for /sandbox/catalog within timeout
+
+tests/cluster/test_sandbox_contract_live.py:127: AssertionError
+=========================== short test summary info ============================
+FAILED tests/cluster/test_sandbox_contract_live.py::test_partner_handoff_live_cluster_contract

@@ -26,6 +26,14 @@ def _configure_tmp_paths(tmp_path, monkeypatch) -> None:
     monkeypatch.setattr("backend.app.core.runs.ACTIVE_RUN_FILE", active_run_file)
     monkeypatch.setattr("backend.app.api.stream.REPLAY_DIR", replay_dir)
     monkeypatch.setattr("backend.app.sandbox.jobs.settings.sandbox_step_delay_seconds", 0.005)
+    monkeypatch.setattr("backend.app.sandbox.jobs.settings.sandbox_execution_mode", "cluster")
+    monkeypatch.setattr(
+        "backend.app.sandbox.jobs.settings.sandbox_checkpoint_id", "checkpoint_blue_demo_best"
+    )
+    checkpoint_dir.mkdir(parents=True, exist_ok=True)
+    (checkpoint_dir / "checkpoint_blue_demo_best.json").write_text(
+        '{"policy_bias": 0.2}', encoding="utf-8"
+    )
 
 
 def _wait_terminal(client: TestClient, run_id: str, timeout_s: float = 10.0) -> dict:
@@ -144,4 +152,57 @@ def test_sandbox_catalog_endpoint(tmp_path, monkeypatch) -> None:
     payload = response.json()
     assert "vulnerabilities" in payload
     assert "objectives" in payload
+    assert payload["execution_mode"] == "cluster"
+    assert payload["live_run_enabled"] is True
+    assert payload["live_block_reason"] is None
     assert "exfiltrate" in payload["objectives"]
+
+
+def test_sandbox_live_gate_blocks_when_not_cluster(tmp_path, monkeypatch) -> None:
+    _configure_tmp_paths(tmp_path, monkeypatch)
+    monkeypatch.setattr("backend.app.sandbox.jobs.settings.sandbox_execution_mode", "local")
+    with shared_state.lock:
+        shared_state.sandbox_runs.clear()
+
+    client = TestClient(app)
+    create = client.post(
+        "/sandbox/runs",
+        json={
+            "episode_spec": {
+                "name": "blocked-live-run",
+                "horizon": 20,
+                "nodes": [{"id": "host-01", "severity": "high"}],
+                "vulnerabilities": [{"node_id": "host-01", "vuln_id": "SYNTH-CVE-2026-1001"}],
+                "red_objectives": [{"target_node_id": "host-01", "objective": "exfiltrate"}],
+                "defender_mode": "aegis",
+            }
+        },
+    )
+    assert create.status_code == 409
+    assert "live run unavailable" in create.text.lower()
+
+
+def test_sandbox_live_gate_blocks_when_checkpoint_missing(tmp_path, monkeypatch) -> None:
+    _configure_tmp_paths(tmp_path, monkeypatch)
+    monkeypatch.setattr(
+        "backend.app.sandbox.jobs.settings.sandbox_checkpoint_id", "missing-checkpoint-id"
+    )
+    with shared_state.lock:
+        shared_state.sandbox_runs.clear()
+
+    client = TestClient(app)
+    create = client.post(
+        "/sandbox/runs",
+        json={
+            "episode_spec": {
+                "name": "blocked-missing-checkpoint",
+                "horizon": 20,
+                "nodes": [{"id": "host-01", "severity": "high"}],
+                "vulnerabilities": [{"node_id": "host-01", "vuln_id": "SYNTH-CVE-2026-1001"}],
+                "red_objectives": [{"target_node_id": "host-01", "objective": "exfiltrate"}],
+                "defender_mode": "aegis",
+            }
+        },
+    )
+    assert create.status_code == 409
+    assert "checkpoint" in create.text.lower()

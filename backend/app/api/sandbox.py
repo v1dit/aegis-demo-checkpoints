@@ -3,6 +3,7 @@ from __future__ import annotations
 from fastapi import APIRouter, HTTPException, Request
 
 from backend.app.sandbox.jobs import (
+    SandboxLiveUnavailableError,
     SandboxRateLimitError,
     SandboxValidationError,
     get_sandbox_catalog,
@@ -38,6 +39,8 @@ def create_sandbox_run(
         run_id = start_sandbox_run(episode_spec=payload.episode_spec, client_key=client_key)
     except SandboxValidationError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except SandboxLiveUnavailableError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
     except SandboxRateLimitError as exc:
         raise HTTPException(status_code=429, detail=str(exc)) from exc
 
@@ -64,4 +67,3 @@ def cancel_sandbox_run(run_id: str) -> SandboxCancelResponse:
     except KeyError as exc:
         raise HTTPException(status_code=404, detail=f"Unknown run_id: {run_id}") from exc
     return SandboxCancelResponse(run_id=run_id, status=status)
-

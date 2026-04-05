@@ -1,0 +1,11 @@
+{
+  "started_at_utc": "2026-04-05T01:43:29Z",
+  "passes_required": 3,
+  "base_http_url": "http://127.0.0.1:8000",
+  "base_ws_url": "ws://127.0.0.1:8000",
+  "local_branch": "codex/fix-cluster-backend-bugs",
+  "local_sha": "e64aa04d66a219c197358ee9911109f99ed1ba04",
+  "remote_branch": "main",
+  "remote_sha": "4c964efe5fd09ec53ecc2beffad3adfaf3d9d22e",
+  "remote_runner_dir_raw": "$HOME/pantherHacks_runner_api_test"
+}

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from typing import Literal
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -33,6 +34,8 @@ class Settings(BaseSettings):
     sandbox_max_concurrent_per_client: int = 2
     sandbox_run_timeout_seconds: int = 120
     sandbox_step_delay_seconds: float = 0.02
+    sandbox_execution_mode: Literal["cluster", "local"] = "local"
+    sandbox_checkpoint_id: str = "checkpoint_blue_demo_best"
     sandbox_launcher: str = "local"
 
     model_config = SettingsConfigDict(

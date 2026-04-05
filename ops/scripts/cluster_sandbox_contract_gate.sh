@@ -175,6 +175,8 @@ if ! docker image inspect pantherhacks-trainer:latest >/dev/null 2>&1; then
 fi
 docker rm -f pantherhacks-sandbox-api >/dev/null 2>&1 || true
 docker run -d --name pantherhacks-sandbox-api --label project=pantherhacks -p 8000:8000 \
+  -e SANDBOX_EXECUTION_MODE=cluster \
+  -e SANDBOX_CHECKPOINT_ID=checkpoint_blue_demo_best \
   -v "$REMOTE_DIR/artifacts:/workspace/artifacts" \
   -v "$REMOTE_DIR/runs:/workspace/runs" \
   pantherhacks-trainer:latest uvicorn backend.app.main:app --host 0.0.0.0 --port 8000 >/dev/null
