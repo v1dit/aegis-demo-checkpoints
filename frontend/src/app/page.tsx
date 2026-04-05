@@ -333,7 +333,7 @@ export default function Home() {
                   onClick={() => setTab(item.id)}
                   className={`rounded-md border px-3 py-2 text-left transition ${
                     tab === item.id
-                      ? "border-[#E24B4A] bg-[#E24B4A]/20 text-[#ffd6d4]"
+                      ? "border-[var(--steel-accent)] bg-[var(--steel-soft)] text-[#dde7f8]"
                       : "border-[var(--border)] bg-[#0f131a] text-[var(--text-secondary)]"
                   }`}
                 >
@@ -344,7 +344,7 @@ export default function Home() {
             </div>
 
             <div className="flex flex-wrap items-center gap-2 text-xs uppercase tracking-[0.12em]">
-              <span className="rounded-md border border-[#E24B4A] bg-[#E24B4A]/15 px-3 py-1 text-[#ffd9d7]">
+              <span className="rounded-md border border-[var(--steel-accent)] bg-[var(--steel-soft)] px-3 py-1 text-[#dde7f8]">
                 {statusLabel}
               </span>
               <span className="rounded-md border border-[var(--border)] bg-[#0f131a] px-3 py-1 text-[var(--text-secondary)]">
@@ -361,7 +361,7 @@ export default function Home() {
                 onClick={() => changeProfileMode(mode.id)}
                 className={`rounded-lg border px-3 py-3 text-left transition ${
                   selectedScenarioRun.profile_mode === mode.id
-                    ? "border-[#E24B4A] bg-[#E24B4A]/14"
+                    ? "border-[var(--steel-accent)] bg-[var(--steel-soft)]"
                     : "border-[var(--border)] bg-[#0f131a]"
                 }`}
               >
@@ -378,7 +378,7 @@ export default function Home() {
               Active Scenario
             </span>
             <div className="mt-1">{scenarioHeadline}</div>
-            <div className="mt-1 text-xs text-[#cbb7b4]">
+            <div className="mt-1 text-xs text-[#b6c2d7]">
               Mode Meaning: {modePlainLanguage(selectedScenarioRun.profile_mode)}
             </div>
           </div>
@@ -444,7 +444,7 @@ export default function Home() {
                       ? `Campaign stage ${campaignStage.stage_index + 1}/${CAMPAIGN_ALL_5.ordered_stages.length}: ${campaignStage.transition_label}`
                       : activeScenario?.expected_flow ?? "Live scenario topology playback"}
                   </p>
-                  <div className="mt-1 inline-flex rounded border border-[#E24B4A]/60 bg-[#E24B4A]/12 px-2 py-0.5 text-[10px] uppercase tracking-[0.12em] text-[#ffd8d5]">
+                  <div className="mt-1 inline-flex rounded border border-[var(--steel-accent)] bg-[var(--steel-soft)] px-2 py-0.5 text-[10px] uppercase tracking-[0.12em] text-[#dbe6f7]">
                     Scenario Profile: {activeModeLabel}
                   </div>
                 </div>
@@ -453,7 +453,7 @@ export default function Home() {
                   <button
                     type="button"
                     onClick={() => setIsPlaying((prev) => !prev)}
-                    className="rounded-md border border-[#E24B4A] bg-[#E24B4A]/14 px-3 py-1 text-xs uppercase tracking-[0.12em] text-[#ffd6d4]"
+                    className="rounded-md border border-[var(--steel-accent)] bg-[var(--steel-soft)] px-3 py-1 text-xs uppercase tracking-[0.12em] text-[#dde7f8]"
                   >
                     {isPlaying ? "Pause" : "Play"}
                   </button>
@@ -505,7 +505,7 @@ export default function Home() {
                       onClick={() => setSpeed(value)}
                       className={`rounded-md border px-2 py-1 text-[11px] uppercase tracking-[0.12em] ${
                         speed === value
-                          ? "border-[#E24B4A] bg-[#E24B4A]/18 text-[#ffd5d3]"
+                          ? "border-[var(--steel-accent)] bg-[var(--steel-soft)] text-[#dde7f8]"
                           : "border-[var(--border)] bg-[#0f131a] text-[var(--text-secondary)]"
                       }`}
                     >
@@ -532,7 +532,7 @@ export default function Home() {
                     <button
                       type="button"
                       onClick={() => setLogFilter(`node:${selectedNode.id}`)}
-                      className="rounded border border-[#E24B4A]/60 bg-[#E24B4A]/18 px-2 py-1 text-[10px] uppercase tracking-[0.12em] text-[#ffd4d2]"
+                      className="rounded border border-[var(--steel-accent)] bg-[var(--steel-soft)] px-2 py-1 text-[10px] uppercase tracking-[0.12em] text-[#dde7f8]"
                     >
                       Filter Log to Node
                     </button>
@@ -598,7 +598,7 @@ export default function Home() {
                   <article
                     key={scenario.id}
                     className={`rounded-lg border p-3 ${
-                      selected ? "border-[#E24B4A] bg-[#E24B4A]/12" : "border-[var(--border)] bg-[#0f131a]"
+                      selected ? "border-[var(--steel-accent)] bg-[var(--steel-soft)]" : "border-[var(--border)] bg-[#0f131a]"
                     }`}
                   >
                     <div className="flex flex-wrap items-start justify-between gap-3">
@@ -607,16 +607,16 @@ export default function Home() {
                         <p className="mt-1 text-xs text-[var(--text-secondary)]">{scenario.description}</p>
                         <div className="mt-2 text-[11px] text-[var(--text-secondary)]">Attack type: {scenario.attack_type}</div>
                         <div className="text-[11px] text-[var(--text-secondary)]">Severity profile: {scenario.severity_profile}</div>
-                        <div className="mt-1 text-[11px] text-[#d8beb8]">Flow: {scenario.expected_flow}</div>
+                        <div className="mt-1 text-[11px] text-[#c4cedd]">Flow: {scenario.expected_flow}</div>
                       </div>
                       <div className="flex items-center gap-2">
-                        <span className="rounded border border-[#A32D2D]/60 bg-[#A32D2D]/18 px-2 py-1 text-[10px] uppercase tracking-[0.12em] text-[#ffd7d4]">
+                        <span className="rounded border border-[var(--steel-accent)] bg-[var(--steel-soft)] px-2 py-1 text-[10px] uppercase tracking-[0.12em] text-[#dde7f8]">
                           Scenario
                         </span>
                         <button
                           type="button"
                           onClick={() => selectScenarioFromVault({ kind: "scenario", scenario_id: scenario.id })}
-                          className="rounded border border-[#E24B4A]/70 bg-[#E24B4A]/18 px-3 py-1 text-xs uppercase tracking-[0.12em] text-[#ffd4d1]"
+                          className="rounded border border-[var(--steel-accent)] bg-[var(--steel-soft)] px-3 py-1 text-xs uppercase tracking-[0.12em] text-[#dde7f8]"
                         >
                           Open in Dashboard
                         </button>
@@ -629,7 +629,7 @@ export default function Home() {
               <article
                 className={`rounded-lg border p-3 ${
                   selectedScenarioRun.selection.kind === "campaign"
-                    ? "border-[#E24B4A] bg-[#E24B4A]/12"
+                    ? "border-[var(--steel-accent)] bg-[var(--steel-soft)]"
                     : "border-[var(--border)] bg-[#0f131a]"
                 }`}
               >
@@ -647,13 +647,13 @@ export default function Home() {
                     </ul>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="rounded border border-[#A32D2D]/60 bg-[#A32D2D]/18 px-2 py-1 text-[10px] uppercase tracking-[0.12em] text-[#ffd7d4]">
+                    <span className="rounded border border-[var(--steel-accent)] bg-[var(--steel-soft)] px-2 py-1 text-[10px] uppercase tracking-[0.12em] text-[#dde7f8]">
                       Campaign
                     </span>
                     <button
                       type="button"
                       onClick={() => selectScenarioFromVault({ kind: "campaign", campaign_id: "campaign_all_5" })}
-                      className="rounded border border-[#E24B4A]/70 bg-[#E24B4A]/18 px-3 py-1 text-xs uppercase tracking-[0.12em] text-[#ffd4d1]"
+                      className="rounded border border-[var(--steel-accent)] bg-[var(--steel-soft)] px-3 py-1 text-xs uppercase tracking-[0.12em] text-[#dde7f8]"
                     >
                       Open in Dashboard
                     </button>
@@ -670,7 +670,7 @@ export default function Home() {
             <p className="mt-2 text-sm text-[var(--text-secondary)]">
               Plain-language summary of what attack is active, how Aegis is defending, and why it matters.
             </p>
-            <div className="mt-2 inline-flex rounded border border-[#E24B4A]/60 bg-[#E24B4A]/12 px-2 py-0.5 text-[10px] uppercase tracking-[0.12em] text-[#ffd8d5]">
+            <div className="mt-2 inline-flex rounded border border-[var(--steel-accent)] bg-[var(--steel-soft)] px-2 py-0.5 text-[10px] uppercase tracking-[0.12em] text-[#dde7f8]">
               Scenario Profile: {activeModeLabel}
             </div>
 
@@ -731,7 +731,7 @@ export default function Home() {
                 <span className="rounded border border-[var(--border)] px-2 py-0.5 text-[var(--text-secondary)]">none</span>
               ) : (
                 <>
-                  <span className="rounded border border-[#E24B4A]/60 bg-[#E24B4A]/16 px-2 py-0.5 text-[#ffd8d5]">
+                  <span className="rounded border border-[var(--steel-accent)] bg-[var(--steel-soft)] px-2 py-0.5 text-[#dde7f8]">
                     {logFilter.replace("node:", "node ")}
                   </span>
                   <button

@@ -33,6 +33,8 @@ const EDGE_STATE_CLASSES = [
   "edge-blocked",
 ];
 
+const EDGE_CONTEXT_CLASSES = ["edge-context-active", "edge-context-muted"];
+
 const ZONE_CLASSES: Record<string, string> = {
   zone_perimeter: "zone-perimeter",
   zone_campus: "zone-campus",
@@ -56,23 +58,23 @@ function stylesheet(): NonNullable<CytoscapeOptions["style"]> {
         "text-valign": "bottom",
         "text-margin-y": 8,
         "border-width": 1,
-        "border-color": "#6d5a59",
-        "background-color": "#3e3335",
+        "border-color": "#6b7688",
+        "background-color": "#2c3340",
       },
     },
     {
       selector: "node:parent",
       style: {
         "background-opacity": 0.08,
-        "background-color": "#140e10",
+        "background-color": "#121923",
         "border-width": 1.2,
         "border-style": "dashed",
-        "border-color": "rgba(210,92,92,0.25)",
+        "border-color": "rgba(136,154,178,0.34)",
         label: "data(label)",
         "text-valign": "top",
         "text-halign": "center",
         "font-size": 11,
-        color: "#b99898",
+        color: "#9ca8bb",
         "text-transform": "uppercase",
         "padding-top": "26px",
         "padding-bottom": "26px",
@@ -110,17 +112,17 @@ function stylesheet(): NonNullable<CytoscapeOptions["style"]> {
     },
     {
       selector: ".zone-admin",
-      style: { "border-color": "#378ADD" },
+      style: { "border-color": "#7b8ea8" },
     },
     {
       selector: ".zone-research",
-      style: { "border-color": "#965e5e" },
+      style: { "border-color": "#6a788f" },
     },
     {
       selector: ".state-neutral",
       style: {
-        "background-color": "#3e3335",
-        "border-color": "#6d5a59",
+        "background-color": "#2c3340",
+        "border-color": "#6b7688",
         "border-width": 1,
         "shadow-opacity": 0,
       },
@@ -128,7 +130,7 @@ function stylesheet(): NonNullable<CytoscapeOptions["style"]> {
     {
       selector: ".state-monitored",
       style: {
-        "background-color": "#3e3335",
+        "background-color": "#2c3340",
         "border-color": "#1D9E75",
         "border-width": 2,
       },
@@ -171,7 +173,7 @@ function stylesheet(): NonNullable<CytoscapeOptions["style"]> {
     {
       selector: ".state-patched",
       style: {
-        "background-color": "#3e3335",
+        "background-color": "#2c3340",
         "border-color": "#378ADD",
         "border-style": "dashed",
         "border-width": 1.5,
@@ -192,19 +194,19 @@ function stylesheet(): NonNullable<CytoscapeOptions["style"]> {
     {
       selector: "edge",
       style: {
-        width: 1,
-        "line-color": "rgba(255,255,255,0.08)",
+        width: 1.15,
+        "line-color": "rgba(193,206,226,0.24)",
         "curve-style": "bezier",
         "target-arrow-shape": "none",
-        opacity: 0.9,
+        opacity: 0.75,
       },
     },
     {
       selector: ".edge-normal",
       style: {
-        width: 1,
+        width: 1.15,
         "line-style": "solid",
-        "line-color": "rgba(255,255,255,0.08)",
+        "line-color": "rgba(193,206,226,0.24)",
       },
     },
     {
@@ -250,6 +252,22 @@ function stylesheet(): NonNullable<CytoscapeOptions["style"]> {
         "line-color": "#378ADD",
         "line-style": "dashed",
         "line-dash-pattern": [4, 6],
+      },
+    },
+    {
+      selector: ".edge-context-active",
+      style: {
+        opacity: 1,
+        "line-opacity": 1,
+        width: 2.6,
+        "z-index": 999,
+      },
+    },
+    {
+      selector: ".edge-context-muted",
+      style: {
+        opacity: 0.16,
+        "line-opacity": 0.16,
       },
     },
     {
@@ -558,8 +576,12 @@ export default function Graph({
     const cy = cyRef.current;
     if (!cy) return;
 
+    const focusNodeId = highlightedNodeId ?? selectedNodeId;
+
     cy.batch(() => {
       cy.nodes().removeClass("node-selected node-highlighted");
+      cy.edges().removeClass(EDGE_CONTEXT_CLASSES.join(" "));
+
       if (selectedNodeId) {
         const selected = cy.getElementById(selectedNodeId);
         if (selected.length) {
@@ -574,8 +596,20 @@ export default function Graph({
         const highlighted = cy.getElementById(highlightedNodeId);
         if (highlighted.length) highlighted.addClass("node-highlighted");
       }
+
+      if (focusNodeId) {
+        cy.edges().forEach((edge) => {
+          const source = String(edge.data("source"));
+          const target = String(edge.data("target"));
+          if (source === focusNodeId || target === focusNodeId) {
+            edge.addClass("edge-context-active");
+          } else {
+            edge.addClass("edge-context-muted");
+          }
+        });
+      }
     });
-  }, [selectedNodeId, highlightedNodeId]);
+  }, [selectedNodeId, highlightedNodeId, graphState]);
 
   const showLoadingState = !topology || !graphState;
   const showEmptyState = Boolean(topology && graphState && graphState.nodes.length === 0);
