@@ -1,340 +1,514 @@
-'use client';
+"use client";
 
-import { useEffect, useMemo, useRef, useState } from 'react';
-import type { Core, StylesheetJson } from 'cytoscape';
-import type { ReplayEvent, ReplayTopology } from '../lib/api';
-import { classifyAction, formatIncident, type FormattedIncident } from '../lib/incidents';
+import { useEffect, useMemo, useRef } from "react";
+import type { Core, CytoscapeOptions, ElementDefinition } from "cytoscape";
+import type { TopologyInitData } from "../lib/integrationContract";
+import type { RuntimeGraphState } from "../lib/replayRuntime";
 
 type GraphProps = {
-  events?: ReplayEvent[];
-  topology?: ReplayTopology | null;
+  topology: TopologyInitData | null;
+  graphState: RuntimeGraphState | null;
+  selectedNodeId: string | null;
+  highlightedNodeId?: string | null;
+  onNodeSelect: (nodeId: string | null) => void;
   className?: string;
 };
 
-type NodeStatus = 'stable' | 'compromised' | 'contained';
-
-type NodeKind =
-  | 'gateway'
-  | 'service'
-  | 'workstation'
-  | 'database'
-  | 'identity'
-  | 'cloud';
-
-type NodeInsight = {
-  id: string;
-  kind: NodeKind;
-  complexity: number;
-  severity: number;
-  attacks: number;
-  defenses: number;
-  lastAction: string;
-  lastActor: 'RED' | 'BLUE' | 'NONE';
-  lastIncident: FormattedIncident | null;
-  latestAttack: FormattedIncident | null;
-  latestDefense: FormattedIncident | null;
-};
-
-type BaseNode = {
-  id: string;
-  assetType?: string;
-};
-
-type BaseEdge = {
-  id: string;
-  source: string;
-  target: string;
-};
-
-const FALLBACK_NODES: BaseNode[] = [
-  { id: 'edge-gateway-01', assetType: 'gateway' },
-  { id: 'identity-core', assetType: 'identity' },
-  { id: 'db-vault-01', assetType: 'database' },
-  { id: 'workstation-07', assetType: 'workstation' },
-  { id: 'api-service-03', assetType: 'service' },
-  { id: 'cloud-sync-01', assetType: 'cloud' },
-  { id: 'ops-terminal-01', assetType: 'workstation' },
-  { id: 'investigation-node', assetType: 'service' },
+const NODE_STATE_CLASSES = [
+  "state-neutral",
+  "state-monitored",
+  "state-probed",
+  "state-compromised",
+  "state-critical",
+  "state-isolated",
+  "state-patched",
 ];
 
-const FALLBACK_EDGES: BaseEdge[] = [
-  { id: 'e1', source: 'edge-gateway-01', target: 'identity-core' },
-  { id: 'e2', source: 'identity-core', target: 'db-vault-01' },
-  { id: 'e3', source: 'identity-core', target: 'workstation-07' },
-  { id: 'e4', source: 'workstation-07', target: 'api-service-03' },
-  { id: 'e5', source: 'api-service-03', target: 'cloud-sync-01' },
-  { id: 'e6', source: 'ops-terminal-01', target: 'investigation-node' },
-  { id: 'e7', source: 'investigation-node', target: 'identity-core' },
-  { id: 'e8', source: 'cloud-sync-01', target: 'db-vault-01' },
+const EDGE_STATE_CLASSES = [
+  "edge-normal",
+  "edge-scanning",
+  "edge-lateral_movement",
+  "edge-exfiltration",
+  "edge-credential_flow",
+  "edge-blocked",
 ];
 
-const STATUS_COLOR: Record<NodeStatus, string> = {
-  stable: '#6b7280',
-  compromised: '#ef4444',
-  contained: '#38bdf8',
+const ZONE_CLASSES: Record<string, string> = {
+  zone_perimeter: "zone-perimeter",
+  zone_campus: "zone-campus",
+  zone_admin: "zone-admin",
+  zone_research: "zone-research",
 };
 
-function normalizeLabel(nodeId: string): string {
-  return nodeId.replaceAll('-', ' ').replaceAll('_', ' ').toUpperCase();
+type XYPosition = { x: number; y: number };
+
+function stylesheet(): NonNullable<CytoscapeOptions["style"]> {
+  const styles: Array<Record<string, unknown>> = [
+    {
+      selector: "node",
+      style: {
+        label: "data(label)",
+        color: "#f1eee8",
+        "font-size": 10,
+        "font-family": "var(--font-mono-custom)",
+        "text-wrap": "wrap",
+        "text-max-width": "96px",
+        "text-valign": "bottom",
+        "text-margin-y": 8,
+        "border-width": 1,
+        "border-color": "#6d5a59",
+        "background-color": "#3e3335",
+      },
+    },
+    {
+      selector: "node:parent",
+      style: {
+        "background-opacity": 0.08,
+        "background-color": "#140e10",
+        "border-width": 1.2,
+        "border-style": "dashed",
+        "border-color": "rgba(210,92,92,0.25)",
+        label: "data(label)",
+        "text-valign": "top",
+        "text-halign": "center",
+        "font-size": 11,
+        color: "#b99898",
+        "text-transform": "uppercase",
+        "padding-top": "26px",
+        "padding-bottom": "26px",
+        "padding-left": "28px",
+        "padding-right": "28px",
+      },
+    },
+    {
+      selector: "node[type='endpoint']",
+      style: { shape: "ellipse", width: 36, height: 36 },
+    },
+    {
+      selector: "node[type='infrastructure']",
+      style: { shape: "round-rectangle", width: 44, height: 44 },
+    },
+    {
+      selector: "node[type='hvt']",
+      style: { shape: "diamond", width: 52, height: 52 },
+    },
+    {
+      selector: "node[type='iot']",
+      style: { shape: "triangle", width: 32, height: 32 },
+    },
+    {
+      selector: "node[type='external']",
+      style: { shape: "hexagon", width: 40, height: 40 },
+    },
+    {
+      selector: ".zone-perimeter",
+      style: { "border-color": "#d0702c" },
+    },
+    {
+      selector: ".zone-campus",
+      style: { "border-color": "rgba(255,255,255,0.22)" },
+    },
+    {
+      selector: ".zone-admin",
+      style: { "border-color": "#378ADD" },
+    },
+    {
+      selector: ".zone-research",
+      style: { "border-color": "#965e5e" },
+    },
+    {
+      selector: ".state-neutral",
+      style: {
+        "background-color": "#3e3335",
+        "border-color": "#6d5a59",
+        "border-width": 1,
+        "shadow-opacity": 0,
+      },
+    },
+    {
+      selector: ".state-monitored",
+      style: {
+        "background-color": "#3e3335",
+        "border-color": "#1D9E75",
+        "border-width": 2,
+      },
+    },
+    {
+      selector: ".state-probed",
+      style: {
+        "background-color": "#EF9F27",
+        "border-color": "#BA7517",
+        "border-width": 1.5,
+      },
+    },
+    {
+      selector: ".state-compromised",
+      style: {
+        "background-color": "#E24B4A",
+        "border-color": "#A32D2D",
+        "border-width": 1.5,
+      },
+    },
+    {
+      selector: ".state-critical",
+      style: {
+        "background-color": "#A32D2D",
+        "border-color": "#791F1F",
+        "border-width": 2,
+        "shadow-color": "rgba(163,45,45,0.6)",
+        "shadow-blur": 20,
+        "shadow-opacity": 0.95,
+      },
+    },
+    {
+      selector: ".state-isolated",
+      style: {
+        "background-color": "#378ADD",
+        "border-color": "#85B7EB",
+        "border-width": 2.5,
+      },
+    },
+    {
+      selector: ".state-patched",
+      style: {
+        "background-color": "#3e3335",
+        "border-color": "#378ADD",
+        "border-style": "dashed",
+        "border-width": 1.5,
+      },
+    },
+    {
+      selector: ".overlay-monitored",
+      style: {
+        "shadow-color": "rgba(29,158,117,0.65)",
+        "shadow-opacity": 1,
+        "shadow-blur": 14,
+      },
+    },
+    {
+      selector: ".decoy-node",
+      style: { opacity: 0.5, "border-style": "dashed" },
+    },
+    {
+      selector: "edge",
+      style: {
+        width: 1,
+        "line-color": "rgba(255,255,255,0.08)",
+        "curve-style": "bezier",
+        "target-arrow-shape": "none",
+        opacity: 0.9,
+      },
+    },
+    {
+      selector: ".edge-normal",
+      style: {
+        width: 1,
+        "line-style": "solid",
+        "line-color": "rgba(255,255,255,0.08)",
+      },
+    },
+    {
+      selector: ".edge-scanning",
+      style: {
+        width: 1.5,
+        "line-color": "#EF9F27",
+        "line-style": "dashed",
+        "line-dash-pattern": [6, 4],
+      },
+    },
+    {
+      selector: ".edge-lateral_movement",
+      style: {
+        width: 2,
+        "line-color": "#E24B4A",
+        "target-arrow-shape": "triangle",
+        "target-arrow-color": "#E24B4A",
+      },
+    },
+    {
+      selector: ".edge-exfiltration",
+      style: {
+        width: 3,
+        "line-color": "#A32D2D",
+        "target-arrow-shape": "triangle",
+        "target-arrow-color": "#A32D2D",
+      },
+    },
+    {
+      selector: ".edge-credential_flow",
+      style: {
+        width: 2,
+        "line-color": "#C56C1A",
+        "target-arrow-shape": "triangle",
+        "target-arrow-color": "#C56C1A",
+      },
+    },
+    {
+      selector: ".edge-blocked",
+      style: {
+        width: 1,
+        "line-color": "#378ADD",
+        "line-style": "dashed",
+        "line-dash-pattern": [4, 6],
+      },
+    },
+    {
+      selector: ".node-selected",
+      style: {
+        "overlay-color": "rgba(255,255,255,0.18)",
+        "overlay-opacity": 1,
+        "overlay-padding": 8,
+      },
+    },
+    {
+      selector: ".node-highlighted",
+      style: {
+        "underlay-color": "rgba(255,255,255,0.38)",
+        "underlay-opacity": 1,
+        "underlay-padding": 8,
+      },
+    },
+  ];
+  return styles as unknown as NonNullable<CytoscapeOptions["style"]>;
 }
 
-function clamp(value: number, min: number, max: number): number {
-  return Math.max(min, Math.min(max, value));
+function zoneClass(zoneId: string): string {
+  return ZONE_CLASSES[zoneId] ?? "";
 }
 
-function hashIntoRange(value: string, min: number, max: number): number {
-  let acc = 0;
-  for (let i = 0; i < value.length; i += 1) {
-    acc = (acc * 31 + value.charCodeAt(i)) % 9973;
-  }
-  const span = max - min;
-  return min + (acc % (span + 1));
-}
-
-function inferKind(id: string, assetType?: string): NodeKind {
-  const raw = `${assetType ?? ''} ${id}`.toLowerCase();
-  if (raw.includes('gate') || raw.includes('edge') || raw.includes('router')) return 'gateway';
-  if (raw.includes('db') || raw.includes('vault') || raw.includes('sql')) return 'database';
-  if (raw.includes('id') || raw.includes('auth') || raw.includes('identity')) return 'identity';
-  if (raw.includes('cloud') || raw.includes('saas')) return 'cloud';
-  if (raw.includes('workstation') || raw.includes('terminal') || raw.includes('laptop')) {
-    return 'workstation';
-  }
-  return 'service';
-}
-
-function buildInsight(node: BaseNode): NodeInsight {
-  const kind = inferKind(node.id, node.assetType);
+function topDownPositions(): Record<string, XYPosition> {
   return {
-    id: node.id,
-    kind,
-    complexity: hashIntoRange(node.id, 30, 95),
-    severity: hashIntoRange(node.id, 12, 42),
-    attacks: 0,
-    defenses: 0,
-    lastAction: 'Awaiting telemetry',
-    lastActor: 'NONE',
-    lastIncident: null,
-    latestAttack: null,
-    latestDefense: null,
+    internet: { x: 760, y: 70 },
+
+    vpn_gateway: { x: 620, y: 225 },
+    web_portal: { x: 760, y: 225 },
+    dns_server: { x: 900, y: 225 },
+
+    eduroam_ap_01: { x: 560, y: 395 },
+    eduroam_ap_02: { x: 760, y: 395 },
+    eduroam_ap_03: { x: 960, y: 395 },
+
+    student_device_01: { x: 500, y: 520 },
+    student_device_02: { x: 560, y: 560 },
+    student_device_03: { x: 700, y: 530 },
+    student_device_04: { x: 760, y: 565 },
+    student_device_05: { x: 860, y: 530 },
+
+    faculty_device_01: { x: 620, y: 470 },
+    faculty_device_02: { x: 760, y: 470 },
+    faculty_device_03: { x: 900, y: 470 },
+
+    lab_workstation_01: { x: 680, y: 630 },
+    lab_workstation_02: { x: 840, y: 630 },
+    print_server: { x: 700, y: 670 },
+    iot_projector_01: { x: 860, y: 670 },
+
+    auth_server: { x: 540, y: 820 },
+    active_directory: { x: 660, y: 790 },
+    sis_server: { x: 780, y: 820 },
+    finance_server: { x: 620, y: 890 },
+    hr_server: { x: 790, y: 890 },
+
+    research_server_01: { x: 940, y: 805 },
+    research_server_02: { x: 1050, y: 805 },
+    shared_storage: { x: 995, y: 880 },
+    irb_system: { x: 1090, y: 920 },
   };
 }
 
-function suggestionForInsight(insight: NodeInsight): string {
-  const riskScore = insight.lastIncident?.riskScore ?? 0;
-
-  if (riskScore >= 80) {
-    return 'Trigger immediate isolation, rotate exposed credentials, and launch host forensics before reconnect.';
-  }
-
-  if (insight.attacks > insight.defenses + 2) {
-    return 'Escalate isolation and rotate credentials for this asset path.';
-  }
-  if (insight.defenses > insight.attacks) {
-    return 'Defense lead detected. Continue containment and monitor lateral links.';
-  }
-  return 'Balanced activity. Keep packet capture enabled for anomaly drift.';
+function fallbackPositionForZone(zone: string, index: number): XYPosition {
+  const spacingX = 64;
+  if (zone === "perimeter") return { x: 600 + index * spacingX, y: 225 };
+  if (zone === "campus") return { x: 510 + (index % 7) * spacingX, y: 470 + Math.floor(index / 7) * 78 };
+  if (zone === "admin") return { x: 520 + index * spacingX, y: 840 };
+  if (zone === "research") return { x: 930 + index * spacingX, y: 840 };
+  return { x: 760, y: 70 };
 }
 
-export default function Graph({ events = [], topology = null, className }: GraphProps) {
-  const cyContainerRef = useRef<HTMLDivElement | null>(null);
-  const cyRef = useRef<Core | null>(null);
-  const processedEventsRef = useRef(0);
-  const pendingTimeoutsRef = useRef<number[]>([]);
-  const insightsRef = useRef<Record<string, NodeInsight>>({});
+function applyDeterministicPositions(cy: Core, topology: TopologyInitData): void {
+  const explicit = topDownPositions();
+  const zoneIndices = new Map<string, number>();
 
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
-  const [nodeInsights, setNodeInsights] = useState<Record<string, NodeInsight>>({});
+  cy.batch(() => {
+    for (const node of topology.nodes) {
+      const ele = cy.getElementById(node.id);
+      if (!ele.length) continue;
 
-  const baseGraph = useMemo<{ nodes: BaseNode[]; edges: BaseEdge[] }>(() => {
-    if (topology && topology.nodes.length > 0) {
-      const nodes = topology.nodes.map((node) => ({ id: node.id, assetType: node.assetType }));
-      const edges = topology.edges.map((edge) => ({
-        id: edge.id,
-        source: edge.source,
-        target: edge.target,
-      }));
-      return { nodes, edges };
+      const existingIndex = zoneIndices.get(node.zone) ?? 0;
+      const target = explicit[node.id] ?? fallbackPositionForZone(node.zone, existingIndex);
+      zoneIndices.set(node.zone, existingIndex + 1);
+      ele.position(target);
+    }
+  });
+
+  cy.layout({
+    name: "preset",
+    fit: true,
+    padding: 48,
+    animate: false,
+  }).run();
+}
+
+function upsertBaseTopology(cy: Core, topology: TopologyInitData, graphState: RuntimeGraphState): void {
+  cy.elements().remove();
+
+  const zoneElements: ElementDefinition[] = topology.zones.map((zone) => ({
+    group: "nodes",
+    data: { id: zone.id, label: zone.label },
+    classes: zoneClass(zone.id),
+  }));
+
+  const nodeElements: ElementDefinition[] = graphState.nodes.map((node) => ({
+    group: "nodes",
+    data: {
+      id: node.id,
+      label: node.label,
+      type: node.type,
+      zone: node.zone,
+      parent: node.zone === "external" ? undefined : `zone_${node.zone}`,
+    },
+    classes: [
+      `state-${node.visual_state}`,
+      node.overlay === "monitored" ? "overlay-monitored" : "",
+      node.is_decoy ? "decoy-node" : "",
+    ]
+      .filter(Boolean)
+      .join(" "),
+  }));
+
+  const edgeElements: ElementDefinition[] = graphState.edges.map((edge) => ({
+    group: "edges",
+    data: {
+      id: edge.id,
+      source: edge.source,
+      target: edge.target,
+      direction: edge.direction,
+    },
+    classes: `edge-${edge.visual_state}`,
+  }));
+
+  cy.add([...zoneElements, ...nodeElements, ...edgeElements]);
+  applyDeterministicPositions(cy, topology);
+  cy.resize();
+  cy.fit(cy.elements(), 48);
+}
+
+function syncGraphState(cy: Core, graphState: RuntimeGraphState): void {
+  const nodeIds = new Set(graphState.nodes.map((node) => node.id));
+  const edgeIds = new Set(graphState.edges.map((edge) => edge.id));
+
+  cy.batch(() => {
+    cy.nodes().forEach((node) => {
+      if (node.id().startsWith("zone_")) return;
+      if (!nodeIds.has(node.id())) node.remove();
+    });
+
+    cy.edges().forEach((edge) => {
+      if (!edgeIds.has(edge.id())) edge.remove();
+    });
+
+    for (const runtimeNode of graphState.nodes) {
+      let node = cy.getElementById(runtimeNode.id);
+      if (!node.length) {
+        cy.add({
+          group: "nodes",
+          data: {
+            id: runtimeNode.id,
+            label: runtimeNode.label,
+            type: runtimeNode.type,
+            zone: runtimeNode.zone,
+            parent: runtimeNode.zone === "external" ? undefined : `zone_${runtimeNode.zone}`,
+          },
+          classes: runtimeNode.is_decoy ? "decoy-node" : "",
+        });
+        node = cy.getElementById(runtimeNode.id);
+
+        if (runtimeNode.is_decoy) {
+          const parent = cy.getElementById("auth_server");
+          if (parent.length) {
+            const pos = parent.position();
+            node.position({ x: pos.x + 84, y: pos.y - 38 });
+          }
+        }
+      }
+
+      node.removeClass(NODE_STATE_CLASSES.join(" "));
+      node.removeClass("overlay-monitored decoy-node");
+      node.addClass(`state-${runtimeNode.visual_state}`);
+      if (runtimeNode.overlay === "monitored") node.addClass("overlay-monitored");
+      if (runtimeNode.is_decoy) node.addClass("decoy-node");
     }
 
-    return { nodes: FALLBACK_NODES, edges: FALLBACK_EDGES };
-  }, [topology]);
+    for (const runtimeEdge of graphState.edges) {
+      let edge = cy.getElementById(runtimeEdge.id);
+      if (!edge.length) {
+        cy.add({
+          group: "edges",
+          data: {
+            id: runtimeEdge.id,
+            source: runtimeEdge.source,
+            target: runtimeEdge.target,
+          },
+          classes: `edge-${runtimeEdge.visual_state}`,
+        });
+        edge = cy.getElementById(runtimeEdge.id);
+      }
+
+      edge.removeClass(EDGE_STATE_CLASSES.join(" "));
+      edge.addClass(`edge-${runtimeEdge.visual_state}`);
+      edge.data("direction", runtimeEdge.direction ?? "forward");
+    }
+  });
+}
+
+export default function Graph({
+  topology,
+  graphState,
+  selectedNodeId,
+  highlightedNodeId,
+  onNodeSelect,
+  className,
+}: GraphProps) {
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const cyRef = useRef<Core | null>(null);
+  const onNodeSelectRef = useRef(onNodeSelect);
+  const topologyKeyRef = useRef<string | null>(null);
+
+  const shellClass = useMemo(
+    () => `${className ?? "h-[620px] w-full rounded-xl border border-[var(--border)] bg-[#0d1018]"} relative overflow-hidden`,
+    [className],
+  );
 
   useEffect(() => {
-    insightsRef.current = nodeInsights;
-  }, [nodeInsights]);
-
-  const selectedNode = selectedNodeId ? nodeInsights[selectedNodeId] ?? null : null;
-
-  const aggregate = useMemo(() => {
-    const all = Object.values(nodeInsights);
-    const attacks = all.reduce((acc, node) => acc + node.attacks, 0);
-    const defenses = all.reduce((acc, node) => acc + node.defenses, 0);
-    const hotNodes = all
-      .slice()
-      .sort((a, b) => b.severity - a.severity)
-      .slice(0, 4)
-      .map((node) => ({ id: node.id, severity: node.severity }));
-
-    return { attacks, defenses, hotNodes };
-  }, [nodeInsights]);
-
-  const applyReplayEvent = (event: ReplayEvent) => {
-    const nextStatus: NodeStatus = event.actor === 'RED' ? 'compromised' : 'contained';
-    const incident = formatIncident(event);
-
-    const existing = insightsRef.current[event.target] ?? buildInsight({ id: event.target });
-    const nextInsight: NodeInsight = {
-      ...existing,
-      attacks: existing.attacks + (event.actor === 'RED' ? 1 : 0),
-      defenses: existing.defenses + (event.actor === 'BLUE' ? 1 : 0),
-      lastAction: event.action,
-      lastActor: event.actor,
-      lastIncident: incident,
-      latestAttack: event.actor === 'RED' ? incident : existing.latestAttack,
-      latestDefense: event.actor === 'BLUE' ? incident : existing.latestDefense,
-      severity: clamp(
-        existing.severity + (event.actor === 'RED' ? 8 : -6),
-        8,
-        100,
-      ),
-    };
-
-    setNodeInsights((prev) => ({
-      ...prev,
-      [event.target]: nextInsight,
-    }));
-    insightsRef.current = {
-      ...insightsRef.current,
-      [event.target]: nextInsight,
-    };
-
-    const cy = cyRef.current;
-    if (!cy) return;
-
-    let node = cy.getElementById(event.target);
-    if (!node.length) {
-      cy.add({
-        group: 'nodes',
-        data: {
-          id: event.target,
-          label: normalizeLabel(event.target),
-          size: clamp(26 + nextInsight.complexity * 0.45, 26, 74),
-          kind: nextInsight.kind,
-        },
-      });
-
-      node = cy.getElementById(event.target);
-      cy.layout({
-        name: 'cose',
-        animate: true,
-        animationDuration: 220,
-        nodeRepulsion: 11000,
-      }).run();
-    }
-
-    if (node.length) {
-      const baseSize = clamp(26 + nextInsight.complexity * 0.45, 26, 74);
-      node.style('background-color', STATUS_COLOR[nextStatus]);
-      node.animate(
-        {
-          style: {
-            width: baseSize + 8,
-            height: baseSize + 8,
-            'border-width': 2.8,
-          },
-        },
-        {
-          duration: 180,
-          complete: () => {
-            node.style('width', baseSize);
-            node.style('height', baseSize);
-            node.style('border-width', 1.8);
-          },
-        },
-      );
-    }
-  };
+    onNodeSelectRef.current = onNodeSelect;
+  }, [onNodeSelect]);
 
   useEffect(() => {
     let mounted = true;
 
     const init = async () => {
-      if (!cyContainerRef.current || cyRef.current) return;
-
-      const cytoscape = (await import('cytoscape')).default;
-      if (!mounted) return;
-
-      const styles: StylesheetJson = [
-        {
-          selector: 'node',
-          style: {
-            label: 'data(label)',
-            color: '#f4f4f5',
-            'font-size': 10,
-            'font-family': 'var(--font-body)',
-            'text-wrap': 'wrap',
-            'text-max-width': '90px',
-            'text-valign': 'center',
-            'text-halign': 'center',
-            width: 'data(size)',
-            height: 'data(size)',
-            'background-color': STATUS_COLOR.stable,
-            'border-color': '#f87171',
-            'border-width': 1.8,
-            'text-outline-width': 0.9,
-            'text-outline-color': '#08090f',
-          },
-        },
-        {
-          selector: 'node.node-selected',
-          style: {
-            'border-color': '#22d3ee',
-            'border-width': 3,
-          },
-        },
-        { selector: 'node[kind = "gateway"]', style: { shape: 'diamond' } },
-        { selector: 'node[kind = "service"]', style: { shape: 'round-rectangle' } },
-        { selector: 'node[kind = "workstation"]', style: { shape: 'hexagon' } },
-        { selector: 'node[kind = "database"]', style: { shape: 'barrel' } },
-        { selector: 'node[kind = "identity"]', style: { shape: 'ellipse' } },
-        { selector: 'node[kind = "cloud"]', style: { shape: 'vee' } },
-        {
-          selector: 'edge',
-          style: {
-            width: 1.7,
-            'line-color': '#7f1d1d',
-            'target-arrow-color': '#f87171',
-            'target-arrow-shape': 'triangle',
-            'curve-style': 'bezier',
-            opacity: 0.8,
-          },
-        },
-      ];
+      if (!containerRef.current || cyRef.current) return;
+      const cytoscape = (await import("cytoscape")).default;
+      if (!mounted || !containerRef.current) return;
 
       cyRef.current = cytoscape({
-        container: cyContainerRef.current,
+        container: containerRef.current,
         elements: [],
-        minZoom: 0.4,
-        maxZoom: 2.4,
+        style: stylesheet(),
+        minZoom: 0.5,
+        maxZoom: 2.5,
         wheelSensitivity: 0.18,
-        style: styles,
       });
 
       const cy = cyRef.current;
-      cy.on('tap', 'node', (evt) => {
-        const node = evt.target;
-        cy.nodes().removeClass('node-selected');
-        node.addClass('node-selected');
-        setSelectedNodeId(node.id());
+      cy.on("tap", "node", (evt) => {
+        const id = String(evt.target.id());
+        if (id.startsWith("zone_")) return;
+        onNodeSelectRef.current(id);
       });
 
-      cy.on('tap', (evt) => {
-        if (evt.target === cy) {
-          cy.nodes().removeClass('node-selected');
-          setSelectedNodeId(null);
-        }
+      cy.on("tap", (evt) => {
+        if (evt.target === cy) onNodeSelectRef.current(null);
       });
     };
 
@@ -342,8 +516,6 @@ export default function Graph({ events = [], topology = null, className }: Graph
 
     return () => {
       mounted = false;
-      pendingTimeoutsRef.current.forEach((id) => window.clearTimeout(id));
-      pendingTimeoutsRef.current = [];
       if (cyRef.current) {
         cyRef.current.destroy();
         cyRef.current = null;
@@ -352,247 +524,75 @@ export default function Graph({ events = [], topology = null, className }: Graph
   }, []);
 
   useEffect(() => {
-    const freshInsights = Object.fromEntries(
-      baseGraph.nodes.map((node) => [node.id, buildInsight(node)]),
-    ) as Record<string, NodeInsight>;
-
-    setNodeInsights(freshInsights);
-    insightsRef.current = freshInsights;
-    setSelectedNodeId(baseGraph.nodes[0]?.id ?? null);
-    processedEventsRef.current = 0;
-
-    const cy = cyRef.current;
-    if (!cy) return;
-
-    cy.elements().remove();
-
-    cy.add(
-      baseGraph.nodes.map((node) => {
-        const insight = freshInsights[node.id];
-        return {
-          group: 'nodes',
-          data: {
-            id: node.id,
-            label: normalizeLabel(node.id),
-            size: clamp(26 + insight.complexity * 0.45, 26, 74),
-            kind: insight.kind,
-          },
-        };
-      }),
-    );
-
-    cy.add(
-      baseGraph.edges.map((edge) => ({
-        group: 'edges',
-        data: {
-          id: edge.id,
-          source: edge.source,
-          target: edge.target,
-        },
-      })),
-    );
-
-    cy.layout({
-      name: 'cose',
-      animate: true,
-      animationDuration: 540,
-      nodeRepulsion: 10000,
-      idealEdgeLength: 170,
-      gravity: 0.45,
-    }).run();
-  }, [baseGraph]);
-
-  useEffect(() => {
-    if (!events.length) return;
-
-    if (events.length < processedEventsRef.current) {
-      processedEventsRef.current = 0;
-      setNodeInsights((prev) => {
-        const reset = Object.fromEntries(
-          Object.entries(prev).map(([id, insight]) => [
-            id,
-            {
-              ...insight,
-              attacks: 0,
-              defenses: 0,
-              lastAction: 'Awaiting telemetry',
-              lastActor: 'NONE',
-              lastIncident: null,
-              latestAttack: null,
-              latestDefense: null,
-            },
-          ]),
-        ) as Record<string, NodeInsight>;
-        insightsRef.current = reset;
-        return reset;
-      });
-    }
-
-    const freshEvents = events.slice(processedEventsRef.current);
-    freshEvents.forEach((event, idx) => {
-      const timeoutId = window.setTimeout(() => {
-        applyReplayEvent(event);
-      }, idx * 170);
-      pendingTimeoutsRef.current.push(timeoutId);
-    });
-
-    processedEventsRef.current = events.length;
-
-    return () => {
-      pendingTimeoutsRef.current.forEach((id) => window.clearTimeout(id));
-      pendingTimeoutsRef.current = [];
-    };
-  }, [events]);
-
-  useEffect(() => {
-    const cy = cyRef.current;
-    if (!cy) return;
-
-    const timeoutId = window.setTimeout(() => {
+    if (!containerRef.current) return;
+    const observer = new ResizeObserver(() => {
+      const cy = cyRef.current;
+      if (!cy) return;
       cy.resize();
-      cy.fit(undefined, isExpanded ? 92 : 48);
-    }, 160);
+      if (cy.nodes().length > 0) {
+        cy.fit(cy.elements(), 48);
+      }
+    });
+    observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, []);
 
-    return () => window.clearTimeout(timeoutId);
-  }, [isExpanded]);
+  useEffect(() => {
+    const cy = cyRef.current;
+    if (!cy || !topology || !graphState) return;
 
-  const shellClass = isExpanded
-    ? 'fixed inset-0 z-[70] bg-[#020307]/95 p-4 md:p-6'
-    : className ?? 'h-[560px]';
+    const topologyKey = `${topology.scenario_id}:${topology.seed}:${topology.nodes.length}:${topology.edges.length}`;
+    if (topologyKeyRef.current === topologyKey) return;
+    topologyKeyRef.current = topologyKey;
 
-  const openRatio =
-    aggregate.attacks + aggregate.defenses === 0
-      ? 0
-      : Math.round((aggregate.attacks / (aggregate.attacks + aggregate.defenses)) * 100);
+    upsertBaseTopology(cy, topology, graphState);
+  }, [topology, graphState]);
+
+  useEffect(() => {
+    const cy = cyRef.current;
+    if (!cy || !graphState) return;
+    syncGraphState(cy, graphState);
+  }, [graphState]);
+
+  useEffect(() => {
+    const cy = cyRef.current;
+    if (!cy) return;
+
+    cy.batch(() => {
+      cy.nodes().removeClass("node-selected node-highlighted");
+      if (selectedNodeId) {
+        const selected = cy.getElementById(selectedNodeId);
+        if (selected.length) {
+          selected.addClass("node-selected");
+          cy.animate({
+            center: { eles: selected },
+          }, { duration: 220 });
+        }
+      }
+
+      if (highlightedNodeId) {
+        const highlighted = cy.getElementById(highlightedNodeId);
+        if (highlighted.length) highlighted.addClass("node-highlighted");
+      }
+    });
+  }, [selectedNodeId, highlightedNodeId]);
+
+  const showLoadingState = !topology || !graphState;
+  const showEmptyState = Boolean(topology && graphState && graphState.nodes.length === 0);
 
   return (
-    <div className={shellClass}>
-      <section className="aegis-card relative h-full overflow-hidden p-4">
-        <header className="mb-4 flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <h3 className="font-display text-sm uppercase tracking-[0.24em] text-[#fecaca]">
-              Threat Topology Matrix
-            </h3>
-            <p className="text-xs text-[#fca5a5]">
-              Drag nodes to reposition, zoom to inspect, click a node for attack/defense context.
-            </p>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="rounded-md border border-red-500/50 bg-red-950/30 px-3 py-1 text-[11px] uppercase tracking-[0.18em] text-red-100">
-              Open pressure {openRatio}%
-            </div>
-            <button
-              type="button"
-              onClick={() => setIsExpanded((prev) => !prev)}
-              className="rounded-md border border-cyan-400/60 bg-cyan-500/10 px-3 py-1 text-[11px] uppercase tracking-[0.18em] text-cyan-100 transition hover:bg-cyan-400/20"
-            >
-              {isExpanded ? 'Collapse View' : 'Expand View'}
-            </button>
-          </div>
-        </header>
-
-        <div className="grid h-[calc(100%-4.4rem)] gap-3 lg:grid-cols-[minmax(0,1fr)_300px]">
-          <div
-            ref={cyContainerRef}
-            className="h-full min-h-[320px] rounded-xl border border-red-500/30 bg-[#06070d]"
-            aria-label="interactive threat topology graph"
-          />
-
-          <aside className="rounded-xl border border-red-500/30 bg-[#080a11]/90 p-3">
-            <div className="mb-3 grid grid-cols-2 gap-2 text-xs">
-              <Metric label="Attacks" value={aggregate.attacks} tone="text-[#f87171]" />
-              <Metric label="Defenses" value={aggregate.defenses} tone="text-[#38bdf8]" />
-            </div>
-
-            <div className="mb-3 rounded-lg border border-red-500/25 bg-black/30 p-3">
-              <div className="text-[11px] uppercase tracking-[0.18em] text-[#fca5a5]">Node Intelligence</div>
-              {selectedNode ? (
-                <div className="mt-2 space-y-2 text-xs text-[#e5e7eb]">
-                  <div className="font-display text-sm tracking-wide text-[#fee2e2]">
-                    {normalizeLabel(selectedNode.id)}
-                  </div>
-                  <InfoRow label="Class" value={selectedNode.kind} />
-                  <InfoRow label="Threat score" value={`${selectedNode.severity}/100`} />
-                  <InfoRow label="Complexity" value={`${selectedNode.complexity}/100`} />
-                  <InfoRow label="Attack actions" value={selectedNode.attacks} />
-                  <InfoRow label="Defense actions" value={selectedNode.defenses} />
-                  <InfoRow label="Latest signal" value={classifyAction(selectedNode.lastAction)} />
-
-                  <div className="rounded-md border border-red-500/35 bg-red-950/20 p-2 text-[11px] leading-relaxed text-red-100">
-                    <div className="mb-1 uppercase tracking-[0.12em] text-red-200/90">What Happened</div>
-                    {selectedNode.lastIncident?.narrative ?? 'No active incident narrative yet for this node.'}
-                  </div>
-
-                  <div className="rounded-md border border-orange-500/30 bg-orange-950/20 p-2 text-[11px] leading-relaxed text-orange-100">
-                    <div className="mb-1 uppercase tracking-[0.12em] text-orange-200/90">What&apos;s Wrong / Impact</div>
-                    {selectedNode.latestAttack
-                      ? `${selectedNode.latestAttack.riskLevel} risk at ${selectedNode.latestAttack.riskScore}% centered on ${normalizeLabel(selectedNode.id)}. The latest offensive move indicates elevated exposure for this asset path.`
-                      : 'No confirmed offensive pressure is active on this node right now.'}
-                  </div>
-
-                  <div className="rounded-md border border-cyan-500/30 bg-cyan-950/20 p-2 text-[11px] leading-relaxed text-cyan-100">
-                    <div className="mb-1 uppercase tracking-[0.12em] text-cyan-200/90">What AEGIS Is Doing</div>
-                    {selectedNode.latestDefense
-                      ? selectedNode.latestDefense.narrative
-                      : 'AEGIS is currently monitoring this node and waiting for actionable defender signals.'}
-                  </div>
-
-                  <div className="rounded-md border border-emerald-500/30 bg-emerald-950/20 p-2 text-[11px] leading-relaxed text-emerald-100">
-                    <div className="mb-1 uppercase tracking-[0.12em] text-emerald-200/90">Recommended Next Action</div>
-                    {suggestionForInsight(selectedNode)}
-                  </div>
-                </div>
-              ) : (
-                <p className="mt-2 text-xs text-[#a1a1aa]">Select any node to inspect mission context.</p>
-              )}
-            </div>
-
-            <div className="rounded-lg border border-red-500/25 bg-black/30 p-3">
-              <div className="text-[11px] uppercase tracking-[0.18em] text-[#fca5a5]">Hot Assets</div>
-              <ul className="mt-2 space-y-1 text-xs text-[#e4e4e7]">
-                {aggregate.hotNodes.map((node) => (
-                  <li key={node.id} className="flex items-center justify-between">
-                    <span>{normalizeLabel(node.id)}</span>
-                    <span className="font-semibold text-red-300">{node.severity}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </aside>
+    <div className={shellClass} aria-label="AEGIS threat topology matrix">
+      <div ref={containerRef} className="h-full w-full" />
+      {showLoadingState ? (
+        <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/25 text-xs uppercase tracking-[0.12em] text-[#bba9a9]">
+          Loading topology...
         </div>
-      </section>
-    </div>
-  );
-}
-
-function Metric({
-  label,
-  value,
-  tone,
-}: {
-  label: string;
-  value: number;
-  tone: string;
-}) {
-  return (
-    <div className="rounded-md border border-red-500/20 bg-black/25 px-2 py-2">
-      <div className="text-[10px] uppercase tracking-[0.14em] text-[#a1a1aa]">{label}</div>
-      <div className={`font-display text-lg ${tone}`}>{value}</div>
-    </div>
-  );
-}
-
-function InfoRow({
-  label,
-  value,
-}: {
-  label: string;
-  value: string | number;
-}) {
-  return (
-    <div className="flex items-center justify-between gap-2 border-b border-white/10 pb-1 text-[11px]">
-      <span className="uppercase tracking-[0.12em] text-[#a1a1aa]">{label}</span>
-      <span className="text-right text-[#f4f4f5]">{value}</span>
+      ) : null}
+      {showEmptyState ? (
+        <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/45 px-6 text-center text-xs uppercase tracking-[0.12em] text-[#ffd7d3]">
+          Topology unavailable for this run. Check replay source and contract format.
+        </div>
+      ) : null}
     </div>
   );
 }

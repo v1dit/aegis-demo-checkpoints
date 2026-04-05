@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test:contract": "tsx --test src/lib/api.contract.test.ts"
+    "test:contract": "tsx --test src/lib/*.test.ts",
+    "generate:mock-replay": "tsx scripts/generate_mock_replay.ts"
   },
   "dependencies": {
     "cytoscape": "^3.33.1",
