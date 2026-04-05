@@ -10,6 +10,7 @@ from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 from backend.app.core.paths import REPLAY_DIR
 from backend.app.core.runs import get_active_run_id, load_manifest, run_stage_dirs
 from backend.app.env.simulator import simulate_episode
+from backend.app.sandbox.jobs import get_live_events, sandbox_run_exists
 
 router = APIRouter(prefix="/stream", tags=["stream"])
 
@@ -37,9 +38,57 @@ def _events_path_for_replay(replay_id: str, run_id: str | None = None) -> Path:
     return REPLAY_DIR / replay_id / "events.jsonl"
 
 
+def _normalized_envelope(event: dict) -> dict:
+    normalized = dict(event)
+    event_type = normalized.get("event_type") or normalized.get("type")
+    if event_type:
+        normalized["event_type"] = event_type
+        normalized["type"] = event_type
+    return normalized
+
+
+async def _stream_sandbox_run(websocket: WebSocket, run_id: str) -> None:
+    offset = 0
+    terminal_statuses = {"completed", "failed", "cancelled"}
+
+    while True:
+        try:
+            events, status = get_live_events(run_id, offset)
+        except KeyError:
+            await websocket.send_json(
+                {"event_type": "marker", "type": "marker", "payload": {"error": "run_not_found"}}
+            )
+            await websocket.close(code=1008)
+            return
+
+        for event in events:
+            await websocket.send_json(_normalized_envelope(event))
+            offset += 1
+
+        if status in terminal_statuses:
+            if not events:
+                await websocket.send_json(
+                    {
+                        "event_type": "marker",
+                        "type": "marker",
+                        "payload": {"status": status},
+                    }
+                )
+            break
+
+        await asyncio.sleep(0.05)
+
+
 @router.websocket("/live/{session_id}")
 async def live_stream(websocket: WebSocket, session_id: str) -> None:
     await websocket.accept()
+    if sandbox_run_exists(session_id):
+        try:
+            await _stream_sandbox_run(websocket, session_id)
+        except WebSocketDisconnect:
+            return
+        return
+
     seed = _seed_from_session(session_id)
     simulation = simulate_episode(
         seed=seed,

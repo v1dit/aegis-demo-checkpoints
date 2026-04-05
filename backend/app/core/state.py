@@ -10,6 +10,7 @@ class SharedState:
     train_runs: dict[str, dict[str, Any]] = field(default_factory=dict)
     eval_runs: dict[str, dict[str, Any]] = field(default_factory=dict)
     replay_index: dict[str, dict[str, Any]] = field(default_factory=dict)
+    sandbox_runs: dict[str, dict[str, Any]] = field(default_factory=dict)
     lock: Lock = field(default_factory=Lock)
 
 

@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from backend.app.api import eval as eval_api
 from backend.app.api import replay as replay_api
+from backend.app.api import sandbox as sandbox_api
 from backend.app.api import stream as stream_api
 from backend.app.api import train as train_api
 from backend.app.core.paths import ensure_artifact_dirs
@@ -21,6 +22,7 @@ app.add_middleware(
 app.include_router(train_api.router)
 app.include_router(eval_api.router)
 app.include_router(replay_api.router)
+app.include_router(sandbox_api.router)
 app.include_router(stream_api.router)
 
 

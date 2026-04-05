@@ -1,8 +1,9 @@
 from __future__ import annotations
 
 import random
+import time
 from dataclasses import dataclass
-from typing import Any, Literal
+from typing import Any, Callable, Literal
 
 from backend.app.core.runs import read_checkpoint_payload
 from backend.app.env.catalog import MITRE_TACTIC_BY_ACTION
@@ -77,8 +78,13 @@ def simulate_episode(
     checkpoint_payload: dict[str, Any] | None = None,
     run_id: str | None = None,
     horizon: int = 200,
+    topology_override: TopologySnapshot | None = None,
+    red_target_priority: list[str] | None = None,
+    event_callback: Callable[[str, dict[str, Any]], None] | None = None,
+    should_stop: Callable[[], bool] | None = None,
+    step_delay_s: float = 0.0,
 ) -> SimulationResult:
-    topology = generate_topology(seed=seed, scenario_id=scenario_id)
+    topology = topology_override or generate_topology(seed=seed, scenario_id=scenario_id)
     hosts = [node.node_id for node in topology.nodes]
     services_by_host = {node.node_id: node.services for node in topology.nodes}
 
@@ -129,7 +135,19 @@ def simulate_episode(
     }
 
     for step in range(1, horizon + 1):
+        if callable(should_stop) and should_stop():
+            break
+
         red_decision = red_policy.decide(step, hosts, services_by_host)
+        if red_target_priority:
+                preferred_hosts = [host for host in red_target_priority if host in hosts]
+                if preferred_hosts:
+                    preferred_target = preferred_hosts[(step - 1) % len(preferred_hosts)]
+                    preferred_services = services_by_host.get(preferred_target) or ["web"]
+                    red_decision.target_host = preferred_target
+                    red_decision.target_service = preferred_services[
+                        (step - 1) % len(preferred_services)
+                    ]
         recent_red_target = red_decision.target_host
 
         red_success = False
@@ -201,6 +219,11 @@ def simulate_episode(
                 confidence=_confidence(seed, step, 0.06),
             )
         )
+        if callable(event_callback):
+            event_callback(
+                "action",
+                action_events[-1].model_dump(mode="json"),
+            )
         action_counter += 1
 
         blue_decision: BlueDecision | None = blue_policy.decide(
@@ -332,6 +355,11 @@ def simulate_episode(
                     confidence=_confidence(seed + 17, step, 0.12),
                 )
             )
+            if callable(event_callback):
+                event_callback(
+                    "action",
+                    action_events[-1].model_dump(mode="json"),
+                )
             action_counter += 1
 
             explainability.append(
@@ -387,6 +415,11 @@ def simulate_episode(
                 confidence=1.0,
             )
         )
+        if callable(event_callback):
+            event_callback(
+                "action",
+                action_events[-1].model_dump(mode="json"),
+            )
         action_counter += 1
 
         for host_state in runtime.values():
@@ -414,6 +447,11 @@ def simulate_episode(
                 "repeat_penalty_events": repeat_penalty_events,
             }
         )
+        if callable(event_callback):
+            event_callback("metric", metrics_series[-1])
+
+        if step_delay_s > 0:
+            time.sleep(step_delay_s)
 
     mean_latency = (
         sum(detection_latencies) / len(detection_latencies)

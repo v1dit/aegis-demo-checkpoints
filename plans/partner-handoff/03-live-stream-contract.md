@@ -1,113 +1,29 @@
-# 03 - Live Stream Contract
-
-This document freezes the partner-facing websocket contract for run live updates.
+# Partner Handoff 03: Live Stream Contract
 
 ## Endpoint
-
-- WebSocket path: `/stream/live/{run_id}`
+- `WS /stream/live/{run_id}`
 
 ## Message Envelope (Frozen)
-
-Every websocket message must match this envelope:
-
 ```json
 {
   "type": "action",
-  "payload": {}
+  "event_type": "action",
+  "payload": { "step": 4, "actor": "BLUE", "action_type": "isolate_host", "target_host": "host-01" },
+  "run_id": "run_20260404_190122_001"
 }
 ```
 
-Where `type` is one of:
+## Event Types
+- `action`: defense or attack action event
+- `metric`: per-step metrics update
+- `marker`: terminal status event (`completed`, `failed`, `cancelled`)
 
-- `"action"`
-- `"metric"`
-- `"marker"`
-
-Canonical shape to freeze:
-
-```json
-{ "type": "action" | "metric" | "marker", "payload": { } }
-```
-
-## Payload Families
-
-### `type = "action"`
-
-Represents timeline-worthy execution events.
-
-Example:
-
-```json
-{
-  "type": "action",
-  "payload": {
-    "step": 12,
-    "timestamp": "2026-04-04T20:11:31Z",
-    "actor": "red-team",
-    "action": "exploit_attempt",
-    "node_id": "workstation-1",
-    "result": "blocked"
-  }
-}
-```
-
-### `type = "metric"`
-
-Represents KPI or telemetry updates.
-
-Example:
-
-```json
-{
-  "type": "metric",
-  "payload": {
-    "step": 12,
-    "timestamp": "2026-04-04T20:11:31Z",
-    "kpis": {
-      "detections": 2,
-      "objective_completion": 0.33
-    }
-  }
-}
-```
-
-### `type = "marker"`
-
-Represents lifecycle boundaries and terminal signals.
-
-Example terminal marker:
-
-```json
-{
-  "type": "marker",
-  "payload": {
-    "step": 120,
-    "timestamp": "2026-04-04T20:13:04Z",
-    "status": "completed"
-  }
-}
-```
-
-## Delivery Semantics
-
-- Ordered-by-step guarantee exists only within a single active connection.
-- Reconnects can introduce gaps for missed events while disconnected.
-- Frontend must not assume lossless replay from websocket alone.
-- Terminal `marker` is guaranteed to be emitted by the producer; client receipt is not guaranteed if disconnected.
-
-## Reconnect and Reconciliation Rules
-
-On disconnect or websocket error:
-
-1. Frontend reopens `/stream/live/{run_id}` with backoff.
-2. Frontend reconciles current truth via `GET /sandbox/runs/{run_id}` polling.
-3. Frontend updates terminal/non-terminal state from status API as source of truth.
-4. Frontend resumes live rendering from newly received websocket messages.
+## Ordering and Reconnect Rules
+- Ordering is step-ordered within an active connection.
+- On disconnect, frontend should reconnect to the same websocket path.
+- Frontend must poll `GET /sandbox/runs/{run_id}` every 2-5 seconds as backup truth source.
+- If run is terminal and no marker was seen due to disconnect, UI must treat status endpoint as authoritative terminal state.
 
 ## Terminal Behavior
-
-- `completed`: stop reconnect attempts after status confirms terminal; show success summary.
-- `failed`: stop reconnect attempts after status confirms terminal; show error summary from `error` when available.
-- `cancelled`: stop reconnect attempts after status confirms terminal; show cancelled summary.
-
-For all terminal states, `RunTerminalSummary` is rendered from status API data, not websocket-only state.
+- Run is complete only after terminal `marker` or terminal status from polling.
+- UI must stop live animation on terminal state and render final summary panel.

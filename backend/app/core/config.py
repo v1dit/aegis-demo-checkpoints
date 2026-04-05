@@ -23,6 +23,17 @@ class Settings(BaseSettings):
     ppo_heavy_timesteps_threshold: int = 100000
     ppo_preflight_iterations: int = 5
     ppo_preflight_min_entropy: float = 0.01
+    sandbox_min_horizon: int = 10
+    sandbox_max_horizon: int = 300
+    sandbox_max_nodes: int = 30
+    sandbox_max_vulns_per_node: int = 3
+    sandbox_max_objectives: int = 20
+    sandbox_rate_limit_window_seconds: int = 600
+    sandbox_rate_limit_max_runs: int = 5
+    sandbox_max_concurrent_per_client: int = 2
+    sandbox_run_timeout_seconds: int = 120
+    sandbox_step_delay_seconds: float = 0.02
+    sandbox_launcher: str = "local"
 
     model_config = SettingsConfigDict(
         env_file=".env",

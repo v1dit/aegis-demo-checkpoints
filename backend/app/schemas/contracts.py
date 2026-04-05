@@ -208,6 +208,68 @@ class RunListResponse(BaseModel):
     runs: list[RunListItem]
 
 
+SandboxRunStatus = Literal["queued", "running", "completed", "failed", "cancelled"]
+
+
+class EpisodeNode(BaseModel):
+    id: str
+    severity: Literal["low", "medium", "high"]
+    role: str | None = None
+
+
+class EpisodeVulnerability(BaseModel):
+    node_id: str
+    vuln_id: str
+    exploitability: float | None = Field(default=None, ge=0.0, le=1.0)
+
+
+class RedObjective(BaseModel):
+    target_node_id: str
+    objective: str
+    priority: int | None = None
+
+
+class EpisodeSpec(BaseModel):
+    name: str
+    seed: int | None = None
+    horizon: int = Field(ge=1)
+    nodes: list[EpisodeNode]
+    vulnerabilities: list[EpisodeVulnerability] = Field(default_factory=list)
+    red_objectives: list[RedObjective] = Field(default_factory=list)
+    defender_mode: Literal["aegis"] = "aegis"
+
+
+class SandboxRunCreateRequest(BaseModel):
+    episode_spec: EpisodeSpec
+
+
+class SandboxRunCreateResponse(BaseModel):
+    run_id: str
+    status: Literal["queued"]
+    stream_url: str
+
+
+class SandboxRunStatusResponse(BaseModel):
+    run_id: str
+    status: SandboxRunStatus
+    created_at: str
+    started_at: str | None = None
+    ended_at: str | None = None
+    kpis: dict[str, float] | None = None
+    error: str | None = None
+    artifact_paths: dict[str, str] = Field(default_factory=dict)
+
+
+class SandboxCancelResponse(BaseModel):
+    run_id: str
+    status: SandboxRunStatus
+
+
+class SandboxCatalogResponse(BaseModel):
+    vulnerabilities: list[str]
+    objectives: list[str]
+
+
 class StreamEvent(BaseModel):
     event_type: Literal["action", "detection", "state_delta", "explainability", "metric", "marker"]
     payload: dict[str, Any]
