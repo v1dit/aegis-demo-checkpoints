@@ -303,6 +303,17 @@ export default function Home() {
 
   const latestNodeEvent = nodeEvents[nodeEvents.length - 1] ?? null;
 
+  const latestNodeRedEvent = useMemo<ActionEvent | null>(() => {
+    if (!runtimeState || !selectedNodeId) return null;
+    let latest: ActionEvent | null = null;
+    for (const event of runtimeState.actions) {
+      if (event.actor !== "RED") continue;
+      if (event.source_host !== selectedNodeId && event.target_host !== selectedNodeId) continue;
+      latest = event;
+    }
+    return latest;
+  }, [runtimeState, selectedNodeId]);
+
   const latestNodeExplainability = useMemo<ExplainabilityRecord | null>(() => {
     if (!runtimeState || !selectedNodeId) return null;
     let latest: ExplainabilityRecord | null = null;
@@ -347,6 +358,26 @@ export default function Home() {
   const activeModeLabel = useMemo(() => {
     return PROFILE_MODES.find((mode) => mode.id === selectedScenarioRun.profile_mode)?.label ?? "Mode";
   }, [selectedScenarioRun.profile_mode]);
+
+  const isNoBlueMode = selectedScenarioRun.profile_mode === "no_blue";
+
+  const nodeAttackNarrative = useMemo(() => {
+    const scenarioContext = campaignStage
+      ? `Stage ${campaignStage.stage_index + 1} of ${CAMPAIGN_ALL_5.ordered_stages.length}: ${campaignStage.scenario_name}. ${campaignStage.transition_label}.`
+      : activeScenario
+        ? `${activeScenario.attack_type}. ${activeScenario.expected_flow}`
+        : "Attack stream context is loading.";
+
+    if (latestNodeRedEvent) {
+      return `${scenarioContext} Latest red action on this node: ${latestNodeRedEvent.description}`;
+    }
+
+    if (latestNodeEvent) {
+      return `${scenarioContext} Latest node event: ${latestNodeEvent.description}`;
+    }
+
+    return `${scenarioContext} No direct activity on this node yet.`;
+  }, [campaignStage, activeScenario, latestNodeRedEvent, latestNodeEvent]);
 
   const canStepBack = Boolean(runtimeState && runtimeState.step > 0);
   const canStepForward = Boolean(runtimeState && runtimeState.step < maxStep);
@@ -625,18 +656,54 @@ export default function Home() {
                   </div>
 
                   <NarrativeCard
+                    title="Attack In Progress"
+                    body={nodeAttackNarrative}
+                  />
+
+                  <NarrativeCard
                     title="What Happened"
                     body={latestNodeEvent?.description ?? "No recent event for this node at the current step."}
                   />
 
-                  <NarrativeCard
-                    title="How Aegis Responded"
-                    body={
-                      latestNodeExplainability
-                        ? `${latestNodeExplainability.action} · ${(latestNodeExplainability.confidence * 100).toFixed(0)}% confidence · ${latestNodeExplainability.expected_effect}`
-                        : "No blue rationale has targeted this node yet in the current run."
-                    }
-                  />
+                  {!isNoBlueMode ? (
+                    <NarrativeCard
+                      title="How Aegis Responded"
+                      body={
+                        latestNodeExplainability
+                          ? `${latestNodeExplainability.action} · ${(latestNodeExplainability.confidence * 100).toFixed(0)}% confidence · ${latestNodeExplainability.expected_effect}`
+                          : "AEGIS has not taken a targeted blue action for this node yet in the current run."
+                      }
+                    />
+                  ) : null}
+
+                  <div className="mt-3 rounded-lg border border-[var(--border)] bg-[#0e131c] p-3">
+                    <div className="mb-2 text-[11px] uppercase tracking-[0.14em] text-[var(--text-secondary)]">
+                      Red Team Activity
+                    </div>
+                    {latestNodeRedEvent ? (
+                      <ul className="space-y-1 text-xs text-[#e4e3de]">
+                        <li>
+                          Action: {upper(latestNodeRedEvent.action_type)}
+                        </li>
+                        <li>
+                          Path: {latestNodeRedEvent.source_host} -&gt; {latestNodeRedEvent.target_host}
+                        </li>
+                        <li>
+                          Tactic: {latestNodeRedEvent.mitre_tactic}
+                        </li>
+                        <li>
+                          Outcome: {upper(latestNodeRedEvent.outcome)}
+                        </li>
+                        <li>
+                          Severity: {upper(latestNodeRedEvent.severity)} · {riskPercent(latestNodeRedEvent.risk_score)}%
+                        </li>
+                      </ul>
+                    ) : (
+                      <p className="text-xs leading-relaxed text-[#e4e3de]">
+                        No red action has targeted this node yet in the current run.
+                      </p>
+                    )}
+                  </div>
 
                   <div className="mt-3 rounded-lg border border-[var(--border)] bg-[#0e131c] p-3">
                     <div className="mb-2 text-[11px] uppercase tracking-[0.14em] text-[var(--text-secondary)]">
