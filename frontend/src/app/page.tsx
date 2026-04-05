@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Graph from "../components/Graph";
-import type { ActionEvent, MetricsTick } from "../lib/integrationContract";
+import type { ActionEvent, EdgeVisualState, ExplainabilityRecord, MetricsTick } from "../lib/integrationContract";
 import {
   type LoadedScenarioRun,
   type ScenarioProfileMode,
@@ -14,7 +14,6 @@ import {
   type ReplayTimeline,
   type RuntimeGraphState,
   collectActionsUntilStep,
-  getFrameByStep,
   materializeGraphAtStep,
   maxReplayStep,
 } from "../lib/replayRuntime";
@@ -34,6 +33,11 @@ interface RuntimeState {
   actions: ActionEvent[];
   metrics: MetricsTick | null;
   step: number;
+}
+
+interface DisplayConnection {
+  neighbor_id: string;
+  visual_state: EdgeVisualState;
 }
 
 const PROFILE_MODES: Array<{
@@ -60,6 +64,15 @@ const TABS: Array<{ id: TabId; label: string; subtitle: string }> = [
 ];
 
 const SPEEDS: ReplaySpeed[] = [0.5, 1, 2, 4];
+
+const EDGE_STATE_PRIORITY: Record<EdgeVisualState, number> = {
+  exfiltration: 6,
+  lateral_movement: 5,
+  credential_flow: 4,
+  scanning: 3,
+  blocked: 2,
+  normal: 1,
+};
 
 function clamp(value: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, value));
@@ -131,6 +144,8 @@ export default function Home() {
   const [highlightedNodeId, setHighlightedNodeId] = useState<string | null>(null);
   const [logFilter, setLogFilter] = useState<LogFilter>("none");
   const [syncDriftMs, setSyncDriftMs] = useState(0);
+  const [isGraphFullscreen, setIsGraphFullscreen] = useState(false);
+  const [resetViewToken, setResetViewToken] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
@@ -169,6 +184,30 @@ export default function Home() {
     setHighlightedNodeId(null);
     setLogFilter("none");
   }, [tab]);
+
+  useEffect(() => {
+    if (!isGraphFullscreen) return;
+    const priorOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsGraphFullscreen(false);
+      }
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = priorOverflow;
+    };
+  }, [isGraphFullscreen]);
+
+  useEffect(() => {
+    if (tab !== "command" && isGraphFullscreen) {
+      setIsGraphFullscreen(false);
+    }
+  }, [tab, isGraphFullscreen]);
 
   const maxStep = useMemo(() => {
     if (!runtimeState) return 0;
@@ -264,16 +303,37 @@ export default function Home() {
 
   const latestNodeEvent = nodeEvents[nodeEvents.length - 1] ?? null;
 
-  const activeFrame = useMemo(() => {
-    if (!runtimeState) return null;
-    return getFrameByStep(runtimeState.timeline, runtimeState.step);
-  }, [runtimeState]);
+  const latestNodeExplainability = useMemo<ExplainabilityRecord | null>(() => {
+    if (!runtimeState || !selectedNodeId) return null;
+    let latest: ExplainabilityRecord | null = null;
+    for (const frame of runtimeState.timeline.frames) {
+      if (frame.step > runtimeState.step) break;
+      if (frame.explainability?.target_host === selectedNodeId) {
+        latest = frame.explainability;
+      }
+    }
+    return latest;
+  }, [runtimeState, selectedNodeId]);
 
-  const selectedConnections = useMemo(() => {
+  const selectedConnections = useMemo<DisplayConnection[]>(() => {
     if (!runtimeState || !selectedNodeId) return [];
-    return runtimeState.graphState.edges
-      .filter((edge) => edge.source === selectedNodeId || edge.target === selectedNodeId)
-      .slice(0, 8);
+    const byNeighbor = new Map<string, DisplayConnection>();
+
+    for (const edge of runtimeState.graphState.edges) {
+      if (edge.source !== selectedNodeId && edge.target !== selectedNodeId) continue;
+      const neighbor = edge.source === selectedNodeId ? edge.target : edge.source;
+      const existing = byNeighbor.get(neighbor);
+      if (!existing || EDGE_STATE_PRIORITY[edge.visual_state] > EDGE_STATE_PRIORITY[existing.visual_state]) {
+        byNeighbor.set(neighbor, {
+          neighbor_id: neighbor,
+          visual_state: edge.visual_state,
+        });
+      }
+    }
+
+    return [...byNeighbor.values()]
+      .sort((a, b) => a.neighbor_id.localeCompare(b.neighbor_id))
+      .slice(0, 10);
   }, [runtimeState, selectedNodeId]);
 
   const scenarioHeadline = useMemo(() => {
@@ -459,6 +519,20 @@ export default function Home() {
                   </button>
                   <button
                     type="button"
+                    onClick={() => setResetViewToken((prev) => prev + 1)}
+                    className="rounded-md border border-[var(--border)] bg-[#0f131a] px-3 py-1 text-xs uppercase tracking-[0.12em] text-[#d2d2cd]"
+                  >
+                    Reset View
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setIsGraphFullscreen((prev) => !prev)}
+                    className="rounded-md border border-[#6f809a] bg-[#1a2434] px-3 py-1 text-xs uppercase tracking-[0.12em] text-[#dde7f8]"
+                  >
+                    {isGraphFullscreen ? "Exit Fullscreen" : "Expand"}
+                  </button>
+                  <button
+                    type="button"
                     onClick={() => runtimeState && applyStep(runtimeState.step - 1)}
                     disabled={!canStepBack}
                     className="rounded-md border border-[var(--border)] bg-[#0f131a] px-3 py-1 text-xs uppercase tracking-[0.12em] text-[#d2d2cd] disabled:opacity-35"
@@ -476,44 +550,49 @@ export default function Home() {
                 </div>
               </div>
 
-              <Graph
-                topology={runtimeState?.timeline.topology ?? null}
-                graphState={runtimeState?.graphState ?? null}
-                selectedNodeId={selectedNodeId}
-                highlightedNodeId={highlightedNodeId}
-                onNodeSelect={handleNodeSelect}
-                className="h-[560px] w-full rounded-xl border border-[var(--border)] bg-[#0b0f16]"
-              />
+              {!isGraphFullscreen ? (
+                <>
+                  <Graph
+                    topology={runtimeState?.timeline.topology ?? null}
+                    graphState={runtimeState?.graphState ?? null}
+                    selectedNodeId={selectedNodeId}
+                    highlightedNodeId={highlightedNodeId}
+                    onNodeSelect={handleNodeSelect}
+                    resetViewToken={resetViewToken}
+                    className="h-[560px] w-full rounded-xl border border-[var(--border)] bg-[#0b0f16]"
+                  />
 
-              <div className="mt-3 grid gap-2 md:grid-cols-[minmax(0,1fr)_220px]">
-                <input
-                  type="range"
-                  min={0}
-                  max={maxStep}
-                  value={runtimeState?.step ?? 0}
-                  onChange={(event) => {
-                    setIsPlaying(false);
-                    applyStep(Number(event.target.value));
-                  }}
-                  className="h-2 w-full cursor-pointer appearance-none rounded-full bg-[#222a36]"
-                />
-                <div className="flex items-center justify-end gap-2">
-                  {SPEEDS.map((value) => (
-                    <button
-                      key={value}
-                      type="button"
-                      onClick={() => setSpeed(value)}
-                      className={`rounded-md border px-2 py-1 text-[11px] uppercase tracking-[0.12em] ${
-                        speed === value
-                          ? "border-[#6f809a] bg-[#1a2434] text-[#dde7f8]"
-                          : "border-[var(--border)] bg-[#0f131a] text-[var(--text-secondary)]"
-                      }`}
-                    >
-                      {value}x
-                    </button>
-                  ))}
-                </div>
-              </div>
+                  <div className="mt-3 grid gap-2 md:grid-cols-[minmax(0,1fr)_220px]">
+                    <input
+                      type="range"
+                      min={0}
+                      max={maxStep}
+                      value={runtimeState?.step ?? 0}
+                      onChange={(event) => {
+                        setIsPlaying(false);
+                        applyStep(Number(event.target.value));
+                      }}
+                      className="h-2 w-full cursor-pointer appearance-none rounded-full bg-[#222a36]"
+                    />
+                    <div className="flex items-center justify-end gap-2">
+                      {SPEEDS.map((value) => (
+                        <button
+                          key={value}
+                          type="button"
+                          onClick={() => setSpeed(value)}
+                          className={`rounded-md border px-2 py-1 text-[11px] uppercase tracking-[0.12em] ${
+                            speed === value
+                              ? "border-[#6f809a] bg-[#1a2434] text-[#dde7f8]"
+                              : "border-[var(--border)] bg-[#0f131a] text-[var(--text-secondary)]"
+                          }`}
+                        >
+                          {value}x
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </>
+              ) : null}
             </article>
 
             <aside className="rounded-xl border border-[var(--border)] bg-[var(--surface-card)] p-4">
@@ -553,9 +632,9 @@ export default function Home() {
                   <NarrativeCard
                     title="How Aegis Responded"
                     body={
-                      activeFrame?.explainability && activeFrame.explainability.target_host === selectedNode.id
-                        ? `${activeFrame.explainability.action} · ${(activeFrame.explainability.confidence * 100).toFixed(0)}% confidence · ${activeFrame.explainability.expected_effect}`
-                        : "No targeted blue rationale for this node in the current frame."
+                      latestNodeExplainability
+                        ? `${latestNodeExplainability.action} · ${(latestNodeExplainability.confidence * 100).toFixed(0)}% confidence · ${latestNodeExplainability.expected_effect}`
+                        : "No blue rationale has targeted this node yet in the current run."
                     }
                   />
 
@@ -565,8 +644,8 @@ export default function Home() {
                     </div>
                     <ul className="space-y-1 text-xs text-[var(--text-secondary)]">
                       {selectedConnections.map((edge) => (
-                        <li key={edge.id}>
-                          {edge.source === selectedNode.id ? "→" : "←"} {edge.source === selectedNode.id ? edge.target : edge.source} [{edge.visual_state}]
+                        <li key={edge.neighbor_id}>
+                          ↔ {edge.neighbor_id} [{edge.visual_state}]
                         </li>
                       ))}
                     </ul>
@@ -720,6 +799,66 @@ export default function Home() {
               </div>
             </div>
           </section>
+        ) : null}
+
+        {isGraphFullscreen ? (
+          <div className="fixed inset-0 z-[95] bg-black/85 p-4">
+            <div className="mx-auto flex h-full w-full max-w-[1840px] flex-col rounded-xl border border-[var(--border)] bg-[#0b0f16] p-3 shadow-[0_24px_90px_rgba(0,0,0,0.55)]">
+              <div className="mb-3 flex items-center justify-between gap-2">
+                <div>
+                  <div className="font-mono text-xs uppercase tracking-[0.18em] text-[#f3ead7]">Threat Topology Matrix</div>
+                  <div className="text-[11px] text-[var(--text-secondary)]">Fullscreen view · Press Esc to close</div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setIsGraphFullscreen(false)}
+                  className="rounded-md border border-[#6f809a] bg-[#1a2434] px-3 py-1 text-xs uppercase tracking-[0.12em] text-[#dde7f8]"
+                >
+                  Exit Fullscreen
+                </button>
+              </div>
+
+              <Graph
+                topology={runtimeState?.timeline.topology ?? null}
+                graphState={runtimeState?.graphState ?? null}
+                selectedNodeId={selectedNodeId}
+                highlightedNodeId={highlightedNodeId}
+                onNodeSelect={handleNodeSelect}
+                resetViewToken={resetViewToken}
+                className="h-[calc(100vh-180px)] w-full rounded-xl border border-[var(--border)] bg-[#0b0f16]"
+              />
+
+              <div className="mt-3 grid gap-2 md:grid-cols-[minmax(0,1fr)_220px]">
+                <input
+                  type="range"
+                  min={0}
+                  max={maxStep}
+                  value={runtimeState?.step ?? 0}
+                  onChange={(event) => {
+                    setIsPlaying(false);
+                    applyStep(Number(event.target.value));
+                  }}
+                  className="h-2 w-full cursor-pointer appearance-none rounded-full bg-[#222a36]"
+                />
+                <div className="flex items-center justify-end gap-2">
+                  {SPEEDS.map((value) => (
+                    <button
+                      key={value}
+                      type="button"
+                      onClick={() => setSpeed(value)}
+                      className={`rounded-md border px-2 py-1 text-[11px] uppercase tracking-[0.12em] ${
+                        speed === value
+                          ? "border-[#6f809a] bg-[#1a2434] text-[#dde7f8]"
+                          : "border-[var(--border)] bg-[#0f131a] text-[var(--text-secondary)]"
+                      }`}
+                    >
+                      {value}x
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
         ) : null}
 
         <section className="rounded-xl border border-[var(--border)] bg-[var(--surface-card)] p-4">

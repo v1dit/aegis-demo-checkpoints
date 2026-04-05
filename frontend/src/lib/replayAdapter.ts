@@ -215,7 +215,7 @@ export async function loadScenarioRun(selected: SelectedScenarioRun): Promise<Lo
     const fallback = buildMockRun(selected.selection, selected.profile_mode);
     return {
       ...fallback,
-      notice: "No local replay bundle found. Showing contract-valid mock replay for this scenario.",
+      notice: null,
     };
   }
 

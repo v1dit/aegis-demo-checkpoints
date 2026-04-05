@@ -11,6 +11,7 @@ type GraphProps = {
   selectedNodeId: string | null;
   highlightedNodeId?: string | null;
   onNodeSelect: (nodeId: string | null) => void;
+  resetViewToken?: number;
   className?: string;
 };
 
@@ -273,17 +274,15 @@ function stylesheet(): NonNullable<CytoscapeOptions["style"]> {
     {
       selector: ".node-selected",
       style: {
-        "overlay-color": "rgba(255,255,255,0.18)",
-        "overlay-opacity": 1,
-        "overlay-padding": 8,
+        "overlay-opacity": 0,
+        "overlay-padding": 0,
       },
     },
     {
       selector: ".node-highlighted",
       style: {
-        "underlay-color": "rgba(255,255,255,0.38)",
-        "underlay-opacity": 1,
-        "underlay-padding": 8,
+        "underlay-opacity": 0,
+        "underlay-padding": 0,
       },
     },
   ];
@@ -485,12 +484,14 @@ export default function Graph({
   selectedNodeId,
   highlightedNodeId,
   onNodeSelect,
+  resetViewToken = 0,
   className,
 }: GraphProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const cyRef = useRef<Core | null>(null);
   const onNodeSelectRef = useRef(onNodeSelect);
   const topologyKeyRef = useRef<string | null>(null);
+  const lastCenteredNodeRef = useRef<string | null>(null);
 
   const shellClass = useMemo(
     () => `${className ?? "h-[620px] w-full rounded-xl border border-[var(--border)] bg-[#0d1018]"} relative overflow-hidden`,
@@ -515,7 +516,6 @@ export default function Graph({
         style: stylesheet(),
         minZoom: 0.5,
         maxZoom: 2.5,
-        wheelSensitivity: 0.18,
       });
 
       const cy = cyRef.current;
@@ -547,13 +547,17 @@ export default function Graph({
       const cy = cyRef.current;
       if (!cy) return;
       cy.resize();
-      if (cy.nodes().length > 0) {
-        cy.fit(cy.elements(), 48);
-      }
     });
     observer.observe(containerRef.current);
     return () => observer.disconnect();
   }, []);
+
+  useEffect(() => {
+    const cy = cyRef.current;
+    if (!cy || cy.nodes().length === 0) return;
+    cy.resize();
+    cy.fit(cy.elements(), 48);
+  }, [resetViewToken]);
 
   useEffect(() => {
     const cy = cyRef.current;
@@ -576,6 +580,25 @@ export default function Graph({
     const cy = cyRef.current;
     if (!cy) return;
 
+    if (!selectedNodeId) {
+      lastCenteredNodeRef.current = null;
+      return;
+    }
+
+    if (lastCenteredNodeRef.current === selectedNodeId) return;
+    lastCenteredNodeRef.current = selectedNodeId;
+
+    const selected = cy.getElementById(selectedNodeId);
+    if (!selected.length) return;
+    cy.animate({
+      center: { eles: selected },
+    }, { duration: 220 });
+  }, [selectedNodeId]);
+
+  useEffect(() => {
+    const cy = cyRef.current;
+    if (!cy) return;
+
     const focusNodeId = highlightedNodeId ?? selectedNodeId;
 
     cy.batch(() => {
@@ -586,9 +609,6 @@ export default function Graph({
         const selected = cy.getElementById(selectedNodeId);
         if (selected.length) {
           selected.addClass("node-selected");
-          cy.animate({
-            center: { eles: selected },
-          }, { duration: 220 });
         }
       }
 
