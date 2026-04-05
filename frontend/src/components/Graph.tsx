@@ -147,7 +147,7 @@ function stylesheet(): NonNullable<CytoscapeOptions["style"]> {
       selector: ".state-compromised",
       style: {
         "background-color": "#E24B4A",
-        "border-color": "#A32D2D",
+        "border-color": "#707c90",
         "border-width": 1.5,
       },
     },
@@ -155,7 +155,7 @@ function stylesheet(): NonNullable<CytoscapeOptions["style"]> {
       selector: ".state-critical",
       style: {
         "background-color": "#A32D2D",
-        "border-color": "#791F1F",
+        "border-color": "#7a879e",
         "border-width": 2,
         "shadow-color": "rgba(163,45,45,0.6)",
         "shadow-blur": 20,

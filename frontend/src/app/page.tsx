@@ -78,15 +78,15 @@ function riskPercent(score: number): number {
 }
 
 function severityBadgeClass(severity: ActionEvent["severity"]): string {
-  if (severity === "critical") return "border-[#A32D2D] bg-[#A32D2D]/25 text-[#ffdada]";
-  if (severity === "high") return "border-[#E24B4A] bg-[#E24B4A]/20 text-[#ffd7d5]";
+  if (severity === "critical") return "border-[#7f8da4] bg-[#A32D2D]/25 text-[#ffdada]";
+  if (severity === "high") return "border-[#7f8da4] bg-[#E24B4A]/20 text-[#ffd7d5]";
   if (severity === "medium") return "border-[#EF9F27] bg-[#EF9F27]/18 text-[#ffebb8]";
   if (severity === "low") return "border-[#1D9E75] bg-[#1D9E75]/15 text-[#ccffe9]";
   return "border-[#888780] bg-[#888780]/15 text-[#edece8]";
 }
 
 function actorBadgeClass(actor: ActionEvent["actor"]): string {
-  if (actor === "RED") return "border-[#E24B4A] bg-[#E24B4A]/20 text-[#ffd9d7]";
+  if (actor === "RED") return "border-[#7f8da4] bg-[#E24B4A]/20 text-[#ffd9d7]";
   if (actor === "BLUE") return "border-[#378ADD] bg-[#378ADD]/20 text-[#d6e9ff]";
   return "border-[#888780] bg-[#888780]/20 text-[#eceae5]";
 }
